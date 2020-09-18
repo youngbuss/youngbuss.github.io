@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>写在最前面</title>
-    <url>/2020/09/18/%E5%86%99%E5%9C%A8%E6%9C%80%E5%89%8D%E9%9D%A2/</url>
-    <content><![CDATA[<p>写在博客的最前面 在这里记录踩坑记录 以及看到的好文章mark住 和生活中的小事情~</p>
-<p><img src="/2020/09/18/%E5%86%99%E5%9C%A8%E6%9C%80%E5%89%8D%E9%9D%A2/kk.jpg"></p>
-]]></content>
-      <tags>
-        <tag>other</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>linux 操作</title>
     <url>/2020/09/18/linux%20Shell%20%E5%88%9D%E5%AD%A6/</url>
     <content><![CDATA[<h1 id="1-Grep"><a href="#1-Grep" class="headerlink" title="1.Grep"></a>1.Grep</h1><p>暂时没怎么用到 先做个记录吧  万一以后用到了<br>grep命令的常用格式为：grep  [选项]  ”模式“  [文件]<br>grep家族总共有三个：grep，egrep，fgrep。<br><strong>常用选项：</strong><br>　　-E ：开启扩展（Extend）的正则表达式。<br>　　-i ：忽略大小写（ignore case）。<br>　　-v ：反过来（invert），只打印没有匹配的，而匹配的反而不打印。<br>　　-n ：显示行号<br>　　-w ：被匹配的文本只能是单词，而不能是单词中的某一部分，如文本中有liker，而我搜寻的只是like，就可以使用-w选项来避免匹配liker<br>　　-c ：显示总共有多少行被匹配到了，而不是显示被匹配到的内容，注意如果同时使用-cv选项是显示有多少行没有被匹配到。<br>　　-o ：只显示被模式匹配到的字符串。<br>　　–color :将匹配到的内容以颜色高亮显示。<br>　　-A  n：显示匹配到的字符串所在的行及其后n行，after<br>　　-B  n：显示匹配到的字符串所在的行及其前n行，before<br>　　-C  n：显示匹配到的字符串所在的行及其前后各n行，context<br>1、直接输入要匹配的字符串，这个可以用fgrep（fast grep）代替来提高查找速度，比如我要匹配一下hello.c文件中printf的个数：fgrep  -c  “printf”  hello.c<br>2、使用基本正则表达式，下面谈关于基本正则表达式的使用：<br><strong>匹配字符：</strong><br>　　　　            . ：任意一个字符。<br>　　　　　     [abc] ：表示匹配一个字符，这个字符必须是abc中的一个。<br>　　　　　     [a-zA-Z] ：表示匹配一个字符，这个字符必须是a-z或A-Z这52个字母中的一个。<br>　　　　　　[^123] ：匹配一个字符，这个字符是除了1、2、3以外的所有字符。<br>　　　　　　对于一些常用的字符集，系统做了定义：<br>　　　　　　[A-Za-z] 等价于 [[:alpha:]]<br>　　　　　　[0-9] 等价于 [[:digit:]]<br>　　　　　　[A-Za-z0-9] 等价于 [[:alnum:]]<br>　　　　　　tab,space 等空白字符 [[:space:]]<br>　　　　　　[A-Z] 等价于 [[:upper:]]<br>　　　　　　[a-z] 等价于 [[:lower:]]<br>　　　　　　标点符号 [[:punct:]]<br><strong>匹配次数：</strong><br>　　　　　　{m,n} ：匹配其前面出现的字符至少m次，至多n次。<br>　　　　　　? ：匹配其前面出现的内容0次或1次，等价于{0,1}。<br>　　　　　　* ：匹配其前面出现的内容任意次，等价于{0,}，所以 “.*” 表述任意字符任意次，即无论什么内容全部匹配。<br><strong>位置锚定：</strong><br>　　　　　　^ ：锚定行首<br>　　　　　　$ ：锚定行尾。技巧：”^$”用于匹配空白行。<br>　　　　　　\b或&lt;：锚定单词的词首。如”\blike”不会匹配alike，但是会匹配liker<br>　　　　　　\b或&gt;：锚定单词的词尾。如”\blike\b”不会匹配alike和liker，只会匹配like<br>　　　　　　\B ：与\b作用相反。</p>
@@ -26,6 +16,64 @@
       </categories>
       <tags>
         <tag>shell</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>git操作</title>
+    <url>/2020/09/18/git%E6%93%8D%E4%BD%9C/</url>
+    <content><![CDATA[<h2 id="Gitlab"><a href="#Gitlab" class="headerlink" title="Gitlab"></a>Gitlab</h2><p>gitlab 在管理项目代码以及实际应用中感觉用处很大应该是必须掌握的 慢慢更新一些已经用到的操作</p>
+<a id="more"></a>
+
+<h2 id="下载Git"><a href="#下载Git" class="headerlink" title="下载Git"></a>下载Git</h2><p>进入Git官网 <a href="https://link.zhihu.com/?target=https://git-scm.com">Git官网</a> 点击Downloads下载 吐槽下下载是真的慢 然后就是傻瓜式安装了 最后点击右键进入git bash<br>输入 git 查看是否安装成功</p>
+<h2 id="创建ssh"><a href="#创建ssh" class="headerlink" title="创建ssh"></a>创建ssh</h2><p>可以通过HTTP和SSH去做克隆和提交代码，由于HTTP需要每次提交的时候输入邮箱号和密码，所以常用电脑上配置SSH，只要配置好了以后，下次提交的时候就方便了。SSH的方式主要是通过生成一个密钥和一个公钥，这个公钥可以使用在GitHub，GItLab，内网GitLab中。<br>大多数 Git 服务器都会选择使用 SSH 公钥来进行授权。系统中的每个用户都必须提供一个公钥用于授权，没有的话就要生成一个。生成公钥的过程在所有操作系统上都差不多。首先你要确认一下本机是否已经有一个公钥。<br>SSH 公钥默认储存在账户的主目录下的 ~/.ssh 目录<br>看一下有没有id_rsa和id_rsa.pub(或者是id_dsa和id_dsa.pub之类成对的文件)，有 .pub 后缀的文件就是公钥，另一个文件则是密钥。<br>假如没有这些文件，甚至连 .ssh 目录都没有，可以用 ssh-keygen 来创建。该程序在 Linux/Mac 系统上由 SSH 包提供，而在 Windows 上则包含在GitBash里面里.<br>创建的命令：</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">ssh<span class="literal">-keygen</span> <span class="literal">-t</span> rsa <span class="literal">-C</span> <span class="string">&quot;hongyu.yang@mobvista.com”</span></span><br></pre></td></tr></table></figure>
+
+<p>然后各种enter就可以<br>然后登陆网址，把公钥内容添加进去就可以啦<br>秘钥和公钥默认生成在以下两个目录：</p>
+<ul>
+<li>linux : ~/.ssh</li>
+<li>Mac : ~/.ssh</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#105;&#116;&#x40;&#103;&#x69;&#116;&#x68;&#x75;&#x62;&#46;&#99;&#x6f;&#x6d;">&#103;&#105;&#116;&#x40;&#103;&#x69;&#116;&#x68;&#x75;&#x62;&#46;&#99;&#x6f;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+</ul>
+<p>输入ssh 可以查看本机是否已经安装了ssh</p>
+<h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
+<h3 id="第一种：本地没有-git-仓库"><a href="#第一种：本地没有-git-仓库" class="headerlink" title="第一种：本地没有 git 仓库"></a><strong>第一种：本地没有 git 仓库</strong></h3><ol>
+<li>直接将远程仓库 clone 到本地；</li>
+<li>将文件添加并 commit 到本地仓库； </li>
+<li>将本地仓库的内容push到远程仓库。<br>具体操作为 点击git项目的Clone or download ,复制https地址，进入准备存储的仓库目录，输入 </li>
+</ol>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/youngbuss/....</span><br></pre></td></tr></table></figure>
+
+<p>在我们修改完内容后点击 git status 命令查看仓库状态 ，提示我们输入git add 添加文件，再用git commit -m “备注信息” 将其提交到本地仓库:</p>
+<p><img src="/2020/09/18/git%E6%93%8D%E4%BD%9C/1.jpg"></p>
+<p>第一次提交需要输入用户名与邮箱，只需要添加两行代码</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line"><span class="variable">$</span> git config -<span class="literal">-global</span> user.name<span class="string">&quot;youngbuss&quot;</span></span><br><span class="line"><span class="variable">$</span> git config -<span class="literal">-global</span> user.email<span class="string">&quot;***@***.cn&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>输入git log 查看仓库提交日志，输入git status 查看仓库状态，现在输入 git push origin master（实习操作好像不太一样）</p>
+<h3 id="第二种：本地有-Git-仓库，并且我们已经进行了多次-commit-操作"><a href="#第二种：本地有-Git-仓库，并且我们已经进行了多次-commit-操作" class="headerlink" title="第二种：本地有 Git 仓库，并且我们已经进行了多次 commit 操作"></a><strong>第二种：本地有 Git 仓库，并且我们已经进行了多次 commit 操作</strong></h3><ol>
+<li>建立一个本地仓库进入，init 初始化； </li>
+<li>关联远程仓库； </li>
+<li>同步远程仓库和本地仓库； </li>
+<li>将文件添加提交到本地仓库； </li>
+<li>将本地仓库的内容；</li>
+<li>push 到远程仓库。<br>具体操作为：建立一个本地仓库，使用git init命令初始化这个仓库 再输入</li>
+</ol>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">git remote add origin https://github.com/....</span><br></pre></td></tr></table></figure>
+
+<p>关联远程仓库，接着输入</p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">git pull origin maste</span><br></pre></td></tr></table></figure>
+
+<p>同步远程仓库与本地仓库，接下来操作就一样了 </p>
+<h2 id="实战经历"><a href="#实战经历" class="headerlink" title="实战经历"></a>实战经历</h2><p>直接贴上复制下来的命令把 </p>
+<figure class="highlight powershell"><table><tr><td class="code"><pre><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (master)</span><br><span class="line"><span class="variable">$</span> <span class="built_in">ls</span> <span class="literal">-a</span></span><br><span class="line">./   .git/       build.sh*      conf/       doc/  readme.md  todo.md</span><br><span class="line">../  .gitignore  build_udf.sh*  deploy.sh*  jq    src/       upload_azkaban.sh*</span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (master)</span><br><span class="line"><span class="variable">$</span> git fetch <span class="literal">-a</span></span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (master)</span><br><span class="line"><span class="variable">$</span> git branch</span><br><span class="line">* master</span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (master)</span><br><span class="line"><span class="variable">$</span> git fetch</span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (master)</span><br><span class="line"><span class="variable">$</span> git branch <span class="literal">-a</span></span><br><span class="line">* master</span><br><span class="line">  remotes/origin/HEAD -&gt; origin/master</span><br><span class="line">  remotes/origin/bin.li</span><br><span class="line">  remotes/origin/dev_ltv</span><br><span class="line">  remotes/origin/dev_retention</span><br><span class="line">  remotes/origin/hongyu.yang</span><br><span class="line">  remotes/origin/master</span><br><span class="line">  remotes/origin/sdk_log</span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (master)</span><br><span class="line"><span class="variable">$</span> git checkout <span class="literal">-b</span> hongyu.yang origin/hongyu.yang</span><br><span class="line">Switched to a new branch <span class="string">&#x27;hongyu.yang&#x27;</span></span><br><span class="line">Branch <span class="string">&#x27;hongyu.yang&#x27;</span> <span class="built_in">set</span> up to track remote branch <span class="string">&#x27;hongyu.yang&#x27;</span> from <span class="string">&#x27;origin&#x27;</span>.</span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (hongyu.yang)</span><br><span class="line"><span class="variable">$</span> git branch</span><br><span class="line">* hongyu.yang</span><br><span class="line">  master</span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (hongyu.yang)</span><br><span class="line"><span class="variable">$</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">分支提交过程 要进入自己的分支</span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (hongyu.yang)</span><br><span class="line"><span class="variable">$</span> <span class="built_in">ls</span> <span class="literal">-a</span></span><br><span class="line">./   .git/       build.sh*      conf/       doc/  readme.md  todo.md</span><br><span class="line">../  .gitignore  build_udf.sh*  deploy.sh*  jq    src/       upload_azkaban.sh*</span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (hongyu.yang)</span><br><span class="line"><span class="variable">$</span> git status</span><br><span class="line">On branch hongyu.yang</span><br><span class="line">Your branch is up to date with <span class="string">&#x27;origin/hongyu.yang&#x27;</span>.</span><br><span class="line"></span><br><span class="line">Untracked files:</span><br><span class="line">  (use <span class="string">&quot;git add &lt;file&gt;...&quot;</span> to include <span class="keyword">in</span> what will be committed)</span><br><span class="line">        src/ga_data.job</span><br><span class="line">        src/ods/ga_data.py</span><br><span class="line">        src/ods/upload_delete.shell</span><br><span class="line">        src/upload_delete.job</span><br><span class="line"></span><br><span class="line">nothing added to commit but untracked files present (use <span class="string">&quot;git add&quot;</span> to track)</span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (hongyu.yang)</span><br><span class="line"><span class="variable">$</span> git add src/ga_data.job src/ods/ga_data.py src/ods/upload_delete.shell src/upload_delete.job</span><br><span class="line">warning: CRLF will be replaced by LF <span class="keyword">in</span> src/ga_data.job.</span><br><span class="line">The file will have its original line endings <span class="keyword">in</span> your working directory</span><br><span class="line">warning: CRLF will be replaced by LF <span class="keyword">in</span> src/ods/ga_data.py.</span><br><span class="line">The file will have its original line endings <span class="keyword">in</span> your working directory</span><br><span class="line">warning: CRLF will be replaced by LF <span class="keyword">in</span> src/ods/upload_delete.shell.</span><br><span class="line">The file will have its original line endings <span class="keyword">in</span> your working directory</span><br><span class="line">warning: CRLF will be replaced by LF <span class="keyword">in</span> src/upload_delete.job.</span><br><span class="line">The file will have its original line endings <span class="keyword">in</span> your working directory</span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (hongyu.yang)</span><br><span class="line"><span class="variable">$</span> git status</span><br><span class="line">On branch hongyu.yang</span><br><span class="line">Your branch is up to date with <span class="string">&#x27;origin/hongyu.yang&#x27;</span>.</span><br><span class="line"></span><br><span class="line">Changes to be committed:</span><br><span class="line">  (use <span class="string">&quot;git restore --staged &lt;file&gt;...&quot;</span> to unstage)</span><br><span class="line">        new file:   src/ga_data.job</span><br><span class="line">        new file:   src/ods/ga_data.py</span><br><span class="line">        new file:   src/ods/upload_delete.shell</span><br><span class="line">        new file:   src/upload_delete.job</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (hongyu.yang)</span><br><span class="line"><span class="variable">$</span> git commit <span class="literal">-m</span> <span class="string">&quot;fetch data and upload&quot;</span></span><br><span class="line">[<span class="type">hongyu.yang</span> <span class="type">e5f2e43</span>] fetch <span class="keyword">data</span> and upload</span><br><span class="line"> <span class="number">4</span> files changed, <span class="number">194</span> insertions(+)</span><br><span class="line"> create mode <span class="number">100644</span> src/ga_data.job</span><br><span class="line"> create mode <span class="number">100644</span> src/ods/ga_data.py</span><br><span class="line"> create mode <span class="number">100644</span> src/ods/upload_delete.shell</span><br><span class="line"> create mode <span class="number">100644</span> src/upload_delete.job</span><br><span class="line"></span><br><span class="line">杨泓宇@DESKTOP<span class="literal">-BI76VH0</span> MINGW64 ~/Documents/joydw (hongyu.yang)</span><br><span class="line"><span class="variable">$</span> git push</span><br><span class="line">Enumerating objects: <span class="number">11</span>, done.</span><br><span class="line">Counting objects: <span class="number">100</span>% (<span class="number">11</span>/<span class="number">11</span>), done.</span><br><span class="line">Delta compression <span class="keyword">using</span> up to 4 threads</span><br><span class="line">Compressing objects: <span class="number">100</span>% (<span class="number">7</span>/<span class="number">7</span>), done.</span><br><span class="line">Writing objects: <span class="number">100</span>% (<span class="number">8</span>/<span class="number">8</span>), <span class="number">3.30</span> KiB | <span class="number">422.00</span> KiB/s, done.</span><br><span class="line">Total <span class="number">8</span> (delta <span class="number">3</span>), reused <span class="number">0</span> (delta <span class="number">0</span>)</span><br><span class="line">remote:</span><br><span class="line">remote: To create a merge request <span class="keyword">for</span> hongyu.yang, visit:</span><br><span class="line">remote:   http://gitlab.mobvista.com/joypac<span class="literal">-server</span>/joydw/merge_requests/new?merge_request%<span class="number">5</span>Bsource_branch%<span class="number">5</span>D=hongyu.yang</span><br><span class="line">remote:</span><br><span class="line">To gitlab.mobvista.com:joypac<span class="literal">-server</span>/joydw.git</span><br><span class="line">   <span class="number">38</span>ce400..e5f2e43  hongyu.yang -&gt; hongyu.yang</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>Linux</category>
+      </categories>
+      <tags>
+        <tag>git</tag>
       </tags>
   </entry>
   <entry>
@@ -47,5 +95,15 @@
 
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
+  </entry>
+  <entry>
+    <title>写在最前面</title>
+    <url>/2020/09/18/%E5%86%99%E5%9C%A8%E6%9C%80%E5%89%8D%E9%9D%A2/</url>
+    <content><![CDATA[<p>写在博客的最前面 在这里记录踩坑记录 以及看到的好文章mark住 和生活中的小事情~</p>
+<p><img src="/2020/09/18/%E5%86%99%E5%9C%A8%E6%9C%80%E5%89%8D%E9%9D%A2/kk.jpg"></p>
+]]></content>
+      <tags>
+        <tag>other</tag>
+      </tags>
   </entry>
 </search>
