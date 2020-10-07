@@ -289,7 +289,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-06 23:19:21" itemprop="dateModified" datetime="2020-10-06T23:19:21+08:00">2020-10-06</time>
+                <time title="修改时间：2020-10-07 10:07:21" itemprop="dateModified" datetime="2020-10-07T10:07:21+08:00">2020-10-07</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -845,7 +845,7 @@
 
 <p>2、编写配置文件</p>
 <p>3、代码实现</p>
-<h4 id="回忆MyBatis"><a href="#回忆MyBatis" class="headerlink" title="回忆MyBatis"></a>回忆MyBatis</h4><p><strong>编写pojo实体类</strong></p>
+<h3 id="回忆MyBatis"><a href="#回忆MyBatis" class="headerlink" title="回忆MyBatis"></a>回忆MyBatis</h3><p><strong>编写pojo实体类</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.kuang.pojo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> id;  <span class="comment">//id</span></span><br><span class="line">   <span class="keyword">private</span> String name;   <span class="comment">//姓名</span></span><br><span class="line">   <span class="keyword">private</span> String pwd;   <span class="comment">//密码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>实现mybatis的配置文件</strong></p>
@@ -860,7 +860,7 @@
 <p><strong>测试类</strong></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selectUser</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">   String resource = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">   InputStream inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">   SqlSessionFactory sqlSessionFactory = newSqlSessionFactoryBuilder().build(inputStream);</span><br><span class="line">   SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line"></span><br><span class="line">   UserMapper mapper = sqlSession.getMapper(UserMapper.class);</span><br><span class="line"></span><br><span class="line">   List&lt;User&gt; userList = mapper.selectUser();</span><br><span class="line">   <span class="keyword">for</span> (User user: userList)&#123;</span><br><span class="line">       System.out.println(user);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">   sqlSession.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="MyBatis-Spring学习"><a href="#MyBatis-Spring学习" class="headerlink" title="MyBatis-Spring学习"></a>MyBatis-Spring学习</h4><p>引入Spring之前需要了解mybatis-spring包中的一些重要类；</p>
+<h3 id="MyBatis-Spring学习"><a href="#MyBatis-Spring学习" class="headerlink" title="MyBatis-Spring学习"></a>MyBatis-Spring学习</h3><p>引入Spring之前需要了解mybatis-spring包中的一些重要类；</p>
 <p><a target="_blank" rel="noopener" href="http://www.mybatis.org/spring/zh/index.html">http://www.mybatis.org/spring/zh/index.html</a></p>
 <p><strong>什么是 MyBatis-Spring？</strong></p>
 <p>MyBatis-Spring 会帮助你将 MyBatis 代码无缝地整合到 Spring 中。</p>

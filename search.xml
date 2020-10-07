@@ -546,7 +546,7 @@
 
 <p>2、编写配置文件</p>
 <p>3、代码实现</p>
-<h4 id="回忆MyBatis"><a href="#回忆MyBatis" class="headerlink" title="回忆MyBatis"></a>回忆MyBatis</h4><p><strong>编写pojo实体类</strong></p>
+<h3 id="回忆MyBatis"><a href="#回忆MyBatis" class="headerlink" title="回忆MyBatis"></a>回忆MyBatis</h3><p><strong>编写pojo实体类</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">package</span> com.kuang.pojo;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>&#123;</span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">int</span> id;  <span class="comment">//id</span></span><br><span class="line">   <span class="keyword">private</span> String name;   <span class="comment">//姓名</span></span><br><span class="line">   <span class="keyword">private</span> String pwd;   <span class="comment">//密码</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>实现mybatis的配置文件</strong></p>
@@ -561,7 +561,7 @@
 <p><strong>测试类</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">selectUser</span><span class="params">()</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"></span><br><span class="line">   String resource = <span class="string">&quot;mybatis-config.xml&quot;</span>;</span><br><span class="line">   InputStream inputStream = Resources.getResourceAsStream(resource);</span><br><span class="line">   SqlSessionFactory sqlSessionFactory = newSqlSessionFactoryBuilder().build(inputStream);</span><br><span class="line">   SqlSession sqlSession = sqlSessionFactory.openSession();</span><br><span class="line"></span><br><span class="line">   UserMapper mapper = sqlSession.getMapper(UserMapper.class);</span><br><span class="line"></span><br><span class="line">   List&lt;User&gt; userList = mapper.selectUser();</span><br><span class="line">   <span class="keyword">for</span> (User user: userList)&#123;</span><br><span class="line">       System.out.println(user);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">   sqlSession.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="MyBatis-Spring学习"><a href="#MyBatis-Spring学习" class="headerlink" title="MyBatis-Spring学习"></a>MyBatis-Spring学习</h4><p>引入Spring之前需要了解mybatis-spring包中的一些重要类；</p>
+<h3 id="MyBatis-Spring学习"><a href="#MyBatis-Spring学习" class="headerlink" title="MyBatis-Spring学习"></a>MyBatis-Spring学习</h3><p>引入Spring之前需要了解mybatis-spring包中的一些重要类；</p>
 <p><a href="http://www.mybatis.org/spring/zh/index.html">http://www.mybatis.org/spring/zh/index.html</a></p>
 <p><strong>什么是 MyBatis-Spring？</strong></p>
 <p>MyBatis-Spring 会帮助你将 MyBatis 代码无缝地整合到 Spring 中。</p>
@@ -1869,7 +1869,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#x69;&#116;&#64;&#103;&#x69;&#116;&#104;&#117;&#x62;&#x2e;&#x63;&#111;&#x6d;">&#x67;&#x69;&#116;&#64;&#103;&#x69;&#116;&#104;&#117;&#x62;&#x2e;&#x63;&#111;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#x69;&#116;&#64;&#103;&#x69;&#116;&#x68;&#117;&#98;&#x2e;&#x63;&#111;&#x6d;">&#x67;&#x69;&#116;&#64;&#103;&#x69;&#116;&#x68;&#117;&#98;&#x2e;&#x63;&#111;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
