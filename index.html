@@ -289,7 +289,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-11 23:02:46" itemprop="dateModified" datetime="2020-12-11T23:02:46+08:00">2020-12-11</time>
+                <time title="修改时间：2020-12-12 14:30:10" itemprop="dateModified" datetime="2020-12-12T14:30:10+08:00">2020-12-12</time>
               </span>
 
           
@@ -479,10 +479,44 @@
 <p>分为物理分页和逻辑分页</p>
 <p>所谓逻辑分页，是指使用MyBatis自带的RowBound进行分页，它会一次性查出多条数据，然后再检索分页中的数据，具体一次性查询多少条数据，受封装jdbc配置的fetch-size决定</p>
 <p>而物理分页，是从数据库中查询指定条数的数据，而我们用的分页插件PageHelper实现的就是物理分页</p>
-<h2 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h2><p>HashMap是基于hashing的原理，我们使用put(key,value)存储对象到HashMap中，使用get(key)从中获取键值对。</p>
+<h2 id="Java数据结构"><a href="#Java数据结构" class="headerlink" title="Java数据结构"></a>Java数据结构</h2><ul>
+<li>枚举（Enumeration）</li>
+<li>位集合（BitSet）</li>
+<li>向量（Vector）</li>
+<li>栈（Stack）</li>
+<li>字典（Dictionary）</li>
+<li>哈希表（Hashtable）</li>
+<li>属性（Properties）</li>
+</ul>
+<h2 id="Hash相关知识"><a href="#Hash相关知识" class="headerlink" title="Hash相关知识"></a>Hash相关知识</h2><h3 id="Hash冲突"><a href="#Hash冲突" class="headerlink" title="Hash冲突"></a>Hash冲突</h3><p>1.开放地址方法</p>
+<p>　　（1）线性探测</p>
+<p>　　　按顺序决定值时，如果某数据的值已经存在，则在原来值的基础上往后加一个单位，直至不发生哈希冲突。　</p>
+<p>　　（2）再平方探测</p>
+<p>　　　按顺序决定值时，如果某数据的值已经存在，则在原来值的基础上先加1的平方个单位，若仍然存在则减1的平方个单位。随之是2的平方，3的平方等等。直至不发生哈希冲突。</p>
+<p>　　（3）伪随机探测</p>
+<p>　　　按顺序决定值时，如果某数据已经存在，通过随机函数随机生成一个数，在原来值的基础上加上随机数，直至不发生哈希冲突。</p>
+<p>2.链式地址法（HashMap的哈希冲突解决方法）</p>
+<p>　　对于相同的值，使用链表进行连接。使用数组存储每一个链表。</p>
+<p>　　优点：</p>
+<p>　　（1）拉链法处理冲突简单，且无堆积现象，即非同义词决不会发生冲突，因此平均查找长度较短；</p>
+<p>　　（2）由于拉链法中各链表上的结点空间是动态申请的，故它更适合于造表前无法确定表长的情况；</p>
+<p>　　（3）开放定址法为减少冲突，要求装填因子α较小，故当结点规模较大时会浪费很多空间。而拉链法中可取α≥1，且结点较大时，拉链法中增加的指针域可忽略不计，因此节省空间；</p>
+<p>　　（4）在用拉链法构造的散列表中，删除结点的操作易于实现。只要简单地删去链表上相应的结点即可。<br>　　缺点：</p>
+<p>　　指针占用较大空间时，会造成空间浪费，若空间用于增大散列表规模进而提高开放地址法的效率。</p>
+<p>3.建立公共溢出区</p>
+<p>　　建立公共溢出区存储所有哈希冲突的数据。</p>
+<p>4.再哈希法</p>
+<p>　　对于冲突的哈希值再次进行哈希处理，直至没有哈希冲突。</p>
+<h3 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h3><p>上面通过数据库的例子介绍了哈希算法，然后也分析了它的劣势，当机器数量发生变动的时候，几乎所有的数据都会移动 (不移动的应该是运气比较好吧前后取模都是同一个值)，这个代价很大。此时的问题从水平如何拆分变成了，当增加或者删除节点时，对于大多数记录，保证原来分配到的某个节点，现在仍然应该分配到那个节点，将数据迁移量的降到最低，这就是一致性哈希要做的事情。在这里我们不指定是数据库还是什么，反正都是分布式存储节点。</p>
+<p>一致性 Hash 算法也是使用取模的思想，只是，刚才描述的取模法是对节点数量进行取模，而一致性 Hash 算法是对 <code>2^32</code> 取模，什么意思呢？简单来说，一致性 Hash 算法将整个哈希值空间组织成一个虚拟的圆环，如假设某哈希函数 H 的值空间为 0-2^32-1（即哈希值是一个 32 位无符号整形），整个哈希环如下，从 0 ~ 2^32-1 代表的分别是一个个的节点，这个环也叫哈希环。</p>
+<p>然后我们将我们的节点进行一次哈希，按照一定的规则，比如按照 ip 地址的哈希值，让节点落在哈希环上。</p>
+<p>然后就是需要通过数据 key 找到对应的服务器然后存储了，我们约定，通过数据 key 的哈希值落在哈希环上的节点，如果命中了机器节点就落在这个机器上，否则落在顺时针直到碰到第一个机器。</p>
+<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><p>HashMap是基于hashing的原理，我们使用put(key,value)存储对象到HashMap中，使用get(key)从中获取键值对。</p>
 <p>当我们使用put方法来传递健和值的时候，我们先对健调用hashcode()方法，返回的hashCode用于找到bucket位置来储存Entry对象。需要注意的是，HashMap是在bucket中储存键对象和值对象，作为Map.entry</p>
+<p>HashMap是基于hashing的原理，我们使用put(key, value)存储对象到HashMap中，使用get(key)从HashMap中获取对象。当我们给put()方法传递键和值时，我们先对键调用hashCode()方法，返回的hashCode用于找到bucket位置来储存Entry对象。”这里关键点在于指出， HashMap是在bucket中储存键对象和值对象，作为Map.Entry</p>
 <p>当两个对象的hashcode相同的时候会发生什么呢？</p>
 <p>hashcode相同，而HashMap使用链表存储对象</p>
+<p>因为hashcode相同，所以它们的bucket位置相同，‘碰撞’会发生。因为HashMap使用链表存储对象，这个Entry(包含有键值对的Map.Entry对象)会存储在链表中。</p>
 <p>之前已经提过，在获取HashMap的元素时，基本分两步：</p>
 <ol>
 <li>首先根据hashCode()做hash，然后确定bucket的index；</li>
@@ -490,11 +524,17 @@
 </ol>
 <p>在Java 8之前的实现中是用链表解决冲突的，在产生碰撞的情况下，进行get时，两步的时间复杂度是O(1)+O(n)。因此，当碰撞很厉害的时候n很大，O(n)的速度显然是影响速度的。</p>
 <p>因此在Java 8中，利用红黑树替换链表，这样复杂度就变成了O(1)+O(logn)了，这样在n很大的时候，能够比较理想的解决这个问题，在<a target="_blank" rel="noopener" href="http://www.importnew.com/14417.html">Java 8：HashMap的性能提升</a>一文中有性能测试的结果。</p>
+<p><strong>rehashing</strong></p>
+<p>如果HashMap的大小超过了负载因子(load factor)定义的容量，怎么办？”除非你真正知道HashMap的工作原理，否则你将回答不出这道题。默认的负载因子大小为0.75，也就是说，当一个map填满了75%的bucket时候，和其它集合类(如ArrayList等)一样，将会创建原来HashMap大小的两倍的bucket数组，来重新调整map的大小，并将原来的对象放入新的bucket数组中。这个过程叫作rehashing，因为它调用hash方法找到新的bucket位置。</p>
+<p>1） 首先创建一个比现有哈希表更大的新哈希表（expand）<br>2） 然后将旧哈希表的所有元素都迁移到新哈希表去（rehash）</p>
+<p><strong>为什么String, Interger这样的wrapper类适合作为键？</strong> String, Interger这样的wrapper类作为HashMap的键是再适合不过了，而且String最为常用。因为String是不可变的，也是final的，而且已经重写了equals()和hashCode()方法了。其他的wrapper类也有这个特点。不可变性是必要的，因为为了要计算hashCode()，就要防止键值改变，如果键值在放入时和获取时返回不同的hashcode的话，那么就不能从HashMap中找到你想要的对象。不可变性还有其他的优点如线程安全。如果你可以仅仅通过将某个field声明成final就能保证hashCode是不变的，那么请这么做吧。因为获取对象的时候要用到equals()和hashCode()方法，那么键对象正确的重写这两个方法是非常重要的。如果两个不相等的对象返回不同的hashcode的话，那么碰撞的几率就会小些，这样就能提高HashMap的性能。</p>
+<p><strong>我们可以使用自定义的对象作为键吗？</strong> 这是前一个问题的延伸。当然你可能使用任何对象作为键，只要它遵守了equals()和hashCode()方法的定义规则，并且当对象插入到Map中之后将不会再改变了。如果这个自定义对象时不可变的，那么它已经满足了作为键的条件，因为当它创建之后就已经不能改变了。</p>
+<p><strong>我们可以使用CocurrentHashMap来代替Hashtable吗</strong>？这是另外一个很热门的面试题，因为ConcurrentHashMap越来越多人用了。我们知道Hashtable是synchronized的，但是ConcurrentHashMap同步性能更好，因为它仅仅根据同步级别对map的一部分进行上锁。ConcurrentHashMap当然可以代替HashTable，但是HashTable提供更强的线程安全性。看看<a target="_blank" rel="noopener" href="http://javarevisited.blogspot.sg/2011/04/difference-between-concurrenthashmap.html">这篇博客</a>查看Hashtable和ConcurrentHashMap的区别。</p>
 <p>Hashtable HashMap  ConcurrentHashMap</p>
 <p>Hashtable 线程安全的对象，内部有上锁的控制，sychronized put的时候不能get 效率不高</p>
 <p>HashMap 线程不安全的对象，内部没有上锁 优点就是效率高，缺点是 如果多个线程同时操作可能会出现线程不安全甚至出现死锁的情况</p>
 <p>ConcurrentHashMap 分段锁，将锁的力度变小，兼顾安全与性能</p>
-<h2 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h2><p>最底层用的是map来做这些事,其值作为hashmap的key</p>
+<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>最底层用的是map来做这些事,其值作为hashmap的key</p>
 <p>其实原理就是HashMap</p>
 <p><strong>为什么要采用hash算法，有什么优势，解决了什么问题？</strong></p>
 <p>保证数据的唯一性，存储数据底层采用的是数组</p>
@@ -607,31 +647,6 @@
 <p>Java扩展类，是由ExtClassLoader——jre/lib/ext</p>
 <p>项目中编写的类 由AppClassLoader——-第三方的jar包和自己开发的类</p>
 <p>从上到下寻找类 </p>
-<h2 id="Cookie-Session区别"><a href="#Cookie-Session区别" class="headerlink" title="Cookie,Session区别"></a>Cookie,Session区别</h2><h3 id="存储位置"><a href="#存储位置" class="headerlink" title="存储位置"></a>存储位置</h3><ul>
-<li>Session: 服务端</li>
-<li>Cookie:客户端</li>
-</ul>
-<h3 id="存储的数据格式"><a href="#存储的数据格式" class="headerlink" title="存储的数据格式"></a>存储的数据格式</h3><ul>
-<li>Session:value为对象，Object为类型</li>
-<li>Cookie:value为字符串，如果我们存储一个对象，这个时候，就需要将对象转换为JSON</li>
-</ul>
-<h3 id="存储的数据大小"><a href="#存储的数据大小" class="headerlink" title="存储的数据大小"></a>存储的数据大小</h3><ul>
-<li>Session:受服务器内存控制</li>
-<li>Cookie：一般来说，最大为4k</li>
-</ul>
-<h3 id="声明周期"><a href="#声明周期" class="headerlink" title="声明周期"></a>声明周期</h3><ul>
-<li>Session:服务器段控制，默认是30分钟，注意当用户关闭了浏览器，session并不会消失</li>
-<li>Cookie:客户端控制，其实是客户端的一个文件，分两种情况<ol>
-<li>默认的事会话级的cookie,这种随着浏览器的关闭而消失，比如保存sessionid的cookie</li>
-<li>非会话级的cookie，通过设置有效期来控制，比如这种7天免登录这种功能，就需要设置有效期，setMaxAge</li>
-</ol>
-</li>
-</ul>
-<h3 id="二者联系"><a href="#二者联系" class="headerlink" title="二者联系"></a>二者联系</h3><p>http协议本身是一个无状态协议，服务器为了记住用户的状态，我们采用session的机制，而session机制背后的原理是，服务器会自动生成会话级的cookie来保存session的标识</p>
-<p>session.setAttribute()  get</p>
-<h2 id="转发重定向区别"><a href="#转发重定向区别" class="headerlink" title="转发重定向区别"></a>转发重定向区别</h2><h3 id="转发"><a href="#转发" class="headerlink" title="转发"></a>转发</h3><p>发生在服务器内部的跳转，所以对于客户端来说，至始至终就是一个请求，所以这期间，保存在request对象中的数据可以进行传递</p>
-<h3 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h3><p>发生在客户端的跳转，所以是多次请求，这个时候，如果需要在多次请求之间传递数据，就需要用session对象</p>
-<p>在后台程序，想要跳转到百度应该使用重定向，因为转发的范围限制在服务器内部</p>
 <h2 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h2><p>Web层：负责与用户交互并对外提供服务接口</p>
 <p>业务逻辑层：实现业务逻辑模块</p>
 <p>数据存取层：将业务逻辑层处理的结果持久化，方便后续查询</p>
@@ -656,7 +671,8 @@
 <p>　　<strong>2、不可重复读：事务 A 多次读取同一数据，事务 B 在事务A多次读取的过程中，对数据作了更新并提交，导致事务A多次读取同一数据时，结果 不一致。</strong></p>
 <p>　　<strong>3、幻读：系统管理员A将数据库中所有学生的成绩从具体分数改为ABCDE等级，但是系统管理员B就在这个时候插入了一条具体分数的记录，当系统管理员A改结束后发现还有一条记录没有改过来，就好像发生了幻觉一样，这就叫幻读。</strong></p>
 <p>　　<strong>小结：不可重复读的和幻读很容易混淆，不可重复读侧重于修改，幻读侧重于新增或删除。解决不可重复读的问题只需锁住满足条件的行，解决幻读需要锁表</strong></p>
-<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><table>
+<h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><p>InnoDB默认是可重复读</p>
+<table>
 <thead>
 <tr>
 <th>事务隔离级别</th>
@@ -678,7 +694,7 @@
 <td>是</td>
 </tr>
 <tr>
-<td>可重复度 repeatable-read</td>
+<td>可重复读 repeatable-read</td>
 <td>否</td>
 <td>否</td>
 <td>是</td>
@@ -690,6 +706,11 @@
 <td>否</td>
 </tr>
 </tbody></table>
+<h3 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h3><p>MVCC是多版本并发控制机制，顾名思义支持MVCC的数据库表中每一行数据都可能存在多个版本，对数据库的任何修改的提交都不会直接覆盖之前的数据，而是产生一个新的版本与老版本共存，通过读写数据时读不同的版本来避免加锁阻塞。</p>
+<p>MVCC的实现主要依赖于数据库在每个表中添加的三个隐藏字段以及事务在查询时创建的快照（read view）和数据库的数据版本链(Undo log)。这里先介绍这三个部分的作用，然后再介绍它们是如何联合作战进行非阻塞的实现RC和RR隔离级别。</p>
+<p>MVCC的重要特性:<br>(1)MVCC只支持RC(读取已提交)和RR(可重复读)隔离级别。<br>(2)MVCC能解决脏读、不可重复读问题，不能解决丢失更新问题和幻读问题。<br>(3)MVCC是用来解决读写操作之间的阻塞问题。使得在并发读写数据库时，可以做到在读操作时不用阻塞写操作，写操作也不用阻塞读操作，提高了数据库并发读写的性能。</p>
+<p><strong>总结</strong></p>
+<p>1、MVCC的实现主要依赖于数据库在每个表中添加的三个隐藏字段以及事务在查询时创建的快照（read view）和数据库支持多版本数据，数据库中存在数据版本链(Undo log)。<br>2、InnoDB支持多版本数据，在更新或者删除数据时，并不会立马删除原有行记录，而是将旧版本存入回滚段中的Undo log内，并通过回滚指针形成一个数据链，可以通过这个指针访问链上的历代数据版本，正是这种机制使得数据库数据产生了多个版本，为通过MVCC进行快照读提供了可能。<br>3、并不是所有的查询都是进行快照读，使用普通的select 语句进行查询时会生成快照，进行快照读；使用select … lock in share mode，select … for update，insert，update，delete 语句等语句进行查询或者更新时还是会使用锁机制，进行锁阻塞。<br>4、使用MVCC的作用(意义)是非阻塞的解决了事务读写冲突，提高了并发性能。<br>5、MVCC只支持RC(读取已提交)和RR(可重复读)隔离级别。<br>6、MVCC能解决脏读、不可重复读问题，不能解决丢失更新问题和幻读问题。<br>7、InnoDB使用锁机制和MVCC来共同作用，进行并发控制的，虽然MVCC不能解决幻读和丢失更新问题，但通过与锁机制(行级锁的Next-Key Locks算法的使用、排他锁等）一起作用可以达到可串行化隔离级别的效果，禁止了幻读、更新丢失等问题。</p>
 <h3 id="mysql联合索引详解"><a href="#mysql联合索引详解" class="headerlink" title="mysql联合索引详解"></a>mysql联合索引详解</h3><p>联合索引又叫复合索引。对于复合索引：Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index （a,b,c）。 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
 <p>  两个或更多个列上的索引被称作复合索引。</p>
 <p>  利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。</p>
@@ -749,6 +770,53 @@
 <li>倒排列表(PostingList)：倒排列表记载了出现过某个单词的所有文档的文档列表及单词在该文档中出现的位置信息，每条记录称为一个倒排项(Posting)。根据倒排列表，即可获知哪些文档包含某个单词。</li>
 <li>倒排文件(Inverted File)：所有单词的倒排列表往往顺序地存储在磁盘的某个文件里，这个文件即被称之为倒排文件，倒排文件是存储倒排索引的物理文件。</li>
 </ul>
+<h3 id="Mysql索引实现"><a href="#Mysql索引实现" class="headerlink" title="Mysql索引实现"></a>Mysql索引实现</h3><p>B-tree，B是balance，一般用于<strong>数据库的索引</strong>。使用B-tree结构可以显著减少定位记录时所经历的中间过程，从而加快存取速度。而B+tree是B-tree的一个变种，MySQL就普遍使用B+tree实现其索引结构。　　</p>
+<p>　　一般来说，索引本身也很大，不可能全部存储在内存中，因此<strong>索引往往以索引文件的形式存储的磁盘上</strong>。这样的话，索引查找过程中就要产生磁盘I/O消耗，相对于内存存取，I/O存取的消耗要高几个数量级，所以评价一个数据结构作为索引的优劣最重要的指标就是在查找过程中磁盘I/O操作次数的渐进复杂度。换句话说，索引的结构组织要尽量减少查找过程中磁盘I/O的存取次数。</p>
+<p>　　为了达到这个目的，磁盘按需读取，要求每次都会预读的长度一般为页的整数倍。而且数据库系统将一个节点的大小设为等于一个页，这样每个节点只需要一次I/O就可以完全载入。每次新建节点时，直接申请一个页的空间，这样就保证一个节点物理上也存储在一个页里，加之计算机存储分配都是按页对齐的，就实现了一个node只需一次I/O。并把B-tree中的m值设的非常大，就会让树的高度降低，有利于一次完全载入</p>
+<p><strong>聚集索引：</strong></p>
+<p>　　该索引中键值的<strong>逻辑顺序决定了表中相应行的物理顺序</strong>。 </p>
+<p>　　聚集索引确定表中数据的物理顺序。聚集索引类似于电话簿，后者按姓氏排列数据。由于聚集索引规定数据在表中的物理存储顺序，因此一个表只能包含一个聚集索引。但该索引可以包含多个列（组合索引），就像电话簿按姓氏和名字进行组织一样。 </p>
+<p><strong>非聚集索引：</strong>　　</p>
+<p>　　该索引中索引的<strong>逻辑顺序与磁盘上行的物理存储顺序不同</strong>。 </p>
+<p>　　索引是通过二叉树的数据结构来描述的，我们可以这么理解聚簇索引：索引的叶节点就是数据节点。而非聚簇索引的叶节点仍然是索引节点，只不过有一个指针指向对应的数据块。</p>
+<p><strong>B-树有如下特点:B-树允许每个节点有更多的子节点即可（多叉树）</strong></p>
+<ol>
+<li>所有键值分布在整颗树中（索引值和具体data都在每个节点里）；</li>
+<li>任何一个关键字出现且只出现在一个结点中；</li>
+<li>搜索有可能在非叶子结点结束（最好情况O(1)就能找到数据）；</li>
+<li>在关键字全集内做一次查找,性能逼近二分查找；</li>
+</ol>
+<p><strong>B+树是B-树的变体，也是一种多路搜索树, 它与 B- 树的不同之处在于:</strong></p>
+<ol>
+<li>所有关键字存储在叶子节点出现,内部节点(非叶子节点并不存储真正的 data)</li>
+<li>为所有叶子结点增加了一个链指针</li>
+</ol>
+<h4 id="B-树和B-树的区别"><a href="#B-树和B-树的区别" class="headerlink" title="B-树和B+树的区别"></a>B-树和B+树的区别</h4><p>   1.B+树内节点不存储数据，所有 data 存储在叶节点导致查询时间复杂度固定为 log n。而B-树查询时间复杂度不固定，与 key 在树中的位置有关，最好为O(1)。</p>
+<ol start="2">
+<li>B+树叶节点两两相连可大大增加区间访问性，可使用在范围查询等，而B-树每个节点 key 和 data 在一起，则无法区间查找。</li>
+<li>B+树更适合外部存储。由于内节点无 data 域，每个节点能索引的范围更大更精确，那么由于磁盘 IO 数据大小是固定的，在一次 IO 中，单个元素越小，量就越大。这就意味着B+树单次磁盘 IO 的信息量大于B-树</li>
+<li></li>
+</ol>
+<h3 id="Hash索引-b-树索引"><a href="#Hash索引-b-树索引" class="headerlink" title="Hash索引 b+树索引"></a>Hash索引 b+树索引</h3><p><strong>B+树是一个平衡的多叉树，从根节点到每个叶子节点的高度差值不超过1，而且同层级的节点间有指针相互链接。</strong></p>
+<p>在B+树上的常规检索，从根节点到叶子节点的搜索效率基本相当，不会出现大幅波动，而且基于索引的顺序扫描时，也可以利用双向指针快速左右移动，效率非常高。</p>
+<p>因此，B+树索引被广泛应用于数据库、文件系统等场景。顺便说一下，xfs文件系统比ext3/ext4效率高很多的原因之一就是，它的文件及目录索引结构全部采用B+树索引，而ext3/ext4的文件目录结构则采用Linked list, hashed B-tree、Extents/Bitmap等索引数据结构，因此在高I/O压力下，其IOPS能力不如xfs。</p>
+<p>简单地说，<strong>哈希索引就是采用一定的哈希算法</strong>，把键值换算成新的哈希值，检索时不需要类似B+树那样从根节点到叶子节点逐级查找，只需一次哈希算法即可立刻定位到相应的位置，速度非常快。</p>
+<p>从上面的图来看，B+树索引和哈希索引的明显区别是：</p>
+<ul>
+<li><strong>如果是等值查询，那么哈希索引明显有绝对优势</strong>，因为只需要经过一次算法即可找到相应的键值；当然了，这个前提是，键值都是唯一的。如果键值不是唯一的，就需要先找到该键所在位置，然后再根据链表往后扫描，直到找到相应的数据；</li>
+<li>从示意图中也能看到，<strong>如果是范围查询检索，这时候哈希索引就毫无用武之地了</strong>，因为原先是有序的键值，经过哈希算法后，有可能变成不连续的了，就没办法再利用索引完成范围查询检索；</li>
+<li>同理，<strong>哈希索引也没办法利用索引完成排序</strong>，以及like ‘xxx%’ 这样的部分模糊查询（这种部分模糊查询，其实本质上也是范围查询）；</li>
+<li><strong>哈希索引也不支持多列联合索引的最左匹配规则</strong>；</li>
+<li>B+树索引的关键字检索效率比较平均，不像B树那样波动幅度大，<strong>在有大量重复键值情况下，哈希索引的效率也是极低的，因为存在所谓的哈希碰撞问题</strong>。</li>
+</ul>
+<p>在MySQL中，只有HEAP/MEMORY引擎表才能显式支持哈希索引（NDB也支持，但这个不常用），InnoDB引擎的自适应哈希索引（adaptive hash index）不在此列，因为这不是创建索引时可指定的。</p>
+<p>还需要注意到：HEAP/MEMORY引擎表在mysql实例重启后，数据会丢失。</p>
+<p>通常，B+树索引结构适用于绝大多数场景，像下面这种场景用哈希索引才更有优势：</p>
+<blockquote>
+<p>在HEAP表中，如果存储的数据重复度很低（也就是说基数很大），对该列数据以等值查询为主，没有范围查询、没有排序的时候，特别适合采用哈希索引</p>
+<p>例如这种SQL：<br>SELECT … FROM t WHERE C1 = ?; — 仅等值查询</p>
+</blockquote>
+<p>在大多数场景下，都会有范围查询、排序、分组等查询特征，用B+树索引就可以了。</p>
 <h2 id="TCP-UDP区别"><a href="#TCP-UDP区别" class="headerlink" title="TCP UDP区别"></a>TCP UDP区别</h2><p>两者都是传输层协议</p>
 <p>其次</p>
 <p>tcp提供可靠的传输协议，传输前需要建立连接，面向字节流，传输慢</p>
@@ -813,6 +881,8 @@
 <p>4.使用并行或多线程处理子序列（略）</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 划分、递归、快排</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> bjh</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">QuickSort</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**待排序、划分数组*/</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span>[] array;</span><br><span class="line">    <span class="comment">/**数组长度*/</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> length;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">QuickSort</span><span class="params">(<span class="keyword">int</span>[] array)</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.array = array;</span><br><span class="line">        <span class="keyword">this</span>.length = array.length;</span><br><span class="line">        <span class="keyword">if</span> (array.length &lt; <span class="number">1</span> || start &lt; <span class="number">0</span> || end &gt;= array.length || start &gt; end) <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">        <span class="keyword">int</span> smallIndex = partition(array, start, end);</span><br><span class="line">        <span class="keyword">if</span> (smallIndex &gt; start)</span><br><span class="line">            QuickSort(array, start, smallIndex - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">if</span> (smallIndex &lt; end)</span><br><span class="line">            QuickSort(array, smallIndex + <span class="number">1</span>, end);</span><br><span class="line">        <span class="keyword">return</span> array;   </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 打印元素</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printArray</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;length; i++)&#123;</span><br><span class="line">            System.out.print(array[i]+<span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 划分</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> 划分的分界点</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span> left, <span class="keyword">int</span> right, <span class="keyword">int</span> pivot)</span></span>&#123;</span><br><span class="line">        <span class="comment">//左指针的起点，left-1是由于在后面的循环中，每循环一次左指针都要右移，</span></span><br><span class="line">        <span class="comment">//这样可以确保左指针从左边第一个元素开始，不然是从第二个开始</span></span><br><span class="line">        <span class="keyword">int</span> leftpoint = left-<span class="number">1</span>;</span><br><span class="line">        <span class="comment">//右指针的起点，right+1是由于后面的循环中，每循环一次右指针都要左移，</span></span><br><span class="line">        <span class="comment">//这样可以确保右指针从最右边开始，不然是从倒数第二个开始</span></span><br><span class="line">        <span class="keyword">int</span> rightpoint = right+<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line">            <span class="comment">//找到左边大于pivot的数据，或者走到了最右边仍然没有找到比pivot大的数据</span></span><br><span class="line">            <span class="keyword">while</span>(leftpoint&lt;right &amp;&amp; array[++leftpoint]&lt;pivot);</span><br><span class="line">            <span class="comment">//找到右边小于pivot的数据，或者走到了最左边仍然没有找到比pivot小的数据</span></span><br><span class="line">            <span class="keyword">while</span>(rightpoint&gt;left &amp;&amp; array[--rightpoint]&gt;pivot);</span><br><span class="line">            <span class="comment">//左指针和右指针重叠或相交</span></span><br><span class="line">            <span class="keyword">if</span>(leftpoint &gt;= rightpoint)&#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//交换左边大的和右边小的数据</span></span><br><span class="line">                swap(leftpoint,rightpoint);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//返回分界点，即右边子数组中最左边的点</span></span><br><span class="line">        <span class="keyword">return</span> leftpoint;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 交换数据</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">swap</span><span class="params">(<span class="keyword">int</span> leftpoint,<span class="keyword">int</span> rightpoint)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> temp = array[leftpoint];</span><br><span class="line">        array[leftpoint] = array[rightpoint];</span><br><span class="line">        array[rightpoint] = temp;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] array = &#123;<span class="number">99</span>,<span class="number">78</span>,<span class="number">26</span>,<span class="number">17</span>,<span class="number">82</span>,<span class="number">36</span>,<span class="number">9</span>,<span class="number">81</span>,<span class="number">22</span>,<span class="number">100</span>,<span class="number">30</span>,<span class="number">20</span>,<span class="number">17</span>,<span class="number">85</span>&#125;;</span><br><span class="line">        QuickSort qs = <span class="keyword">new</span> QuickSort(array);</span><br><span class="line">        System.out.println(<span class="string">&quot;划分前的数据为：&quot;</span>);</span><br><span class="line">        qs.printArray();</span><br><span class="line">        <span class="keyword">int</span> bound = qs.partition(<span class="number">0</span>, array.length-<span class="number">1</span>, <span class="number">50</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;划分后的数据为：&quot;</span>);</span><br><span class="line">        qs.printArray();</span><br><span class="line">        System.out.println(<span class="string">&quot;划分的分界点为：&quot;</span> + array[bound] + <span class="string">&quot;，分界点的坐标为：&quot;</span> + bound);</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">堆排序是利用堆这种数据结构而设计的一种排序算法，堆排序是一种选择排序。堆是具有以下性质的完全二叉树：每个结点的值都大于或等于其左右孩子结点的值，称为大顶堆；或者每个结点的值都小于或等于其左右孩子结点的值，称为小顶堆。</span></span><br><span class="line"><span class="comment">它的基本思想是将待排序的序列构造成一个大顶堆（或小顶堆）。此时，整个序列的最大值就是堆顶的根节点，将其与堆数组的末尾元素交换，此时末尾元素就是最大值，然后将剩余的 n-1 个序列重新构造成一个最大堆，再将新的最大堆的顶与末尾元素交换，如此反复执行，便能得到一个有序序列了。</span></span><br><span class="line"><span class="comment">堆排序中重要的一个部分是不断调整堆使其满足最大堆的性质，即父节点都比子节点的值大。调整最大堆的算法如下所示，输入为一个数组A和一个下标i，它用来维护以下标i为根结点的子树最大堆的性质，通过让A[i]的值在最大堆中“逐级下降”，从而使得以下标i为结点的子树重新遵循最大堆的性质。</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">HeapSort</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">heapSort</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">        buildMaxHeap(arr);</span><br><span class="line">        <span class="keyword">int</span> heapSize = arr.length;</span><br><span class="line">        <span class="comment">//最大值的节点与最后一个节点交换位置</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = arr.length - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">            <span class="keyword">int</span> temp = arr[i];</span><br><span class="line">            arr[i] = arr[<span class="number">0</span>];</span><br><span class="line">            arr[<span class="number">0</span>] = temp;</span><br><span class="line">            <span class="comment">//最后一个节点为最大值后，再对前边节点进行堆排序，每交换出一个最大值，最大堆的大小减1</span></span><br><span class="line">            heapSize--;</span><br><span class="line">            maxHeapify(arr, <span class="number">0</span>, heapSize);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 4 3 9 5 10 2 6</span></span><br><span class="line"><span class="comment">     * 0 1 2 3 4  5 6</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     *       4</span></span><br><span class="line"><span class="comment">     *   3       9</span></span><br><span class="line"><span class="comment">     * 5   10  2   6 </span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> arr 待排序的数组</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> index 要进行调整的节点位置</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> heapSize 最大堆的大小</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">maxHeapify</span><span class="params">(<span class="keyword">int</span>[] arr, <span class="keyword">int</span> index, <span class="keyword">int</span> heapSize)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> leftIndex = <span class="number">2</span> * index + <span class="number">1</span>;<span class="comment">//左节点</span></span><br><span class="line">        <span class="keyword">int</span> rightIndex = <span class="number">2</span> * index + <span class="number">2</span>;</span><br><span class="line">        <span class="keyword">int</span> largeIndex;<span class="comment">//临时存储三个节点中最大的节点</span></span><br><span class="line">        <span class="keyword">if</span> (leftIndex &lt; heapSize &amp;&amp; arr[leftIndex] &gt; arr[index]) &#123;</span><br><span class="line">            largeIndex = leftIndex;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            largeIndex = index;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (rightIndex &lt; heapSize &amp;&amp; arr[rightIndex] &gt; arr[largeIndex]) &#123;</span><br><span class="line">            largeIndex = rightIndex;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (largeIndex != index) &#123;</span><br><span class="line">            <span class="comment">//与最大值的节点交换位置</span></span><br><span class="line">            <span class="keyword">int</span> temp = arr[largeIndex];</span><br><span class="line">            arr[largeIndex] = arr[index];</span><br><span class="line">            arr[index] = temp;</span><br><span class="line">            <span class="comment">//递归的方式对新的节点进行最大堆调整</span></span><br><span class="line">            maxHeapify(arr, largeIndex, heapSize);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//建立最大堆，遍历其中的非叶子节点，调整位置，达到最大堆的特点，即父节点的值大于子节点的值</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">buildMaxHeap</span><span class="params">(<span class="keyword">int</span>[] arr)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> heapSize = arr.length;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = (arr.length - <span class="number">2</span>) / <span class="number">2</span>; i &gt; -<span class="number">1</span>; i--) &#123;</span><br><span class="line">            maxHeapify(arr, i, heapSize);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] test = &#123;<span class="number">4</span>,<span class="number">3</span>,<span class="number">9</span>,<span class="number">5</span>,<span class="number">10</span>,<span class="number">2</span>,<span class="number">6</span>&#125;;</span><br><span class="line">        heapSort(test);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;test.length; i++)&#123;</span><br><span class="line">            System.out.print(test[i] + <span class="string">&quot; &quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
 
 <h2 id="linux"><a href="#linux" class="headerlink" title="linux"></a>linux</h2><ul>
@@ -855,6 +925,71 @@
 <li><p>cpu详细信息：#cat /proc/cpuinfo</p>
 </li>
 </ul>
+<h2 id="前端网页等知识"><a href="#前端网页等知识" class="headerlink" title="前端网页等知识"></a>前端网页等知识</h2><h3 id="输入url到页面加载"><a href="#输入url到页面加载" class="headerlink" title="输入url到页面加载"></a>输入url到页面加载</h3><p>1、输入地址</p>
+<p>2、浏览器查找域名的 IP 地址　　</p>
+<p>3、浏览器向 web 服务器发送一个 HTTP 请求</p>
+<p>4、服务器的永久重定向响应</p>
+<p>5、浏览器跟踪重定向地址</p>
+<p>6、服务器处理请求</p>
+<p>7、服务器返回一个 HTTP 响应　</p>
+<p>8、浏览器显示 HTML</p>
+<p>9、浏览器发送请求获取嵌入在 HTML 中的资源（如CSS、JS、图片、音频、视频等）</p>
+<p><strong>查找ip过程</strong></p>
+<p>请求一旦发起，浏览器首先要做的事情就是解析这个域名，一般来说，浏览器会首先查看本地硬盘的 hosts 文件，看看其中有没有和这个域名对应的规则，如果有的话就直接使用 hosts 文件里面的 ip 地址。</p>
+<p>如果在本地的 hosts 文件没有能够找到对应的 ip 地址，浏览器会发出一个 DNS请求到本地的DNS服务器 ，本地DNS服务器一般都是由你的网络接入服务器商提供，比如中国电信、中国移动。</p>
+<p>你输入的网址的DNS请求到达本地DNS服务器之后，本地DNS服务器会首先查询它的缓存记录，如果缓存中有此条记录，就直接返回结果，此过程是递归的方式进行查询。如果没有，本地DNS服务器还要向DNS根服务器进行查询。</p>
+<p>根DNS服务器没有记录具体的域名和IP地址的对应关系，而是告诉本地DNS服务器，你可以到域服务器上去继续查询，并给出域服务器的地址，这个过程是迭代的过程。</p>
+<p>本地DNS服务器继续向域服务器发出请求，在这个例子中，请求的对象是.com域服务器， .com域服务器收到请求之后，也不会直接返回域名和IP地址的对应关系，而是告诉本地DNS服务器请求的域名的解析服务器地址。</p>
+<p>最后，本地DNS服务器向域名的解析服务器发出请求，这时就能收到一个域名和IP地址对应关系，本地DNS服务器不仅要把IP地址返回给用户电脑，还会把这个对应关系保存在缓存中，以备下次别的用户查询时，可以直接返回结果，加快网络访问。</p>
+<h3 id="Cookie-Session区别"><a href="#Cookie-Session区别" class="headerlink" title="Cookie,Session区别"></a>Cookie,Session区别</h3><h4 id="存储位置"><a href="#存储位置" class="headerlink" title="存储位置"></a>存储位置</h4><ul>
+<li>Session: 服务端</li>
+<li>Cookie:客户端</li>
+</ul>
+<h4 id="存储的数据格式"><a href="#存储的数据格式" class="headerlink" title="存储的数据格式"></a>存储的数据格式</h4><ul>
+<li>Session:value为对象，Object为类型</li>
+<li>Cookie:value为字符串，如果我们存储一个对象，这个时候，就需要将对象转换为JSON</li>
+</ul>
+<h4 id="存储的数据大小"><a href="#存储的数据大小" class="headerlink" title="存储的数据大小"></a>存储的数据大小</h4><ul>
+<li>Session:受服务器内存控制</li>
+<li>Cookie：一般来说，最大为4k</li>
+</ul>
+<h4 id="声明周期"><a href="#声明周期" class="headerlink" title="声明周期"></a>声明周期</h4><ul>
+<li>Session:服务器段控制，默认是30分钟，注意当用户关闭了浏览器，session并不会消失</li>
+<li>Cookie:客户端控制，其实是客户端的一个文件，分两种情况<ol>
+<li>默认的事会话级的cookie,这种随着浏览器的关闭而消失，比如保存sessionid的cookie</li>
+<li>非会话级的cookie，通过设置有效期来控制，比如这种7天免登录这种功能，就需要设置有效期，setMaxAge</li>
+</ol>
+</li>
+</ul>
+<h4 id="二者联系"><a href="#二者联系" class="headerlink" title="二者联系"></a>二者联系</h4><p>http协议本身是一个无状态协议，服务器为了记住用户的状态，我们采用session的机制，而session机制背后的原理是，服务器会自动生成会话级的cookie来保存session的标识</p>
+<p>session.setAttribute()  get</p>
+<h3 id="转发重定向区别"><a href="#转发重定向区别" class="headerlink" title="转发重定向区别"></a>转发重定向区别</h3><h4 id="转发"><a href="#转发" class="headerlink" title="转发"></a>转发</h4><p>发生在服务器内部的跳转，所以对于客户端来说，至始至终就是一个请求，所以这期间，保存在request对象中的数据可以进行传递</p>
+<h4 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h4><p>发生在客户端的跳转，所以是多次请求，这个时候，如果需要在多次请求之间传递数据，就需要用session对象</p>
+<p>在后台程序，想要跳转到百度应该使用重定向，因为转发的范围限制在服务器内部</p>
+<h3 id="Restful"><a href="#Restful" class="headerlink" title="Restful"></a>Restful</h3><h3 id="RestFul-风格"><a href="#RestFul-风格" class="headerlink" title="RestFul 风格"></a>RestFul 风格</h3><p>概念 Restful就是一个资源定位及资源操作的风格。不是标准也不是协议，只是一种风格。基于这个风格设计的软件可以更简洁，更有层次，更易于实现缓存等机制。<br>功能 资源：互联网所有的事物都可以被抽象为资源 资源操作：使用POST、DELETE、PUT、GET，使用不同方法对资源进行操作。 分别对应 添加、 删除、修改、查询。<br>传统方式操作资源 ：通过不同的参数来实现不同的效果！方法单一，post 和 get</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/item/queryItem.action?id=1">http://127.0.0.1/item/queryItem.action?id=1</a> 查询,GET</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/item/saveItem.action">http://127.0.0.1/item/saveItem.action</a> 新增,POST</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/item/updateItem.action">http://127.0.0.1/item/updateItem.action</a> 更新,POST</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/item/deleteItem.action?id=1">http://127.0.0.1/item/deleteItem.action?id=1</a> 删除,GET或POST<br>使用RESTful操作资源 ： 可以通过不同的请求方式来实现不同的效果！如下：请求地址一样，但是功能可以不同！<br><a target="_blank" rel="noopener" href="http://127.0.0.1/item/1">http://127.0.0.1/item/1</a> 查询,GET</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/item">http://127.0.0.1/item</a> 新增,POST</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/item">http://127.0.0.1/item</a> 更新,PUT</p>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/item/1">http://127.0.0.1/item/1</a> 删除,DELETE</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RestFulController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//原来的： http://localhost:8080/add?a=1&amp;b=2</span></span><br><span class="line">    <span class="comment">//RestFul: http://localhost:8080/add/a/b</span></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/add&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  String <span class="title">test1</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b, Model model)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = a+b;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;msg&quot;</span>,<span class="string">&quot;结果为&quot;</span>+res);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;test&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//@RequestMapping(value = &quot;/add/&#123;a&#125;/&#123;b&#125;&quot;,method = RequestMethod.GET)</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/add/&#123;a&#125;/&#123;b&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  String <span class="title">test2</span><span class="params">(<span class="meta">@PathVariable</span> <span class="keyword">int</span> a,<span class="meta">@PathVariable</span> <span class="keyword">int</span> b, Model model)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = a+b;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;msg&quot;</span>,<span class="string">&quot;结果为&quot;</span>+res);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;test&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>思考：使用路径变量的好处？<br>使路径变得更加简洁；<br>获得参数更加方便，框架会自动进行类型转换。<br>通过路径变量的类型可以约束访问参数，如果类型不一样，则访问不到对应的请求方法，如这<br>里访问是的路径是/commit/1/a，则路径与方法不匹配，而不会是参数转换失败。</p>
+<p>使用method属性指定请求类型<br>用于约束请求的类型，可以收窄请求范围。指定请求谓词的类型如GET, POST, HEAD, OPTIONS, PUT,PATCH, DELETE, TRACE等</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//映射访问路径,必须是POST请求</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/hello&quot;,method = &#123;RequestMethod.POST&#125;)</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">index2</span><span class="params">(Model model)</span></span>&#123;</span><br><span class="line">	model.addAttribute(<span class="string">&quot;msg&quot;</span>, <span class="string">&quot;hello!&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;test&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>小结：<br>Spring MVC 的 @RequestMapping 注解能够处理 HTTP 请求的方法, 比如 GET, PUT, POST, DELETE 以及 PATCH。<br>所有的地址栏请求默认都会是 HTTP GET 类型的。<br>方法级别的注解变体有如下几个： 组合注解</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span></span><br><span class="line"><span class="meta">@PostMapping</span></span><br><span class="line"><span class="meta">@PutMapping</span></span><br><span class="line"><span class="meta">@DeleteMapping</span></span><br><span class="line"><span class="meta">@PatchMapping</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p>@GetMapping 是一个组合注解<br>它所扮演的是 @RequestMapping(method =RequestMethod.GET) 的一个快捷方式。<br>平时使用的会比较多！</p>
 
       
     </div>
@@ -897,10 +1032,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-10-23 12:39:54 / 修改时间：22:00:32" itemprop="dateCreated datePublished" datetime="2020-10-23T12:39:54+08:00">2020-10-23</time>
+              <time title="创建时间：2020-10-23 12:39:54" itemprop="dateCreated datePublished" datetime="2020-10-23T12:39:54+08:00">2020-10-23</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-12 13:51:34" itemprop="dateModified" datetime="2020-12-12T13:51:34+08:00">2020-12-12</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -944,6 +1085,45 @@
 <li>支持事物</li>
 <li>。。。。。</li>
 </ol>
+<h2 id="Redis网络模型"><a href="#Redis网络模型" class="headerlink" title="Redis网络模型"></a>Redis网络模型</h2><h3 id="单线程模型原因"><a href="#单线程模型原因" class="headerlink" title="单线程模型原因"></a>单线程模型原因</h3><ol>
+<li><p>使用单线程模型能带来更好的可维护性，方便开发和调试；</p>
+</li>
+<li><p>使用单线程模型也能并发的处理客户端的请求；</p>
+</li>
+<li><p>Redis 服务中运行的绝大多数操作的性能瓶颈都不是 CPU；</p>
+</li>
+<li><p>可维护性</p>
+</li>
+<li><p>并发处理</p>
+<p>使用单线程模型也并不意味着程序不能并发的处理任务，Redis 虽然使用单线程模型处理用户的请求，但是它却使用 I/O 多路复用机制<strong>并发</strong>处理来自客户端的多个连接，同时等待多个连接发送的请求。</p>
+<p>在 I/O 多路复用模型中，最重要的函数调用就是 <code>select</code> 以及类似函数，该方法的能够同时监控多个文件描述符（也就是客户端的连接）的可读可写情况，当其中的某些文件描述符可读或者可写时，<code>select</code> 方法就会返回可读以及可写的文件描述符个数。</p>
+<p>使用 I/O 多路复用技术能够极大地减少系统的开销，系统不再需要额外创建和维护进程和线程来监听来自客户端的大量连接，减少了服务器的开发成本和维护成本。</p>
+</li>
+</ol>
+<p>Redis6.0 引入多线程主要是为了提高网络 IO 读写性能，因为这个算是 Redis 中的一个性能瓶颈（Redis 的瓶颈主要受限于内存和网络）。</p>
+<p>虽然，Redis6.0 引入了多线程，但是 Redis 的多线程只是在网络数据的读写这类耗时操作上使用了， 执行命令仍然是单线程顺序执行。因此，你也不需要担心线程安全问题。</p>
+<p>Redis6.0 的多线程默认是禁用的，只使用主线程。如需开启需要修改 redis 配置文件 redis.conf ：</p>
+<p>开启多线程后，还需要设置线程数，否则是不生效的。同样需要修改 redis 配置文件 redis.conf :</p>
+<p><strong>流程简述如下：</strong></p>
+<ul>
+<li>主线程负责接收建立连接请求，获取 Socket 放入全局等待读处理队列。</li>
+<li>主线程处理完读事件之后，通过 RR（Round Robin）将这些连接分配给这些 IO 线程。</li>
+<li>主线程阻塞等待 IO 线程读取 Socket 完毕。</li>
+<li>主线程通过单线程的方式执行请求命令，请求数据读取并解析完成，但并不执行。</li>
+<li>主线程阻塞等待 IO 线程将数据回写 Socket 完毕。</li>
+<li>解除绑定，清空等待队列。</li>
+</ul>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>我发现缓存雪崩这名字起的有点意思，哈哈。</p>
+<p>实际上，缓存雪崩描述的就是这样一个简单的场景：缓存在同一时间大面积的失效，后面的请求都直接落到了数据库上，造成数据库短时间内承受大量请求。这就好比雪崩一样，摧枯拉朽之势，数据库的压力可想而知，可能直接就被这么多请求弄宕机了。</p>
+<p>举个例子：系统的缓存模块出了问题比如宕机导致不可用。造成系统的所有访问，都要走数据库。</p>
+<p>还有一种缓存雪崩的场景是：有一些被大量访问数据（热点缓存）在某一时刻大面积失效，导致对应的请求直接落到了数据库上。这样的情况，有下面几种解决办法：</p>
+<p>举个例子 ：秒杀开始 12 个小时之前，我们统一存放了一批商品到 Redis 中，设置的缓存过期时间也是 12 个小时，那么秒杀开始的时候，这些秒杀的商品的访问直接就失效了。导致的情况就是，相应的请求直接就落到了数据库上，就像雪崩一样可怕。</p>
+<h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>针对 Redis 服务不可用的情况：</p>
+<p>采用 Redis 集群，避免单机出现问题整个缓存服务都没办法使用。</p>
+<p>限流，避免同时处理大量的请求。</p>
+<p>针对热点缓存失效的情况：</p>
+<p>设置不同的失效时间比如随机设置缓存的失效时间。</p>
+<p>缓存永不失效。</p>
 <h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>安装简单 不建议使用windows 推荐使用linux</p>
 <p>127.0.0.1:6379&gt; ping<br>PONG<br>127.0.0.1:6379&gt; set name bubu<br>OK<br>127.0.0.1:6379&gt; get name<br>“bubu”<br>127.0.0.1:6379&gt;</p>
 <p>redis-benchmark 性能测试机器</p>
@@ -953,10 +1133,102 @@
 
 <p>redis是单线程的</p>
 <p>CPU不是其性能瓶颈 Redis的瓶颈是根据机器的内存和网络带宽。</p>
-<h2 id="五大数据类型"><a href="#五大数据类型" class="headerlink" title="五大数据类型"></a>五大数据类型</h2><p>Redis是一个开源（BSD许可），内存中的数据结构存储，用作数据库、缓存和消息代理。它支持数据结构，如字符串、哈希、列表、集合、带范围查询的排序集、位图、超日志、带有radius查询和流的地理空间索引。Redis内置了复制、Lua脚本、LRU逐出、事务和不同级别的磁盘持久性，并通过Redis Sentinel和Redis Cluster自动分区来提供高可用性。</p>
+<h2 id="底层数据结构"><a href="#底层数据结构" class="headerlink" title="底层数据结构"></a>底层数据结构</h2><p>OBJECT ENCODING key 显示数据结构 </p>
+<h3 id="简单动态字符串"><a href="#简单动态字符串" class="headerlink" title="简单动态字符串"></a>简单动态字符串</h3><p>redis是用c语言实现的，但是字符串是自己构建了一种名为简单动态字符串 SDS （len,free,char buf[])</p>
+<h3 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h3><p>　　Redis链表特性：</p>
+<p>　　①、双端：链表具有前置节点和后置节点的引用，获取这两个节点时间复杂度都为O(1)。</p>
+<p>　　②、无环：表头节点的 prev 指针和表尾节点的 next 指针都指向 NULL,对链表的访问都是以 NULL 结束。　　</p>
+<p>　　③、带链表长度计数器：通过 len 属性获取链表长度的时间复杂度为 O(1)。</p>
+<p>　　④、多态：链表节点使用 void* 指针来保存节点值，可以保存各种不同类型的值。</p>
+<h3 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h3><p>字典又称为符号表或者关联数组、或映射（map），是一种用于保存键值对的抽象数据结构。字典中的每一个键 key 都是唯一的，通过 key 可以对值来进行查找或修改。C 语言中没有内置这种数据结构的实现，所以字典依然是 Redis自己构建的。</p>
+<p>Redis 的字典使用哈希表作为底层实现</p>
+<ul>
+<li>redis哈希表结构 使用<strong>链地址方法来解决键冲突</strong>的，冲突后追加到链表后面。</li>
+<li>redis中有两个哈希表，其中一个时正常使用的 <strong>ht[0]**，另一个是在扩容或者收缩时才需要的</strong>ht[1]，一般为空**</li>
+<li>redis中的哈希表也是有 负载因子的<br><strong>负载因子 = 哈希表已保存节点数量 / 哈希表大小（桶的数量）</strong><br>load factor = ht[0].used / ht[0].size</li>
+<li>redis<strong>扩容时机</strong>：<br>1.服务器未执行BGSAVE / BAREWRITEAOF 时，<strong>哈希表的负载因子 &gt;= 1</strong><br>2 .服务器正在执行BGSAVE / BAREWRITEAOF 时，<strong>哈希表的负载因子 &gt;= 5</strong><br>3 . 当负载因子小于 0.1时，执行收缩</li>
+<li>redis扩容，收缩大小<br><strong>扩容：\</strong>ht[1]大小为 &gt;= ht[0].used * 2 的 2^n****<br>收缩：ht[1]大小为 &gt;= ht[0].used 的 2^n</li>
+<li>lazy rehashing：在每次对dict进行操作的时候执行一个slot的rehash</li>
+<li>active rehashing：每100ms里面使用1ms时间进行rehash。</li>
+</ul>
+<h4 id="扩容步骤"><a href="#扩容步骤" class="headerlink" title="扩容步骤"></a>扩容步骤</h4><ol>
+<li>先将保存在ht[0]中的所有键值对 rehash到ht[1]中：rehash就是重新计算key的hash值和索引值，然后将键值对放置到ht[1]哈希表的指定位置上</li>
+<li>当ht[0]包含的所有键值对都迁移到了ht[1]后（ht[0]变为空表），释放ht[0]，将ht[1]设置为ht[0]，<strong>并将ht[1]新建一个空白哈希表</strong>，为下一次rehash做准备。</li>
+</ol>
+<h4 id="渐进式rehash"><a href="#渐进式rehash" class="headerlink" title="渐进式rehash"></a>渐进式rehash</h4><p>-如果哈希表中存在这几百万，几千万，几亿的数据时，那么<strong>一次性将这些键值对全部rehash到ht[1]的话，会导致一段事件内redis服务器停止对外服务</strong></p>
+<p>步骤：</p>
+<ol>
+<li>为ht[1]分配空间，让字典同时拥有两个哈希表</li>
+<li>在字典中维持一个<strong>rehashidx变量设为0</strong>，表示rehash正式开始</li>
+<li>在rehash期间，每次对字典进行<strong>添加，删除，查找或者更新</strong>操作时，程序除了执行指定的操作外，<strong>还会顺带将将ht[0]哈希表在rehashidx索引上的所有键值对rehash到ht[1]**，</strong>当rehash工作完成后，程序将rehashidx属性+1**</li>
+<li>随着字典操作不断执行，最终在某个时间点上，ht[0]的所有键值对都会rehash至ht[1]，这时程序会将rehash属性的值设为-1，表示rehash操作已完成</li>
+</ol>
+<p>好处：</p>
+<p>渐进式rehash的好处在于他采取分而治之的方式，<strong>将rehash键值对所需要的计算工作均摊到对字典的每个添加、删除、查找和更新操作上</strong>，从而避免集中式rehash而带来的庞大的计算量。</p>
+<p>rehash期间的操作：</p>
+<ol>
+<li>渐进式rehash期间，字典的<strong>删除、查找、更新等操作会在两个哈希表上进行</strong>。例如：要在字典里面找一个key，<strong>程序会先在ht[0]里进行查找，如果没找到，就会继续到ht[1]中进行查找</strong></li>
+<li>渐进式rehash期间，<strong>新添加到字典的键值对一律会保存到ht[1]\</strong>里，ht[0]则不会进行任何添加操作，这保证了**ht[0]包含的键值对数量只减不增**，并伴随这rehash操作的执行，最终变成空表</li>
+</ol>
+<h3 id="跳跃表-skiplist"><a href="#跳跃表-skiplist" class="headerlink" title="跳跃表 skiplist"></a>跳跃表 skiplist</h3><p>跳跃表（skiplist）是一种有序数据结构，它通过在每个节点中维持多个指向其它节点的指针，从而达到快速访问节点的目的。具有如下性质：</p>
+<p>　　1、由很多层结构组成；</p>
+<p>　　2、每一层都是一个有序的链表，排列顺序为由高层到底层，都至少包含两个链表节点，分别是前面的head节点和后面的nil节点；</p>
+<p>　　3、最底层的链表包含了所有的元素；</p>
+<p>　　4、如果一个元素出现在某一层的链表中，那么在该层之下的链表也全都会出现（上一层的元素是当前层的元素的子集）；</p>
+<p>　　5、链表中的每个节点都包含两个指针，一个指向同一层的下一个链表节点，另一个指向下一层的同一个链表节点；</p>
+<p>​        </p>
+<p>​        ①、搜索：从最高层的链表节点开始，如果比当前节点要大和比当前层的下一个节点要小，那么则往下找，也就是和当前层的下一层的节点的下一个节点进行比较，以此类推，一直找到最底层的最后一个节点，如果找到则返回，反之则返回空。</p>
+<p>　　②、插入：首先确定插入的层数，有一种方法是假设抛一枚硬币，如果是正面就累加，直到遇见反面为止，最后记录正面的次数作为插入的层数。当确定插入的层数k后，则需要将新元素插入到从底层到k层。</p>
+<p>　　③、删除：在各个层中找到包含指定值的节点，然后将节点从链表中删除即可，如果删除以后只剩下头尾两个节点，则删除这一层。</p>
+<p><strong>与红黑树区别</strong></p>
+<p>1.skiplist的复杂度和红黑树一样，而且实现起来更简单。<br>2.在并发环境下skiplist有另外一个优势，红黑树在插入和删除的时候可能需要做一些rebalance的操作，这样的操作可能会涉及到整个树的其他部分，而skiplist的操作显然更加局部性一些，锁需要盯住的节点更少，因此在这样的情况下性能好一些。</p>
+<p>总的来说，实现简单，不易出bug，容易维护</p>
+<h3 id="整数集合-intset"><a href="#整数集合-intset" class="headerlink" title="整数集合 intset"></a>整数集合 intset</h3><p>整数集合（intset）是Redis用于保存整数值的集合抽象数据类型，它可以保存类型为int16_t、int32_t 或者int64_t 的整数值，并且保证集合中不会出现重复元素</p>
+<p><strong>①、升级</strong></p>
+<p>　　当我们新增的元素类型比原集合元素类型的长度要大时，需要对整数集合进行升级，才能将新元素放入整数集合中。具体步骤：</p>
+<p>　　1、根据新元素类型，扩展整数集合底层数组的大小，并为新元素分配空间。</p>
+<p>　　2、将底层数组现有的所有元素都转成与新元素相同类型的元素，并将转换后的元素放到正确的位置，放置过程中，维持整个元素顺序都是有序的。</p>
+<p>　　3、将新元素添加到整数集合中（保证有序）。</p>
+<p>　　升级能极大地节省内存。</p>
+<h3 id="压缩列表-ziplist"><a href="#压缩列表-ziplist" class="headerlink" title="压缩列表 ziplist"></a>压缩列表 ziplist</h3><p>压缩列表（ziplist）是Redis为了节省内存而开发的，是由一系列特殊编码的连续内存块组成的顺序型数据结构，一个压缩列表可以包含任意多个节点（entry），每个节点可以保存一个字节数组或者一个整数值。</p>
+<p>压缩列表的原理：压缩列表并不是对数据利用某种算法进行压缩，而是将数据按照一定规则编码在一块连续的内存区域，目的是节省内存</p>
+<p>压缩列表的各个组成部分 </p>
+<ul>
+<li><p>zlbytes(4字节)：记录整个压缩列表占用的内存字节数</p>
+</li>
+<li><p>zltail（4字节）:记录压缩列表表尾结点距离起始地址有多少字节</p>
+</li>
+<li><p>zllen(2字节)：包含的节点数量，当这个值大于uint16_MAX，真实数量则需要遍历</p>
+</li>
+<li><p>entryx：列表节点</p>
+</li>
+<li><p>zlend(1)：用于标记压缩列表的末端</p>
+<p>entryx:</p>
+<p>①、previous_entry_ength：记录压缩列表前一个字节的长度。previous_entry_ength的长度可能是1个字节或者是5个字节，如果上一个节点的长度小于254，则该节点只需要一个字节就可以表示前一个节点的长度了，如果前一个节点的长度大于等于254，则previous length的第一个字节为254，后面用四个字节表示当前节点前一个节点的长度。利用此原理即当前节点位置减去上一个节点的长度即得到上一个节点的起始位置，压缩列表可以从尾部向头部遍历。这么做很有效地减少了内存的浪费。</p>
+<p>②、encoding：节点的encoding保存的是节点的content的内容类型以及长度，encoding类型一共有两种，一种字节数组一种是整数，encoding区域长度为1字节、2字节或者5字节长。</p>
+<p>③、content：content区域用于保存节点的内容，节点内容类型和长度由encoding决定。</p>
+</li>
+</ul>
+<p>可以看到，ziplist采用了一段连续的内存来存储数据，相比hashtable减少了内存碎片，和指针的内存占用。而且当节点较少时，ziplist更容易被加载到CPU缓存中。</p>
+<h2 id="五大数据类型及其实现原理"><a href="#五大数据类型及其实现原理" class="headerlink" title="五大数据类型及其实现原理"></a>五大数据类型及其实现原理</h2><p>Redis是一个开源（BSD许可），内存中的数据结构存储，用作数据库、缓存和消息代理。它支持数据结构，如字符串、哈希、列表、集合、带范围查询的排序集、位图、超日志、带有radius查询和流的地理空间索引。Redis内置了复制、Lua脚本、LRU逐出、事务和不同级别的磁盘持久性，并通过Redis Sentinel和Redis Cluster自动分区来提供高可用性。</p>
+<h3 id="对象的类型与编码"><a href="#对象的类型与编码" class="headerlink" title="对象的类型与编码"></a>对象的类型与编码</h3><p>Redis使用前面说的五大数据类型来表示键和值，每次在Redis数据库中创建一个键值对时，至少会创建两个对象，一个是键对象，一个是值对象，而Redis中的每个对象都是由 redisObject 结构来表示：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">redisObject</span>&#123;</span></span><br><span class="line">     <span class="comment">//类型</span></span><br><span class="line">     <span class="keyword">unsigned</span> type:<span class="number">4</span>;</span><br><span class="line">     <span class="comment">//编码</span></span><br><span class="line">     <span class="keyword">unsigned</span> encoding:<span class="number">4</span>;</span><br><span class="line">     <span class="comment">//指向底层数据结构的指针</span></span><br><span class="line">     <span class="keyword">void</span> *ptr;</span><br><span class="line">     <span class="comment">//引用计数</span></span><br><span class="line">     <span class="keyword">int</span> refcount;</span><br><span class="line">     <span class="comment">//记录最后一次被程序访问的时间</span></span><br><span class="line">     <span class="keyword">unsigned</span> lru:<span class="number">22</span>;</span><br><span class="line"> </span><br><span class="line">&#125;robj</span><br></pre></td></tr></table></figure>
+
+
+
 <h3 id="Redis-Key"><a href="#Redis-Key" class="headerlink" title="Redis-Key"></a>Redis-Key</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> name yangyang</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> age 7</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) <span class="string">&quot;name&quot;</span></span><br><span class="line">2) <span class="string">&quot;age&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; EXISTS age <span class="comment">#//判断是否存在</span></span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; EXPIRE name 5 <span class="comment">#//5 秒后过期</span></span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; keys *</span><br><span class="line">1) <span class="string">&quot;age&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; <span class="built_in">type</span> age <span class="comment">#//查看类型</span></span><br><span class="line">string</span><br></pre></td></tr></table></figure>
 
-<h3 id="String"><a href="#String" class="headerlink" title="String"></a>String</h3><p>最常用的类型 字符串类型</p>
+<h3 id="String"><a href="#String" class="headerlink" title="String"></a>String</h3><p><strong>编码</strong></p>
+<p>字符串对象的编码可以是int，raw或者embstr。</p>
+<p>1、int 编码：保存的是可以用 long 类型表示的整数值。</p>
+<p>2、raw 编码：保存长度大于44字节的字符串（redis3.2版本之前是39字节，之后是44字节）。</p>
+<p>3、embstr 编码：保存长度小于44字节的字符串（redis3.2版本之前是39字节，之后是44字节）。</p>
+<p>embstr与raw都使用redisObject和sds保存数据，区别在于，embstr的使用只分配一次内存空间（因此redisObject和sds是连续的），而raw需要分配两次内存空间（分别为redisObject和sds分配空间）。因此与raw相比，embstr的好处在于创建时少分配一次空间，删除时少释放一次空间，以及对象的所有数据连在一起，寻找方便。而embstr的坏处也很明显，如果字符串的长度增加需要重新分配内存时，整个redisObject和sds都需要重新分配空间，因此redis中的embstr实现为只读。</p>
+<p>　　<strong>ps：Redis中对于浮点数类型也是作为字符串保存的，在需要的时候再将其转换成浮点数类型。</strong></p>
+<p><strong>编码的转换</strong></p>
+<p>当 int 编码保存的值不再是整数，或大小超过了long的范围时，自动转化为raw。</p>
+<p>对于 embstr 编码，由于 Redis 没有对其编写任何的修改程序（embstr 是只读的），在对embstr对象进行修改时，都会先转化为raw再进行修改，因此，只要是修改embstr对象，修改后的对象一定是raw的，无论是否达到了44个字节。</p>
+<p>最常用的类型 字符串类型</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> key1 v1 <span class="comment">#//设置值</span></span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; APPEND key1 <span class="string">&quot;hello&quot;</span> <span class="comment">#// 追加值，如果不存在就新建</span></span><br><span class="line">(<span class="built_in">integer</span>) 7</span><br><span class="line">127.0.0.1:6379&gt; get key1</span><br><span class="line"><span class="string">&quot;v1hello&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; STRLEN key1  <span class="comment">#//获取key的长度</span></span><br><span class="line">(<span class="built_in">integer</span>) 7</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; <span class="built_in">set</span> views 0 </span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; get views</span><br><span class="line"><span class="string">&quot;0&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; incr views <span class="comment">#//自增1</span></span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; get views</span><br><span class="line"><span class="string">&quot;1&quot;</span> </span><br><span class="line">127.0.0.1:6379&gt; decr views <span class="comment">#//自减1</span></span><br><span class="line">(<span class="built_in">integer</span>) 0</span><br><span class="line">127.0.0.1:6379&gt; incrby views 10  <span class="comment">#//步长10</span></span><br><span class="line">(<span class="built_in">integer</span>) 10</span><br><span class="line">127.0.0.1:6379&gt; incrby views 10</span><br><span class="line">(<span class="built_in">integer</span>) 20</span><br><span class="line">127.0.0.1:6379&gt; decrby views 5</span><br><span class="line">(<span class="built_in">integer</span>) 15</span><br></pre></td></tr></table></figure>
@@ -971,29 +1243,69 @@
 <li>粉丝数</li>
 <li>对象缓存存储</li>
 </ul>
-<h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><p>基本的数据类型</p>
+<h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><p>基本的数据类型,list 列表，它是简单的字符串列表，按照插入顺序排序，你可以添加一个元素到列表的头部（左边）或者尾部（右边），它的底层实际上是个链表结构。</p>
 <p>redis中可以设计为队列 栈 </p>
+<p><strong>编码</strong></p>
+<p>列表对象的编码可以是 ziplist(压缩列表) 和 linkedlist(双端链表)。</p>
+<p>当同时满足下面两个条件时，使用ziplist（压缩列表）编码：</p>
+<p>　　1、列表保存元素个数小于512个</p>
+<p>　　2、每个元素长度小于64字节</p>
+<p>　　不能满足这两个条件的时候使用 linkedlist 编码。</p>
 <p>所有list命令以L开头</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; lpush list one <span class="comment">#将值插入到列表的头部（左边）</span></span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; lpush list two</span><br><span class="line">(<span class="built_in">integer</span>) 2</span><br><span class="line">127.0.0.1:6379&gt; lpush list three</span><br><span class="line">(<span class="built_in">integer</span>) 3</span><br><span class="line">127.0.0.1:6379&gt; lrange list 0 -1</span><br><span class="line">1) <span class="string">&quot;three&quot;</span></span><br><span class="line">2) <span class="string">&quot;two&quot;</span></span><br><span class="line">3) <span class="string">&quot;one&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; lrange list 0 1</span><br><span class="line">1) <span class="string">&quot;three&quot;</span></span><br><span class="line">2) <span class="string">&quot;two&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; rpush list zero <span class="comment">#将值插入到列表的尾部（右边）</span></span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br><span class="line">127.0.0.1:6379&gt; lrange list 0 -1</span><br><span class="line">1) <span class="string">&quot;three&quot;</span></span><br><span class="line">2) <span class="string">&quot;two&quot;</span></span><br><span class="line">3) <span class="string">&quot;one&quot;</span></span><br><span class="line">4) <span class="string">&quot;zero&quot;</span></span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; lpop list</span><br><span class="line"><span class="string">&quot;three&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; lrange list 0 -1</span><br><span class="line">1) <span class="string">&quot;two&quot;</span></span><br><span class="line">2) <span class="string">&quot;one&quot;</span></span><br><span class="line">3) <span class="string">&quot;zero&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; rpop list</span><br><span class="line"><span class="string">&quot;zero&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; lrange list 0 -1</span><br><span class="line">1) <span class="string">&quot;two&quot;</span></span><br><span class="line">2) <span class="string">&quot;one&quot;</span></span><br><span class="line"><span class="comment">#lindex</span></span><br><span class="line">127.0.0.1:6379&gt; lindex list 1</span><br><span class="line"><span class="string">&quot;one&quot;</span></span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; llen list</span><br><span class="line">(<span class="built_in">integer</span>) 5</span><br><span class="line"></span><br><span class="line"><span class="comment">#移除指定的值 移除1 个2 可以移除多个相同的</span></span><br><span class="line">lrem list 1 two</span><br><span class="line"></span><br><span class="line"><span class="comment">#trim 修建  通过下标截取指定长度 list会改变</span></span><br><span class="line">127.0.0.1:6379&gt; ltrim list 1 4</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; lrange list 0 -1 </span><br><span class="line">1) <span class="string">&quot;six&quot;</span></span><br><span class="line">2) <span class="string">&quot;five&quot;</span></span><br><span class="line">3) <span class="string">&quot;four&quot;</span></span><br><span class="line">4) <span class="string">&quot;three&quot;</span></span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; rpoplpush list mylist</span><br><span class="line"><span class="string">&quot;three&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; lrange mylist 0 -1</span><br><span class="line">1) <span class="string">&quot;three&quot;</span></span><br><span class="line">2) <span class="string">&quot;hello&quot;</span></span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; lset mylist 1 hello1</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; lrange mylist 0 -1</span><br><span class="line">1) <span class="string">&quot;three&quot;</span></span><br><span class="line">2) <span class="string">&quot;hello1&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; lset mylist 2 hello2</span><br><span class="line">(error) ERR index out of range</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; linsert mylist before three hello0</span><br><span class="line">(<span class="built_in">integer</span>) 3</span><br><span class="line">127.0.0.1:6379&gt; lrange mylist 0 -1</span><br><span class="line">1) <span class="string">&quot;hello0&quot;</span></span><br><span class="line">2) <span class="string">&quot;three&quot;</span></span><br><span class="line">3) <span class="string">&quot;hello1&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; linsert mylist after hello1 hello2</span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br><span class="line">127.0.0.1:6379&gt; lrange mylist 0 -1</span><br><span class="line">1) <span class="string">&quot;hello0&quot;</span></span><br><span class="line">2) <span class="string">&quot;three&quot;</span></span><br><span class="line">3) <span class="string">&quot;hello1&quot;</span></span><br><span class="line">4) <span class="string">&quot;hello2&quot;</span></span><br></pre></td></tr></table></figure>
 
 
 
-<h3 id="Set-集合"><a href="#Set-集合" class="headerlink" title="Set(集合)"></a>Set(集合)</h3><p>set中的值是不能重复的 无序不重复集合</p>
+<h3 id="Set-集合"><a href="#Set-集合" class="headerlink" title="Set(集合)"></a>Set(集合)</h3><p>集合对象 set 是 string 类型（整数也会转换成string类型进行存储）的无序集合。注意集合和列表的区别：集合中的元素是无序的，因此不能通过索引来操作元素；集合中的元素不能有重复</p>
+<p><strong>编码</strong></p>
+<p>集合对象的编码可以是 intset 或者 hashtable。</p>
+<p>intset 编码的集合对象使用整数集合作为底层实现，集合对象包含的所有元素都被保存在整数集合中。</p>
+<p>hashtable 编码的集合对象使用 字典作为底层实现，字典的每个键都是一个字符串对象，这里的每个字符串对象就是一个集合中的元素，而字典的值则全部设置为 null。这里可以类比Java集合中HashSet 集合的实现，HashSet 集合是由 HashMap 来实现的，集合中的元素就是 HashMap 的key，而 HashMap 的值都设为 null。</p>
+<p><strong>编码转换</strong></p>
+<p>　　当集合同时满足以下两个条件时，使用 intset 编码：</p>
+<p>　　1、集合对象中所有元素都是整数</p>
+<p>　　2、集合对象所有元素数量不超过512</p>
+<p>　　不能满足这两个条件的就使用 hashtable 编码</p>
+<p>set中的值是不能重复的 无序不重复集合</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; sadd myset bubu</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; sadd myset yang</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; sadd myset GGB</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; smembers myset</span><br><span class="line">1) <span class="string">&quot;bubu&quot;</span></span><br><span class="line">2) <span class="string">&quot;GGB&quot;</span></span><br><span class="line">3) <span class="string">&quot;yang&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; sismember myset bubu <span class="comment">#判断某一个值是否在集合中</span></span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; scard myset  <span class="comment">#查看元素个数</span></span><br><span class="line">(<span class="built_in">integer</span>) 3</span><br><span class="line">127.0.0.1:6379&gt; srem myset yang <span class="comment">#移除指定元素</span></span><br><span class="line">(<span class="built_in">integer</span>) 1 </span><br><span class="line"></span><br><span class="line"><span class="comment">#抽随机</span></span><br><span class="line">127.0.0.1:6379&gt; smembers myset</span><br><span class="line">1) <span class="string">&quot;bubu&quot;</span></span><br><span class="line">2) <span class="string">&quot;hhh&quot;</span></span><br><span class="line">3) <span class="string">&quot;GGB&quot;</span></span><br><span class="line">4) <span class="string">&quot;hrb&quot;</span></span><br><span class="line">5) <span class="string">&quot;jtt&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; SRANDMEMBER myset  <span class="comment">#随机抽取一个</span></span><br><span class="line"><span class="string">&quot;GGB&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; SRANDMEMBER myset</span><br><span class="line"><span class="string">&quot;hhh&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; SRANDMEMBER myset 2 <span class="comment">#随机抽取两个 可指定</span></span><br><span class="line">1) <span class="string">&quot;jtt&quot;</span></span><br><span class="line">2) <span class="string">&quot;hhh&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#删除指定 随机删除</span></span><br><span class="line">127.0.0.1:6379&gt; spop myset  <span class="comment">#随机删除</span></span><br><span class="line"><span class="string">&quot;bubu&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#移动a 到 b</span></span><br><span class="line">127.0.0.1:6379&gt; SMEMBERS myset2</span><br><span class="line">1) <span class="string">&quot;bgm&quot;</span></span><br><span class="line">2) <span class="string">&quot;gg&quot;</span></span><br><span class="line">3) <span class="string">&quot;dbb&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; smove myset myset2 hrb</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; SMEMBERS myset2</span><br><span class="line">1) <span class="string">&quot;bgm&quot;</span></span><br><span class="line">2) <span class="string">&quot;gg&quot;</span></span><br><span class="line">3) <span class="string">&quot;dbb&quot;</span></span><br><span class="line">4) <span class="string">&quot;hrb&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; SMEMBERS myset</span><br><span class="line">1) <span class="string">&quot;jtt&quot;</span></span><br><span class="line">2) <span class="string">&quot;GGB&quot;</span></span><br><span class="line">3) <span class="string">&quot;hhh&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#共同关注(并集)</span></span><br><span class="line"><span class="comment">#数字集合类 ： 差集 并集 交集 </span></span><br><span class="line">127.0.0.1:6379&gt; sadd set1 a b c d e </span><br><span class="line">(<span class="built_in">integer</span>) 5</span><br><span class="line">127.0.0.1:6379&gt; sadd set2 c d e f </span><br><span class="line">(<span class="built_in">integer</span>) 4</span><br><span class="line">127.0.0.1:6379&gt; SDIFF set1 set2</span><br><span class="line">1) <span class="string">&quot;a&quot;</span></span><br><span class="line">2) <span class="string">&quot;b&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; SINTER set1 set2</span><br><span class="line">1) <span class="string">&quot;e&quot;</span></span><br><span class="line">2) <span class="string">&quot;c&quot;</span></span><br><span class="line">3) <span class="string">&quot;d&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; SUNION set1 set2</span><br><span class="line">1) <span class="string">&quot;e&quot;</span></span><br><span class="line">2) <span class="string">&quot;a&quot;</span></span><br><span class="line">3) <span class="string">&quot;c&quot;</span></span><br><span class="line">4) <span class="string">&quot;f&quot;</span></span><br><span class="line">5) <span class="string">&quot;b&quot;</span></span><br><span class="line">6) <span class="string">&quot;d&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p><strong>简单应用</strong> A用户将所有关注的人放在一个set ，将他的粉丝也放在一个集合</p>
 <p>共同关注，共同爱好等</p>
-<h3 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h3><p>Map集合 key-map 这时候这个值是一个map集合 本质和string没有太大的区别</p>
+<h3 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h3><p>哈希对象的键是一个字符串类型，值是一个键值对集合。</p>
+<p><strong>编码</strong></p>
+<p>哈希对象的编码可以是 ziplist 或者 hashtable。</p>
+<p>当使用ziplist，也就是压缩列表作为底层实现时，新增的键值对是保存到压缩列表的表尾。</p>
+<p>hashtable 编码的哈希表对象底层使用字典数据结构，哈希对象中的每个键值对都使用一个字典键值对。</p>
+<p>在前面介绍压缩列表时，我们介绍过压缩列表是Redis为了节省内存而开发的，是由一系列特殊编码的连续内存块组成的顺序型数据结构，相对于字典数据结构，压缩列表用于元素个数少、元素长度小的场景。其优势在于集中存储，节省空间。</p>
+<p>和上面列表对象使用 ziplist 编码一样，当同时满足下面两个条件时，使用ziplist（压缩列表）编码：</p>
+<p>　　1、列表保存元素个数小于512个</p>
+<p>　　2、每个元素长度小于64字节</p>
+<p>　　不能满足这两个条件的时候使用 hashtable 编码。第一个条件可以通过配置文件中的 set-max-intset-entries 进行修改。</p>
+<p>Map集合 key-map 这时候这个值是一个map集合 本质和string没有太大的区别</p>
 <p>set myhasg field bubu</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; hset myhash field1 bubu</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; hget myhash field1</span><br><span class="line"><span class="string">&quot;bubu&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; hmset myhash field1 hello field2 world</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; hmget myhash field1 field2</span><br><span class="line">1) <span class="string">&quot;hello&quot;</span></span><br><span class="line">2) <span class="string">&quot;world&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; hgetall myhash</span><br><span class="line">1) <span class="string">&quot;field1&quot;</span></span><br><span class="line">2) <span class="string">&quot;hello&quot;</span></span><br><span class="line">3) <span class="string">&quot;field2&quot;</span></span><br><span class="line">4) <span class="string">&quot;world&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; hdel myhash field1 <span class="comment">#删除指定字段 对应的value也消失了</span></span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; hgetall myhash</span><br><span class="line">1) <span class="string">&quot;field2&quot;</span></span><br><span class="line">2) <span class="string">&quot;world&quot;</span></span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; hlen myhash  <span class="comment">#获取字段数量</span></span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line"></span><br><span class="line"><span class="comment">#只获取key</span></span><br><span class="line"><span class="comment">#只获取值</span></span><br><span class="line">127.0.0.1:6379&gt; hkeys myhash</span><br><span class="line">1) <span class="string">&quot;field2&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; hvals myhash</span><br><span class="line">1) <span class="string">&quot;world&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#incr </span></span><br><span class="line">127.0.0.1:6379&gt; hset myhash field3 5</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; HINCRBY myhash field3 1</span><br><span class="line">(<span class="built_in">integer</span>) 6</span><br><span class="line">127.0.0.1:6379&gt; hget myhash field3</span><br><span class="line"><span class="string">&quot;6&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; hmset user:1 age 7 mail bubu@163.com</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; HGETALL user:1</span><br><span class="line">1) <span class="string">&quot;name&quot;</span></span><br><span class="line">2) <span class="string">&quot;bubu&quot;</span></span><br><span class="line">3) <span class="string">&quot;age&quot;</span></span><br><span class="line">4) <span class="string">&quot;7&quot;</span></span><br><span class="line">5) <span class="string">&quot;mail&quot;</span></span><br><span class="line">6) <span class="string">&quot;bubu@163.com&quot;</span></span><br></pre></td></tr></table></figure>
 
 <p>hash更适合存储对象 </p>
 <p>string更适合字符串</p>
-<h3 id="Zset-有序集合"><a href="#Zset-有序集合" class="headerlink" title="Zset(有序集合)"></a>Zset(有序集合)</h3><p>在set的基础上增加了一个值 zset k1 score1 v1</p>
+<h3 id="Zset-有序集合"><a href="#Zset-有序集合" class="headerlink" title="Zset(有序集合)"></a>Zset(有序集合)</h3><p>有序集合的编码可以是 ziplist 或者 skiplist。</p>
+<p>　　ziplist 编码的有序集合对象使用压缩列表作为底层实现，每个集合元素使用两个紧挨在一起的压缩列表节点来保存，第一个节点保存元素的成员，第二个节点保存元素的分值。并且压缩列表内的集合元素按分值从小到大的顺序进行排列，小的放置在靠近表头的位置，大的放置在靠近表尾的位置。</p>
+<p>字典的键保存元素的值，字典的值则保存元素的分值；跳跃表节点的 object 属性保存元素的成员，跳跃表节点的 score 属性保存元素的分值。</p>
+<p>　　这两种数据结构会通过指针来共享相同元素的成员和分值，所以不会产生重复成员和分值，造成内存的浪费。</p>
+<p>　　说明：其实有序集合单独使用字典或跳跃表其中一种数据结构都可以实现，但是这里使用两种数据结构组合起来，原因是假如我们单独使用 字典，虽然能以 O(1) 的时间复杂度查找成员的分值，但是因为字典是以无序的方式来保存集合元素，所以每次进行范围操作的时候都要进行排序；假如我们单独使用跳跃表来实现，虽然能执行范围操作，但是查找操作有 O(1)的复杂度变为了O(logN)。因此Redis使用了两种数据结构来共同实现有序集合。</p>
+<p>当有序集合对象同时满足以下两个条件时，对象使用 ziplist 编码：</p>
+<p>　　1、保存的元素数量小于128；</p>
+<p>　　2、保存的所有元素长度都小于64字节。</p>
+<p>　　不能满足上面两个条件的使用 skiplist 编码。</p>
+<p>在set的基础上增加了一个值 zset k1 score1 v1</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; zadd myset 1 one</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; zadd myset 2 bubu 3 hh 4 ggb</span><br><span class="line">(<span class="built_in">integer</span>) 3</span><br><span class="line">127.0.0.1:6379&gt; ZRANGE myset 0 -1</span><br><span class="line">1) <span class="string">&quot;one&quot;</span></span><br><span class="line">2) <span class="string">&quot;bubu&quot;</span></span><br><span class="line">3) <span class="string">&quot;hh&quot;</span></span><br><span class="line">4) <span class="string">&quot;ggb&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; </span><br><span class="line"></span><br><span class="line"><span class="comment">#排序</span></span><br><span class="line">127.0.0.1:6379&gt; zadd salary 2500 bb 5000 hh 10000 ggb</span><br><span class="line">(<span class="built_in">integer</span>) 3</span><br><span class="line">127.0.0.1:6379&gt; ZRANGEBYSCORE salary -inf +inf</span><br><span class="line">1) <span class="string">&quot;bb&quot;</span></span><br><span class="line">2) <span class="string">&quot;hh&quot;</span></span><br><span class="line">3) <span class="string">&quot;ggb&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; ZRANGEBYSCORE salary -inf +inf withscores</span><br><span class="line">1) <span class="string">&quot;bb&quot;</span></span><br><span class="line">2) <span class="string">&quot;2500&quot;</span></span><br><span class="line">3) <span class="string">&quot;hh&quot;</span></span><br><span class="line">4) <span class="string">&quot;5000&quot;</span></span><br><span class="line">5) <span class="string">&quot;ggb&quot;</span></span><br><span class="line">6) <span class="string">&quot;10000&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; ZRANGEBYSCORE salary -inf 5000 withscores</span><br><span class="line">1) <span class="string">&quot;bb&quot;</span></span><br><span class="line">2) <span class="string">&quot;2500&quot;</span></span><br><span class="line">3) <span class="string">&quot;hh&quot;</span></span><br><span class="line">4) <span class="string">&quot;5000&quot;</span></span><br><span class="line"><span class="comment">#降序</span></span><br><span class="line">127.0.0.1:6379&gt; ZrevRANGEBYSCORE salary +inf -inf withscores</span><br><span class="line">1) <span class="string">&quot;ggb&quot;</span></span><br><span class="line">2) <span class="string">&quot;10000&quot;</span></span><br><span class="line">3) <span class="string">&quot;hh&quot;</span></span><br><span class="line">4) <span class="string">&quot;5000&quot;</span></span><br><span class="line">5) <span class="string">&quot;bb&quot;</span></span><br><span class="line">6) <span class="string">&quot;2500&quot;</span></span><br><span class="line"><span class="comment">#移除</span></span><br><span class="line">127.0.0.1:6379&gt; zrange salary 0 -1</span><br><span class="line">1) <span class="string">&quot;bb&quot;</span></span><br><span class="line">2) <span class="string">&quot;hh&quot;</span></span><br><span class="line">3) <span class="string">&quot;ggb&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; zrem salary ggb</span><br><span class="line">(<span class="built_in">integer</span>) 1</span><br><span class="line">127.0.0.1:6379&gt; zrange salary 0 -1</span><br><span class="line">1) <span class="string">&quot;bb&quot;</span></span><br><span class="line">2) <span class="string">&quot;hh&quot;</span></span><br><span class="line">127.0.0.1:6379&gt; zcard salary  <span class="comment">#获取集合中的个数</span></span><br><span class="line">(<span class="built_in">integer</span>) 2</span><br><span class="line"></span><br><span class="line">zcount salary 0 5000 <span class="comment">#获取指定区间</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-
-
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><ul>
+<li>对于string 数据类型，因为string 类型是二进制安全的，可以用来存放图片，视频等内容，另外由于Redis的高性能读写功能，而string类型的value也可以是数字，可以用作计数器（INCR,DECR），比如分布式环境中统计系统的在线人数，秒杀等。</li>
+<li>对于 hash 数据类型，value 存放的是键值对，比如可以做单点登录存放用户信息。</li>
+<li>对于 list 数据类型，可以实现简单的消息队列，另外可以利用lrange命令，做基于redis的分页功能</li>
+<li>对于 set 数据类型，由于底层是字典实现的，查找元素特别快，另外set 数据类型不允许重复，利用这两个特性我们可以进行全局去重，比如在用户注册模块，判断用户名是否注册；另外就是利用交集、并集、差集等操作，可以计算共同喜好，全部的喜好，自己独有的喜好等功能。</li>
+<li>对于 zset 数据类型，有序的集合，可以做范围查找，排行榜应用，取 TOP N 操作等。</li>
+</ul>
 <h2 id="三种特殊数据类型"><a href="#三种特殊数据类型" class="headerlink" title="三种特殊数据类型"></a>三种特殊数据类型</h2><h3 id="Geospatial"><a href="#Geospatial" class="headerlink" title="Geospatial"></a>Geospatial</h3><p>地理位置</p>
 <p>Redis 3.2推出 这个功能可以推算一些地理位置的信息 两地的距离方圆有多人等</p>
 <p>可以先查询一些数据<a target="_blank" rel="noopener" href="http://www.jsons.cn/lngcode/">http://www.jsons.cn/lngcode/</a></p>
