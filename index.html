@@ -374,7 +374,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-14 13:32:07" itemprop="dateModified" datetime="2020-12-14T13:32:07+08:00">2020-12-14</time>
+                <time title="修改时间：2020-12-14 16:42:47" itemprop="dateModified" datetime="2020-12-14T16:42:47+08:00">2020-12-14</time>
               </span>
 
           
@@ -404,6 +404,9 @@
 <p>修饰的是引用类型，引用的指向不能修改</p>
 <p>final Student student = new Student(1,”bubu”);</p>
 <p>student.setAge(18)；//这个是合理的 </p>
+<p><strong>final</strong>-修饰符(关键字)如果一个类被声明为 final,意味着它不能再派生出新的子类,不能作为父类被继承。因此一个类不能既被声明为 abstract的,又被声明为 final的,将变量或方法声明为 final,可以保证它们在使用中不被改变。被声明为 final f的变量必须在声明时给定初值,而在以后的引用中只能读取,不可修改。被声明为 final的方法也同样只能使用,不能重载</p>
+<p><strong>finally</strong>-再异常处理时提供 finally块来执行任何清除操作,如果抛出一个异常,那么相匹配的catch子句就会执行,然后控制就会进入 finally块(如果有的话)・</p>
+<p><strong>finalize</strong>-方法名。Java技术允许使用 finalize0方法在垃圾收集器将对象从内存中清除出去之前做必要的清理工作,这个方法是由垃圾收集器在确定这个对象没有被引用时对这个对象调用的,它是在Ob ject类中定义的,因此所有的类都继承了它。</p>
 <h4 id="static"><a href="#static" class="headerlink" title="static"></a>static</h4><p><strong>1.静态变量</strong></p>
 <ul>
 <li>静态变量：又称为类变量，也就是说这个变量是属于类的，类所有的实例都可以共享静态变量，可以直接通过类名来访问他，静态变量在内存中只存在一份</li>
