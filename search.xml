@@ -262,6 +262,23 @@
 <h2 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h2><p>进程是计算机中运行的一个应用程序,运行时程序的封装，系统进行资源调度，分配的基本单位</p>
 <p>线程：执行该进程的逻辑单元。线程是用来执行进程的，进程的子任务，cpu调度分派的基本单位，保证程序的实时性</p>
 <p>进程在执行过程中拥有独立的内存单元，而多个线程共享进程的内存</p>
+<p><strong>同一进程中的线程可以共享哪些数据</strong></p>
+<ul>
+<li>进程代码段</li>
+<li>进程的公有数据（全局变量、静态变量…）</li>
+<li>进程打开的文件描述符</li>
+<li>进程的当前目录</li>
+<li>信号处理器/信号处理函数：对收到的信号的处理方式</li>
+<li>进程ID与进程组ID</li>
+</ul>
+<p><strong>线程独占哪些资源</strong></p>
+<ul>
+<li>线程ID</li>
+<li>一组寄存器的值</li>
+<li>线程自身的栈（堆是共享的）</li>
+<li>错误返回码：线程可能会产生不同的错误返回码，一个线程的错误返回码不应该被其它线程修改；</li>
+<li>信号掩码/信号屏蔽字(Signal mask)：表示是否屏蔽/阻塞相应的信号（SIGKILL,SIGSTOP除外）</li>
+</ul>
 <h3 id="创建进程的方式"><a href="#创建进程的方式" class="headerlink" title="创建进程的方式"></a>创建进程的方式</h3><ul>
 <li><p>继承Thread类，并复写run方法，创建该类对象，调用start方法开启线程</p>
 </li>
@@ -283,7 +300,10 @@
 <p> run（）方法当作普通方法的方式调用，程序还是要顺序执行，还是要等待run方法体执行完毕后才可继续执行下面的代码： 而如果直接用run方法，这只是调用一个方法而已，程序中依然只有主线程–这一个线程，其程序执行路径还是只有一条，这样就没有达到多线程的目的</p>
 <h3 id="进程间的五种通信方式"><a href="#进程间的五种通信方式" class="headerlink" title="进程间的五种通信方式"></a>进程间的五种通信方式</h3><ul>
 <li><p>管道通信 </p>
-<p>管道是一种进程间通du信的方zhi式，在linux中分为有名管道和无dao名管道。zhuan有名管道就是把一shu个进程的输出写到一个文件中，再把此文件作为另一个进程的输入。<br>无名管道也是如此，只不过这个管道文件不直接可见而已，通常无名管道都作为一个进程组的形式完成，如ls | grep ‘a’，这就是一种进程间单向的通信方式。</p>
+<p>管道是一种进程间通信的方式，在linux中分为有名管道和无dao名管道。zhuan有名管道就是把一shu个进程的输出写到一个文件中，再把此文件作为另一个进程的输入。<br>无名管道也是如此，只不过这个管道文件不直接可见而已，通常无名管道都作为一个进程组的形式完成，如ls | grep ‘a’，这就是一种进程间单向的通信方式。</p>
+<p>管道是半双工的，数据只能向一个方向流动；需要双方通信时，需要建立起两个管道；</p>
+<p>一个进程向管道中写的内容被管道另一端的进程读出。写入的内容每次都添加在管道缓冲区的末尾，并且每次都是从缓冲区的头部读出数据；</p>
+<p>只能用于父子进程或者兄弟进程之间(具有亲缘关系的进程)</p>
 </li>
 <li><p>消息队列</p>
 </li>
@@ -293,6 +313,13 @@
 </li>
 <li><p>套接字socket通信</p>
 </li>
+</ul>
+<p>几种方式的比较：</p>
+<ul>
+<li>管道：速度慢，容量有限</li>
+<li>消息队列：容量受到系统限制，且要注意第一次读的时候，要考虑上一次没有读完数据的问题。</li>
+<li>信号量：不能传递复杂消息，只能用来同步</li>
+<li>共享内存区：能够很容易控制容量，速度快，但要保持同步，比如一个进程在写的时候，另一个进程要注意读写的问题，相当于线程中的线程安全，当然，共享内存区同样可以用作线程间通讯，不过没这个必要，线程间本来就已经共享了一块内存的。</li>
 </ul>
 <h3 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h3><p><strong>一、先来先去服务</strong></p>
 <p>　　先来先去服务调度算法是一种最简单的调度算法，也称为先进先出或严格排队方案。当每个进程就绪后，它加入就绪队列。当前正运行的进程停止执行，选择在就绪队列中存在时间最长的进程运行。该算法既可以用于作业调度，也可以用于进程调度。先来先去服务比较适合于常作业（进程），而不利于段作业（进程）。</p>
@@ -318,6 +345,7 @@
 <h3 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h3><p><strong>运行态</strong>：该进程正在执行。</p>
 <p><strong>就绪态</strong>：进程已经做好了准备，只要有机会就开始执行。</p>
 <p><strong>阻塞态</strong>（等待态）：进程在某些事情发生前不能执行，等待阻塞进程的事件完成。</p>
+<p>主要是上面三个</p>
 <p><strong>新建态</strong>：刚刚创建的进程，操作系统还没有把它加入到可执行进程组中，通常是进程控制块已经创建但是还没有加载到内存中的进程。</p>
 <p><strong>退出态</strong>：操作系统从可执行进程组中释放出的进程，或由于自身或某种原因停止运行。</p>
 <p><strong>空-&gt;新建</strong>：创建执行一个程序的新进程，可能的事件有：新的批处理作业、交互登录（终端用户登录到系统）、操作系统因为提供一项服务而创建、由现有的进程派生等。</p>
@@ -329,6 +357,8 @@
 <p><strong>阻塞-&gt;就绪</strong>：当等待的事件发生时，处于阻塞态的进程转换到就绪态。</p>
 <p><strong>就绪-&gt;退出</strong>：在上图中没有标出这种转换，在某些进程中，父进程可以在任何时刻终止一个子进程，如果一个父进程终止，所有相关的子进程都被终止。</p>
 <p><strong>阻塞-&gt;退出</strong>：跟上一项原因类似。</p>
+<h3 id="僵尸进程"><a href="#僵尸进程" class="headerlink" title="僵尸进程"></a>僵尸进程</h3><p>一个子进程结束后，它的父进程并没有等待它（调用wait或者waitpid），那么这个子进程将成为一个僵尸进程。僵尸进程是一个已经死亡的进程，但是并没有真正被销毁。它已经放弃了几乎所有内存空间，没有任何可执行代码，也不能被调度，仅仅在进程表中保留一个位置，记载该进程的进程ID、终止状态以及资源利用信息(CPU时间，内存使用量等等)供父进程收集，除此之外，僵尸进程不再占有任何内存空间。这个僵尸进程可能会一直留在系统中直到系统重启。</p>
+<p>危害：占用进程号，而系统所能使用的进程号是有限的；占用内存。</p>
 <h3 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h3><p>new runnable blocked waiting time-waiting terminated</p>
 <ol>
 <li>当进入到同步代码块或者同步方法时，且没有获取到锁，线程就进入到了blocked状态，直到被释放锁，重新进入到runnable状态</li>
@@ -336,6 +366,20 @@
 <li>当线程调用sleep(time),或者wait(time)时，进入到timed waiting状态 当休眠结束时，或者调用otify或notifyAll时会重新进入到runnable状态</li>
 <li>程序结束后，线程进入到terminated状态</li>
 </ol>
+<h3 id="进程的同步方式"><a href="#进程的同步方式" class="headerlink" title="进程的同步方式"></a>进程的同步方式</h3><ol>
+<li>互斥量 采用互斥对象机制</li>
+<li>信号量 允许同一时刻多个线程访问同一资源</li>
+<li>事件</li>
+</ol>
+<h3 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h3><blockquote>
+<p>为什么需要线程同步：线程有时候会和其他线程共享一些资源，比如内存、数据库等。当多个线程同时读写同一份共享资源的时候，可能会发生冲突。因此需要线程的同步，多个线程按顺序访问资源。</p>
+</blockquote>
+<ul>
+<li><strong>互斥量</strong> Mutex：互斥量是内核对象，只有拥有互斥对象的线程才有访问互斥资源的权限。因为互斥对象只有一个，所以可以保证互斥资源不会被多个线程同时访问；当前拥有互斥对象的线程处理完任务后必须将互斥对象交出，以便其他线程访问该资源；</li>
+<li><strong>信号量</strong> Semaphore：信号量是内核对象，它允许同一时刻多个线程访问同一资源，但是需要控制同一时刻访问此资源的最大线程数量。信号量对象保存了<strong>最大资源计数</strong>和<strong>当前可用资源计数</strong>，每增加一个线程对共享资源的访问，当前可用资源计数就减1，只要当前可用资源计数大于0，就可以发出信号量信号，如果为0，则将线程放入一个队列中等待。线程处理完共享资源后，应在离开的同时通过<code>ReleaseSemaphore</code>函数将当前可用资源数加1。如果信号量的取值只能为0或1，那么信号量就成为了互斥量；</li>
+<li><strong>事件</strong> Event：允许一个线程在处理完一个任务后，主动唤醒另外一个线程执行任务。事件分为手动重置事件和自动重置事件。手动重置事件被设置为激发状态后，会唤醒所有等待的线程，而且一直保持为激发状态，直到程序重新把它设置为未激发状态。自动重置事件被设置为激发状态后，会唤醒<strong>一个</strong>等待中的线程，然后自动恢复为未激发状态。</li>
+<li><strong>临界区</strong> Critical Section：任意时刻只允许一个线程对临界资源进行访问。拥有临界区对象的线程可以访问该临界资源，其它试图访问该资源的线程将被挂起，直到临界区对象被释放。</li>
+</ul>
 <h3 id="Sleep-Wait区别"><a href="#Sleep-Wait区别" class="headerlink" title="Sleep Wait区别"></a>Sleep Wait区别</h3><p><strong>所属的类不同</strong> sleep是定义在Thread上，wait是定义在Object上</p>
 <p><strong>对于锁资源的处理方式不同</strong>  sleep不会释放锁，wait会释放锁</p>
 <p><strong>使用范围</strong>：sleep可以使用在任何代码块，wait必须在同步方法或者同步代码块中执行</p>
@@ -372,7 +416,8 @@
 <p>​        当一个变量定义为 volatile 之后，将具备两种特性：</p>
 <p>　　1.保证此变量对所有的线程的可见性，这里的“可见性”，如本文开头所述，当一个线程修改了这个变量的值，volatile 保证了新值能立即同步到主内存，以及每次使用前立即从主内存刷新。但普通变量做不到这点，普通变量的值在线程间传递均需要通过主内存（详见：<a href="http://www.cnblogs.com/zhengbin/p/6407137.html">Java内存模型</a>）来完成。</p>
 <p>　　2.禁止指令重排序优化。有volatile修饰的变量，赋值后多执行了一个“load addl $0x0, (%esp)”操作，这个操作相当于一个<strong>内存屏障</strong>（指令重排序时不能把后面的指令重排序到内存屏障之前的位置），只有一个CPU访问内存时，并不需要内存屏障；（什么是指令重排序：是指CPU采用了允许将多条指令不按程序规定的顺序分开发送给各相应电路单元处理）。</p>
-<h3 id="volatile-性能："><a href="#volatile-性能：" class="headerlink" title="volatile 性能："></a>volatile 性能：</h3><p>　　volatile 的读性能消耗与普通变量几乎相同，但是写操作稍慢，因为它需要在本地代码中插入许多内存屏障指令来保证处理器不发生乱序执行。</p>
+<p><strong>volatile 性能：</strong></p>
+<p>　　volatile 的读性能消耗与普通变量几乎相同，但是写操作稍慢，因为它需要在本地代码中插入许多内存屏障指令来保证处理器不发生乱序执行。</p>
 <h3 id="Synchronized-lock"><a href="#Synchronized-lock" class="headerlink" title="Synchronized lock"></a>Synchronized lock</h3><p>在Java中，synchronized关键字是用来控制线程同步的，就是在多线程的环境下，控制synchronized代码段不被多个线程同时执行。</p>
 <p>synchronized既可以加在一段代码上，也可以加在方法上。</p>
 <p><strong>作用的位置不同</strong> </p>
@@ -459,6 +504,24 @@
 <li>破坏”请求与保持条件“：第一种方法静态分配即每个进程在开始执行时就申请他所需要的全部资源。第二种是动态分配即每个进程在申请所需要的资源时他本身不占用系统资源。</li>
 <li>破坏“循环等待”条件：采用资源有序分配其基本思想是将系统中的所有资源顺序编号，将紧缺的，稀少的采用较大的编号，在申请资源时必须按照编号的顺序进行，一个进程只有获得较小编号的进程才能申请较大编号的进程。</li>
 </ol>
+<h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>信号量(Semaphore)，有时被称为信号灯，是在多线程环境下使用的一种设施，是可以用来保证两个或多个关键代码段不被并发调用。在进入一个关键代码段之前，线程必须获取一个信号量；一旦该关键代码段完成了，那么该线程必须释放信号量。其它想进入该关键代码段的线程必须等待直到 第一个线程释放信号量。为了完成这个过程，需要创建一个信号量VI，然后将Acquire Semaphore VI以及Release Semaphore VI分别放置在每个关键代码段的首末端。确认这些信号量VI引用的是初始创建的信号量。</p>
+<h3 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h3><p>IO多路复用（IO Multiplexing）是指单个进程/线程就可以同时处理多个IO请求。</p>
+<p>实现原理：用户将想要监视的文件描述符（File Descriptor）添加到select/poll/epoll函数中，由内核监视，函数阻塞。一旦有文件描述符就绪（读就绪或写就绪），或者超时（设置timeout），函数就会返回，然后该进程可以进行相应的读/写操作。</p>
+<h2 id="分页和分段"><a href="#分页和分段" class="headerlink" title="分页和分段"></a>分页和分段</h2><ul>
+<li>页式存储：用户空间划分为大小相等的部分称为页（page），内存空间划分为同样大小的区域称为页框，分配时以页为单位，按进程需要的页数分配，逻辑上相邻的页物理上不一定相邻；</li>
+<li>段式存储：用户进程地址空间按照自身逻辑关系划分为若干个段（segment）（如代码段，数据段，堆栈段），内存空间被动态划分为长度不同的区域，分配时以段为单位，每段在内存中占据连续空间，各段可以不相邻；</li>
+<li>段页式存储：用户进程先按段划分，段内再按页划分，内存划分和分配按页。</li>
+</ul>
+<p>区别：</p>
+<ul>
+<li>目的不同：分页的目的是管理内存，用于虚拟内存以获得更大的地址空间；分段的目的是满足用户的需要，使程序和数据可以被划分为逻辑上独立的地址空间；</li>
+<li>大小不同：段的大小不固定，由其所完成的功能决定；页的大小固定，由系统决定；</li>
+<li>地址空间维度不同：分段是二维地址空间（段号+段内偏移），分页是一维地址空间（每个进程一个页表/多级页表，通过一个逻辑地址就能找到对应的物理地址）；</li>
+<li>分段便于信息的保护和共享；分页的共享收到限制；</li>
+<li>碎片：分段没有内碎片，但会产生外碎片；分页没有外碎片，但会产生内碎片（一个页填不满）</li>
+</ul>
+<h2 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h2><p>每个程序都拥有自己的地址空间，这个地址空间被分成大小相等的页，这些页被映射到物理内存；但不需要所有的页都在物理内存中，当程序引用到不在物理内存中的页时，由操作系统将缺失的部分装入物理内存。这样，对于程序来说，逻辑上似乎有很大的内存空间，只是实际上有一部分是存储在磁盘上，因此叫做虚拟内存。</p>
+<p>虚拟内存的优点是让程序可以获得更多的可用内存。</p>
 <h2 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h2><h3 id="和-的区别是什么？"><a href="#和-的区别是什么？" class="headerlink" title="#{}和${}的区别是什么？"></a>#{}和${}的区别是什么？</h3><ul>
 <li><code>$&#123;&#125;</code>是 Properties 文件中的变量占位符，它可以用于标签属性值和 sql 内部，属于静态文本替换，比如${driver}会被静态替换为<code>com.mysql.jdbc.Driver</code>。</li>
 <li><code>#&#123;&#125;</code>是 sql 的参数占位符，Mybatis 会将 sql 中的<code>#&#123;&#125;</code>替换为?号，在 sql 执行前会使用 PreparedStatement 的参数设置方法，按序给 sql 的?号占位符设置参数值，比如 ps.setInt(0, parameterValue)，<code>#&#123;item.name&#125;</code> 的取值方式为使用反射从参数对象中获取 item 对象的 name 属性值，相当于 <code>param.getItem().getName()</code>。</li>
@@ -631,6 +694,17 @@
 <li>第二范式：要有主键</li>
 <li>第三范式：不可存在传递依赖，你如商品表里面关联商类别表，那么只需要一个关联字段peoduct_type_name,那就属于存在传递依赖的情况，第三范式主要是从空间的角度来考虑，避免产生冗余信息，浪费磁盘空间</li>
 </ol>
+<h3 id="两种存储引擎"><a href="#两种存储引擎" class="headerlink" title="两种存储引擎"></a>两种存储引擎</h3><p>InnoDB 和 MyISAM</p>
+<ul>
+<li>InnoDB<strong>支持事务</strong>，可以进行Commit和Rollback；</li>
+<li>MyISAM 只支持表级锁，而 InnoDB 还<strong>支持行级锁</strong>，提高了并发操作的性能；</li>
+<li>InnoDB <strong>支持外键</strong>；</li>
+<li>MyISAM <strong>崩溃</strong>后发生损坏的概率比 InnoDB 高很多，而且<strong>恢复的速度</strong>也更慢；</li>
+<li>MyISAM 支持<strong>压缩</strong>表和空间数据索引，InnoDB需要更多的内存和存储；</li>
+<li>InnoDB 支持在线<strong>热备份</strong></li>
+</ul>
+<p><strong>MyISAM</strong> 管理非事务表。它提供高速存储和检索（MyISAM强调的是性能，每次查询具有原子性，其执行速度比InnoDB更快），以及全文搜索能力。如果表比较小，或者是只读数据（有大量的SELECT），还是可以使用MyISAM；</p>
+<p><strong>InnoDB</strong> 支持事务，并发情况下有很好的性能，基本可以替代MyISAM</p>
 <h3 id="事务的特点-ACID"><a href="#事务的特点-ACID" class="headerlink" title="事务的特点 ACID"></a>事务的特点 ACID</h3><p>ACID</p>
 <ul>
 <li>原子性：事务是数据库的逻辑工作单位，事务中包含的各操作要么完成，要么都不完成</li>
@@ -682,6 +756,7 @@
 </ul>
 <h3 id="MVCC"><a href="#MVCC" class="headerlink" title="MVCC"></a>MVCC</h3><p>MVCC是多版本并发控制机制，顾名思义支持MVCC的数据库表中每一行数据都可能存在多个版本，对数据库的任何修改的提交都不会直接覆盖之前的数据，而是产生一个新的版本与老版本共存，通过读写数据时读不同的版本来避免加锁阻塞。</p>
 <p>MVCC的实现主要依赖于数据库在每个表中添加的三个隐藏字段以及事务在查询时创建的快照（read view）和数据库的数据版本链(Undo log)。这里先介绍这三个部分的作用，然后再介绍它们是如何联合作战进行非阻塞的实现RC和RR隔离级别。</p>
+<p>MVCC最大的好处，相信也是耳熟能详：读不加锁，读写不冲突</p>
 <p>MVCC的重要特性:<br>(1)MVCC只支持RC(读取已提交)和RR(可重复读)隔离级别。<br>(2)MVCC能解决脏读、不可重复读问题，不能解决丢失更新问题和幻读问题。<br>(3)MVCC是用来解决读写操作之间的阻塞问题。使得在并发读写数据库时，可以做到在读操作时不用阻塞写操作，写操作也不用阻塞读操作，提高了数据库并发读写的性能。</p>
 <p><strong>总结</strong></p>
 <p>1、MVCC的实现主要依赖于数据库在每个表中添加的三个隐藏字段以及事务在查询时创建的快照（read view）和数据库支持多版本数据，数据库中存在数据版本链(Undo log)。<br>2、InnoDB支持多版本数据，在更新或者删除数据时，并不会立马删除原有行记录，而是将旧版本存入回滚段中的Undo log内，并通过回滚指针形成一个数据链，可以通过这个指针访问链上的历代数据版本，正是这种机制使得数据库数据产生了多个版本，为通过MVCC进行快照读提供了可能。<br>3、并不是所有的查询都是进行快照读，使用普通的select 语句进行查询时会生成快照，进行快照读；使用select … lock in share mode，select … for update，insert，update，delete 语句等语句进行查询或者更新时还是会使用锁机制，进行锁阻塞。<br>4、使用MVCC的作用(意义)是非阻塞的解决了事务读写冲突，提高了并发性能。<br>5、MVCC只支持RC(读取已提交)和RR(可重复读)隔离级别。<br>6、MVCC能解决脏读、不可重复读问题，不能解决丢失更新问题和幻读问题。<br>7、InnoDB使用锁机制和MVCC来共同作用，进行并发控制的，虽然MVCC不能解决幻读和丢失更新问题，但通过与锁机制(行级锁的Next-Key Locks算法的使用、排他锁等）一起作用可以达到可串行化隔离级别的效果，禁止了幻读、更新丢失等问题。</p>
@@ -744,7 +819,7 @@
 <li>倒排列表(PostingList)：倒排列表记载了出现过某个单词的所有文档的文档列表及单词在该文档中出现的位置信息，每条记录称为一个倒排项(Posting)。根据倒排列表，即可获知哪些文档包含某个单词。</li>
 <li>倒排文件(Inverted File)：所有单词的倒排列表往往顺序地存储在磁盘的某个文件里，这个文件即被称之为倒排文件，倒排文件是存储倒排索引的物理文件。</li>
 </ul>
-<h3 id="Mysql索引实现"><a href="#Mysql索引实现" class="headerlink" title="Mysql索引实现"></a>Mysql索引实现</h3><p>数据库索引：索引是对数据库中的一个或多个列的值进行排序的数据结构，以协助快速查询，更新数据库表中的数据</p>
+<h3 id="Mysql索引实现（B-B树）"><a href="#Mysql索引实现（B-B树）" class="headerlink" title="Mysql索引实现（B+ B树）"></a>Mysql索引实现（B+ B树）</h3><h4 id="索引定义"><a href="#索引定义" class="headerlink" title="索引定义"></a>索引定义</h4><p>数据库索引：索引是对数据库中的一个或多个列的值进行排序的数据结构，以协助快速查询，更新数据库表中的数据</p>
 <p>B-tree，B是balance，一般用于<strong>数据库的索引</strong>。使用B-tree结构可以显著减少定位记录时所经历的中间过程，从而加快存取速度。而B+tree是B-tree的一个变种，MySQL就普遍使用B+tree实现其索引结构。　　</p>
 <p>　　一般来说，索引本身也很大，不可能全部存储在内存中，因此<strong>索引往往以索引文件的形式存储的磁盘上</strong>。这样的话，索引查找过程中就要产生磁盘I/O消耗，相对于内存存取，I/O存取的消耗要高几个数量级，所以评价一个数据结构作为索引的优劣最重要的指标就是在查找过程中磁盘I/O操作次数的渐进复杂度。换句话说，索引的结构组织要尽量减少查找过程中磁盘I/O的存取次数。</p>
 <p>　　为了达到这个目的，磁盘按需读取，要求每次都会预读的长度一般为页的整数倍。而且数据库系统将一个节点的大小设为等于一个页，这样每个节点只需要一次I/O就可以完全载入。每次新建节点时，直接申请一个页的空间，这样就保证一个节点物理上也存储在一个页里，加之计算机存储分配都是按页对齐的，就实现了一个node只需一次I/O。并把B-tree中的m值设的非常大，就会让树的高度降低，有利于一次完全载入</p>
@@ -754,6 +829,19 @@
 <p><strong>非聚集索引：</strong>　　</p>
 <p>　　该索引中索引的<strong>逻辑顺序与磁盘上行的物理存储顺序不同</strong>。 </p>
 <p>　　索引是通过二叉树的数据结构来描述的，我们可以这么理解聚簇索引：索引的叶节点就是数据节点。而非聚簇索引的叶节点仍然是索引节点，只不过有一个指针指向对应的数据块。</p>
+<h4 id="哪些情况下索引会失效？"><a href="#哪些情况下索引会失效？" class="headerlink" title="哪些情况下索引会失效？"></a>哪些情况下索引会失效？</h4><ul>
+<li>以“%(表示任意0个或多个字符)”开头的LIKE语句；</li>
+<li>OR语句前后没有同时使用索引；</li>
+<li>数据类型出现隐式转化（如varchar不加单引号的话可能会自动转换为int型）；</li>
+<li>对于多列索引，必须满足 <strong>最左匹配原则</strong>/最左前缀原则 (最左优先，eg：多列索引col1、col2和col3，则 索引生效的情形包括 col1或col1，col2或col1，col2，col3)；</li>
+<li>如果MySQL估计全表扫描比索引快，则不使用索引（比如非常小的表）</li>
+</ul>
+<h4 id="在哪些地方适合创建索引？"><a href="#在哪些地方适合创建索引？" class="headerlink" title="在哪些地方适合创建索引？"></a>在哪些地方适合创建索引？</h4><ul>
+<li>某列经常作为最大最小值；</li>
+<li>经常被查询的字段；</li>
+<li>经常用作表连接的字段；</li>
+<li>经常出现在ORDER BY/GROUP BY/DISDINCT后面的字段</li>
+</ul>
 <p><strong>B-树有如下特点:B-树允许每个节点有更多的子节点即可（多叉树）</strong></p>
 <ol>
 <li>所有键值分布在整颗树中（索引值和具体data都在每个节点里）；</li>
@@ -799,6 +887,48 @@
 <p>例如这种SQL：<br>SELECT … FROM t WHERE C1 = ?; — 仅等值查询</p>
 </blockquote>
 <p>在大多数场景下，都会有范围查询、排序、分组等查询特征，用B+树索引就可以了。</p>
+<h3 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h3><p>在MySQL中，为了应对并发场景下的读写，锁通常分为两类：共享锁以及排他锁。其中，共享锁允许多个连接在同一时间并发的读取相同的资源，彼此之间互不影响,所以又称为读锁。排他锁则会阻塞其他尝试获取共享锁或者排他锁的操作，确保同一时间只有一个连接可以写入数据，并禁止其他用户的读写，又称写锁。</p>
+<p>在实际使用下，加锁往往意味着高昂的开销，MySQL为了平衡锁的开销以及并发的线程之间的安全，采用了两种不同的锁策略：</p>
+<ul>
+<li><strong>table lock(表锁)</strong></li>
+</ul>
+<p>表锁会锁定整张表，如果当前有用户正在执行写操作并且获取了写锁，这可能导致整张表被锁定，阻塞其他用户的读写操作。如果用户执行的是读操作，则会获取读锁，此时其他用户的并发读操作将被接受，写操作会被阻塞。</p>
+<p>举个例子，执行语句: </p>
+<p>update table set a = 1 where b =2;</p>
+<ul>
+<li><strong>row lock(行锁)</strong></li>
+</ul>
+<p>行锁的粒度是在每一条行数据，这意味行锁可以尽可能的支持并发处理，相应的行锁开销也会比较大。并且，<strong>在InnoDB中的行锁是针对索引加的锁，不是针对记录加的锁，并且该索引不能失效，否则行锁将会自动升级为表锁</strong>。</p>
+<p>相比较而言，表锁的优势在于开销小，加锁快，无死锁，劣势是锁的粒度大，发生锁冲突的概率较高，并发能力较弱。而行锁则相反。实际使用中，两者都会由MySQL自动加锁。行锁冲突可以通过执行 show status like ‘innodb_row_lock%’语句进行分析，表锁冲突则可通过执行show status like ‘table_locks%’ 进行查看。</p>
+<h4 id="乐观锁和悲观锁"><a href="#乐观锁和悲观锁" class="headerlink" title="乐观锁和悲观锁"></a>乐观锁和悲观锁</h4><ul>
+<li><p>悲观锁：认为数据随时会被修改，因此每次读取数据之前都会上锁，防止其它事务读取或修改数据；应用于<strong>数据更新比较频繁</strong>的场景；</p>
+</li>
+<li><p>乐观锁：操作数据时不会上锁，但是更新时会判断在此期间有没有别的事务更新这个数据，若被更新过，则失败重试；适用于</p>
+<p>读多写少</p>
+<p>的场景。乐观锁的实现方式有：</p>
+<ul>
+<li>加一个版本号或者时间戳字段，每次数据更新时同时更新这个字段；</li>
+<li>先读取想要更新的字段或者所有字段，更新的时候比较一下，只有字段没有变化才进行更新</li>
+</ul>
+</li>
+</ul>
+<h3 id="Drop-Delete-Truncate"><a href="#Drop-Delete-Truncate" class="headerlink" title="Drop/Delete/Truncate"></a>Drop/Delete/Truncate</h3><ul>
+<li><strong>Delete</strong>用来删除表的全部或者<strong>部分数据</strong>，执行delete之后，用户<strong>需要提交</strong>之后才会执行，会触发表上的DELETE<strong>触发器</strong>（包含一个OLD的虚拟表，可以只读访问被删除的数据），DELETE之后表结构还在，删除很慢，一行一行地删，因为会记录日志，可以利用日志还原数据；</li>
+<li><strong>Truncate</strong>删除表中的所有数据，这个操作<strong>不能回滚</strong>，也不会触发这个表上的触发器。操作比DELETE快很多（直接把表drop掉，再创建一个新表，删除的数据不能找回）。如果表中有自增（AUTO_INCREMENT）列，则重置为1；</li>
+<li><strong>Drop</strong>命令从数据库中<strong>删除表</strong>，所有的数据行，索引和约束都会被删除；不能回滚，不会触发触发器；</li>
+</ul>
+<h3 id="视图-游标"><a href="#视图-游标" class="headerlink" title="视图 游标"></a>视图 游标</h3><ul>
+<li><p>视图：从数据库的基本表中通过查询选取出来的数据组成的</p>
+<p>虚拟表</p>
+<p>（数据库中存放视图的定义）。可以对其进行增/删/改/查等操作。视图是对若干张基本表的引用，一张虚表，查询语句执行的结果，不存储具体的数据（基本表数据发生了改变，视图也会跟着改变）；可以跟基本表一样，进行增删改查操作(ps:增删改操作有条件限制)；如连表查询产生的视图无法进行，对视图的增删改会影响原表的数据。好处：</p>
+<ul>
+<li>通过只给用户访问视图的权限，保证数据的<strong>安全性</strong>；</li>
+<li><strong>简化</strong>复杂的SQL操作，隐藏数据的复杂性（比如复杂的连接）；</li>
+</ul>
+</li>
+<li><p>游标（Cursor）：用于定位在查询返回的<strong>结果集的特定行</strong>，以对特定行进行操作。使用游标可以方便地对结果集进行移动遍历，根据需要滚动或对浏览/修改任意行中的数据。主要用于交互式应用。</p>
+</li>
+</ul>
 <h2 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h2><p><img src="/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/3.png"></p>
 <p><strong>冒泡排序</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 冒泡排序</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> array</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] bubbleSort(<span class="keyword">int</span>[] array) &#123;</span><br><span class="line">        <span class="keyword">if</span> (array.length == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> array;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++)</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; array.length - <span class="number">1</span> - i; j++)</span><br><span class="line">                <span class="keyword">if</span> (array[j + <span class="number">1</span>] &lt; array[j]) &#123;</span><br><span class="line">                    <span class="keyword">int</span> temp = array[j + <span class="number">1</span>];</span><br><span class="line">                    array[j + <span class="number">1</span>] = array[j];</span><br><span class="line">                    array[j] = temp;</span><br><span class="line">                &#125;</span><br><span class="line">        <span class="keyword">return</span> array;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -863,8 +993,8 @@
 </ul>
 <h2 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h2><h3 id="七层模型"><a href="#七层模型" class="headerlink" title="七层模型"></a>七层模型</h3><p>应用层 表示层 会话层  为<strong>操作系统</strong>或<strong>网络应用程序</strong>提供访问网络服务的接口</p>
 <p>传输层(TCP UDP) 实现两个<strong>应用程序</strong>之间的数据透明传送（<strong>不一定可靠(UDP)**）。将上层数据分段，提供</strong>端到端**的可靠的(TCP)和不可靠的(UDP)服务。</p>
-<p>网络层  实现两个<strong>主机</strong>之间的数据透明传送（**不一定可靠(IP)**）。主要功能：路由选择Routing；存储转发Forwarding；（一部分的）拥塞控制</p>
-<p>数据链路层  将源自网络层来的数据<strong>可靠地</strong>传输到<strong>相邻节点</strong>的目标机网络层</p>
+<p>网络层  实现两个<strong>主机</strong>之间的数据透明传送（<strong>不一定可靠(IP)**）。主要功能：路由选择Routing；存储转发Forwarding；（一部分的）拥塞控制 **ICMP</strong>  路由器</p>
+<p>数据链路层  将源自网络层来的数据<strong>可靠地</strong>传输到<strong>相邻节点</strong>的目标机网络层 **Ethernet以太网协议，用于实现链路层的数据传输和地址封装 **交换机</p>
 <p>物理层 确保原始的数据可在各种物理媒体上以比特流的形式<strong>可靠地</strong>传输</p>
 <p><strong>应用层协议如下：</strong></p>
 <p>(1)域名系统(Domain Name System，DNS)：用于实现网络设备名字到baiIP地址映射的网络服务。</p>
@@ -873,6 +1003,8 @@
 <p>(4)超文本传输协议(HyperText Transfer Protocol，HTTP)：用于实现WWW服务。</p>
 <p>(5)简单网络管理协议(simple Network Management Protocol，SNMP)：用于管理与监视网络设备。</p>
 <p>(6)远程登录协议(Telnet)：用于实现远程登录功能。</p>
+<p><strong>ICMP</strong>是（Internet Control Message Protocol）baiInternet控制报文协议。它是TCP/IP协议簇的一个子协议，用于在IP主机、路由器之间传递控制消息。属于网络层协议</p>
+<p>控制消息是指网络通不通、主机是否可达、路由是否可用等网络本身的消息。这些控制消息虽然并不传输用户数据，但是对于用户数据的传递起着重要的作用。</p>
 <h3 id="端到端，点到点的区别"><a href="#端到端，点到点的区别" class="headerlink" title="端到端，点到点的区别"></a>端到端，点到点的区别</h3><ul>
 <li><strong>端到端是针对传输层</strong>说的。在数据传输之前，先为数据的传输开辟一条通道，然后在进行传输。</li>
 <li><strong>点到点通信是针对数据链路层或网络层</strong>来说的，是指一个设备发数据给<strong>直接连接</strong>的其他设备，通过一台一台直接相连的设备把数据传递到接收端。</li>
@@ -909,6 +1041,21 @@
 <p>503（服务不可用）服务器目前无法使用（由于超载或停机维护）。通常，这只是暂时状态。</p>
 <p><strong>HTTP：80端口 keep-alive：请求应答模式无连接协议，输入这个客户端到服务端连接持续有效</strong></p>
 <p><strong>https: 443端口 http+ssl</strong> </p>
+<ol>
+<li>端口不同：HTTP使用的是80端口，HTTPS使用443端口；</li>
+<li>HTTP（超文本传输协议）信息是明文传输，HTTPS运行在SSL(Secure Socket Layer)之上，添加了加密和认证机制，更加安全；</li>
+<li>HTTPS由于加密解密会带来更大的CPU和内存开销；</li>
+<li>HTTPS通信需要证书，一般需要向证书颁发机构（CA）购买</li>
+</ol>
+<h3 id="https建立连接过程"><a href="#https建立连接过程" class="headerlink" title="https建立连接过程"></a>https建立连接过程</h3><ol>
+<li>客户端向服务器发送请求，同时发送客户端支持的一套加密规则（包括对称加密、非对称加密、摘要算法）；</li>
+<li>服务器从中选出一组加密算法与HASH算法，并将自己的身份信息以证书的形式发回给浏览器。证书里面包含了网站地址，<strong>加密公钥</strong>（用于非对称加密），以及证书的颁发机构等信息（证书中的私钥只能用于服务器端进行解密）；</li>
+<li>客户端验证服务器的合法性，包括：证书是否过期，CA 是否可靠，发行者证书的公钥能否正确解开服务器证书的“发行者的数字签名”，服务器证书上的域名是否和服务器的实际域名相匹配；</li>
+<li>如果证书受信任，或者用户接收了不受信任的证书，浏览器会生成一个<strong>随机密钥</strong>（用于对称算法），并用服务器提供的公钥加密（采用非对称算法对密钥加密）；使用Hash算法对握手消息进行<strong>摘要</strong>计算，并对摘要使用之前产生的密钥加密（对称算法）；将加密后的随机密钥和摘要一起发送给服务器；</li>
+<li>服务器使用自己的私钥解密，得到对称加密的密钥，用这个密钥解密出Hash摘要值，并验证握手消息是否一致；如果一致，服务器使用对称加密的密钥加密握手消息发给浏览器；</li>
+<li>浏览器解密并验证摘要，若一致，则握手结束。之后的数据传送都使用对称加密的密钥进行加密</li>
+</ol>
+<p>总结：非对称加密算法用于在握手过程中加密生成的密码；对称加密算法用于对真正传输的数据进行加密；HASH算法用于验证数据的完整性。</p>
 <h3 id="输入url到页面加载"><a href="#输入url到页面加载" class="headerlink" title="输入url到页面加载"></a>输入url到页面加载</h3><p>1、输入地址</p>
 <p>2、浏览器查找域名的 IP 地址　　</p>
 <p>3、浏览器向 web 服务器发送一个 HTTP 请求</p>
@@ -995,7 +1142,18 @@
 <p>第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK(ack=k+1），此包发送完毕，客户端和服务器进入ESTABLISHED（TCP连接成功）状态，完成三次握手</p>
 <p><strong>三次握手改成两次会出现什么情况</strong></p>
 <p>现在把三次握手改成仅需要两次握手，死锁是可能发生的。作为例子，考虑计算机S和C之间的通信，假定C给S发送一个连接请求分组，S收到了这个分组，并发 送了确认应答分组。按照两次握手的协定，S认为连接已经成功地建立了，可以开始发送数据分组。可是，C在S的应答分组在传输中被丢失的情况下，将不知道S 是否已准备好，不知道S建立什么样的序列号，C甚至怀疑S是否收到自己的连接请求分组。在这种情况下，C认为连接还未建立成功，将忽略S发来的任何数据分 组，只等待连接确认应答分组。而S在发出的分组超时后，重复发送同样的分组。这样就形成了死锁。</p>
+<p>有人会困惑为什么要进行三次握手呢（两次确认）？这主要是为了防止已失效的请求连接报文忽然又传送到了，从而产生错误。<br>假定A向B发送一个连接请求，由于一些原因，导致A发出的连接请求在一个网络节点逗留了比较多的时间。此时A会将此连接请求作为无效处理 又重新向B发起了一次新的连接请求，B正常收到此连接请求后建立了连接，数据传输完成后释放了连接。如果此时A发出的第一次请求又到达了B，B会以为A又发起了一次连接请求，<code>如果是两次握手：此时连接就建立了，B会一直等待A发送数据，从而白白浪费B的资源</code>。 <code>如果是三次握手：由于A没有发起连接请求，也就不会理会B的连接响应，B没有收到A的确认连接，就会关闭掉本次连接</code>。</p>
+<p>序列号的确认号的作用<br>TCP协议工作在OSI的传输层，是一种可靠的面向连接的数据流协议，TCP之所以可靠，是因为它保证了传送数据包的顺序。顺序是用一个序列号来保证的。响应包内也包括一个序列号，表示接收方准备好这个序列号的包。在TCP传送一个数据包时，它会把这个数据包放入重发队列中，同时启动计时器，如果收到了关于这个包的确认信息，便将此数据包从队列中删除，如果在计时器超时的时候仍然没有收到确认信息，则需要重新发送该数据包。另外，TCP通过数据分段中的序列号来保证所有传输的数据可以按照正常的顺序进行重组，从而保障数据传输的完整！</p>
+<p><strong>初始序列号</strong></p>
+<p>TCP连接的一方A，随机选择一个32位的序列号（Sequence Number）作为发送数据的初始序列号（Initial Sequence Number，ISN），比如为1000，以该序列号为原点，对要传送的数据进行编号：1001、1002…三次握手时，把这个初始序列号传送给另一方B，以便在传输数据时，B可以确认什么样的数据编号是合法的；同时在进行数据传输时，A还可以确认B收到的每一个字节，如果A收到了B的确认编号（acknowledge number）是2001，就说明编号为1001-2000的数据已经被B成功接受。</p>
 <h4 id="tcp四次挥手"><a href="#tcp四次挥手" class="headerlink" title="tcp四次挥手"></a><strong>tcp四次挥手</strong></h4><p>1）客户端进程发出连接释放报文，并且停止发送数据。释放数据报文首部，FIN=1，其序列号为seq=u（等于前面已经传送过来的数据的最后一个字节的序号加1），此时，客户端进入FIN-WAIT-1（终止等待1）状态。 TCP规定，FIN报文段即使不携带数据，也要消耗一个序号。<br>2）服务器收到连接释放报文，发出确认报文，ACK=1，ack=u+1，并且带上自己的序列号seq=v，此时，服务端就进入了CLOSE-WAIT（关闭等待）状态。TCP服务器通知高层的应用进程，客户端向服务器的方向就释放了，这时候处于半关闭状态，即客户端已经没有数据要发送了，但是服务器若发送数据，客户端依然要接受。这个状态还要持续一段时间，也就是整个CLOSE-WAIT状态持续的时间。<br>3）客户端收到服务器的确认请求后，此时，客户端就进入FIN-WAIT-2（终止等待2）状态，等待服务器发送连接释放报文（在这之前还需要接受服务器发送的最后的数据）。<br>4）服务器将最后的数据发送完毕后，就向客户端发送连接释放报文，FIN=1，ack=u+1，由于在半关闭状态，服务器很可能又发送了一些数据，假定此时的序列号为seq=w，此时，服务器就进入了LAST-ACK（最后确认）状态，等待客户端的确认。<br>5）客户端收到服务器的连接释放报文后，必须发出确认，ACK=1，ack=w+1，而自己的序列号是seq=u+1，此时，客户端就进入了TIME-WAIT（时间等待）状态。注意此时TCP连接还没有释放，必须经过2∗∗MSL（最长报文段寿命）的时间后，当客户端撤销相应的TCB后，才进入CLOSED状态。<br>6）服务器只要收到了客户端发出的确认，立即进入CLOSED状态。同样，撤销TCB后，就结束了这次的TCP连接。可以看到，服务器结束TCP连接的时间要比客户端早一些</p>
+<h4 id="半关闭状态"><a href="#半关闭状态" class="headerlink" title="半关闭状态"></a>半关闭状态</h4><p>TCP提供了连接的一端在结束它的发送后还能接收来自另一端数据的能力。这就是所谓的半关闭。</p>
+<p><strong>为什么需要半关闭</strong></p>
+<p>为了保证数据的完全交换，应该留出足够长的连接时间，但是应该留出多长的时间呢？</p>
+<p>比如客户端连接到服务器，服务器将一个文件传输给客户端，客户端收到后发送确认数据给服务器端</p>
+<p>这时服务器端只需要连续的传输文件数据，而客户端却无法知道需要接收数据到何时，客户端也不可能无休止的调用输入函数，因为这有可能导致程序阻塞(调用的函数未返回)</p>
+<p>服务器端应该在数据发送完毕后传递EOF表示文件结束，客户端接收到EOF即停止接收数据并向服务器端发送确认数据。close函数与shutdown都可以向客户端发送EOF数据，但使用close发送EOF后也无法接收对方传输的数据了，所以使用shutdown </p>
+<p>注意：即使使用了shutdown函数实现TCP套接字的半关闭，在最后依旧要使用close函数关闭套接字</p>
 <h4 id="TCP如何保证数据传输的可靠性"><a href="#TCP如何保证数据传输的可靠性" class="headerlink" title="TCP如何保证数据传输的可靠性"></a><strong>TCP如何保证数据传输的可靠性</strong></h4><ul>
 <li>应用数据被分割成TCP认为最适合发送的数据块</li>
 <li>TCP给发送的每一个包进行编号，接收方对数据包进行排序，把有序数据传输给应用层</li>
@@ -1017,6 +1175,15 @@
 <p>慢开始：由小到大逐渐增大发送窗口 ，要注意，发送方每收到一个确认报文段，cwnd+1（不包括缺失重传的确认），也就是说，每经过一个传输伦次（RTT时间），cwnd加倍。</p>
 <p>拥塞避免：设置一个窗口值，大于时采用拥塞避免，让拥塞窗口cwnd缓慢增大，每经过一个往返时间RTT就把发送的cwnd+1</p>
 <p>快重传与快恢复：当接收方收到了一个失序的报文，马上报告给发送方，我没收到，赶紧重传（<strong>天下武功唯快不破</strong>），假如M2收到了，M3没有收到，之后的M4,M5,M6又发送了，此时接收方一共连续给发送方反馈了4个M2确认报文。那么快重传规定，发送方只要连续收到3个重复确认，立即重传对方发来的M3</p>
+<h3 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h3><p>　　这是为了实现以上的通信过程而建立成来的通信管道，其真实的代表是客户端和服务器端的一个通信进程，双方进程通过socket进行通信，而通信的规则采用指定的协议。</p>
+<p>　　socket只是一种连接模式，不是协议，socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口（API）。</p>
+<p>　　通过Socket，我们才能使用TCP/IP协议。tcp、udp，简单的说（虽然不准确）是两个最基本的协议。</p>
+<p>　　很多其它协议都是基于这两个协议。如http就是基于tcp的，用socket可以创建tcp连接，也可以创建udp连接。</p>
+<p>　　这意味着，用socket可以创建任何协议的连接，因为其它协议都是基于此的。</p>
+<p>　　一个Socket实例由一个IP地址和一个端口号唯一确定。<br>　　Socket是一种用于网络通信的低层开发接口，借助于通信两端的应用程序(实际上是Socket)可以利用输入输出流完成数据交换。</p>
+<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　3）适合于客户端和服务器端之间信息实时交互；<br>　　4）可以加密,数据安全性强。 </p>
+<p><strong>Socket 传输的缺点</strong><br>　　1）需对传输的数据进行解析，转化成应用级的数据；<br>　　2）对开发人员的开发水平要求高；<br>　　3）相对于Http协议传输，增加了开发量</p>
+<p>基于Socket传输的特点：Socket 传输方式适合于对传输速度，安全性，实时交互，费用等要求高的应用中，如网络游戏，手机应用，银行内部交互等‘’。</p>
 <h2 id="用户态内核态"><a href="#用户态内核态" class="headerlink" title="用户态内核态"></a>用户态内核态</h2><h3 id="操作系统需要两种CPU状态"><a href="#操作系统需要两种CPU状态" class="headerlink" title="操作系统需要两种CPU状态"></a>操作系统需要两种CPU状态</h3><p>内核态（Kernel Mode）：运行操作系统程序，操作硬件</p>
 <p>用户态（User Mode）：运行用户程序</p>
 <h3 id="指令划分"><a href="#指令划分" class="headerlink" title="指令划分"></a>指令划分</h3><p>特权指令：只能由操作系统使用、用户程序不能使用的指令。 举例：启动I/O 内存清零 修改程序状态字 设置时钟 允许/禁止终端 停机</p>
@@ -4101,6 +4268,10 @@
 <p>总结一下反推的过程，就是 (当前index + m) % 上一轮剩余数字的个数。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lastRemaining</span><span class="params">(<span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="comment">// 最后一轮剩下2个人，所以从2开始反推</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt;= n; i++) &#123;</span><br><span class="line">            ans = (ans + m) % i;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">lastRemaining</span><span class="params">(<span class="keyword">int</span> n, <span class="keyword">int</span> m)</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;Integer&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;(n);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">            list.add(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> idx = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (n &gt; <span class="number">1</span>) &#123;</span><br><span class="line">            idx = (idx + m - <span class="number">1</span>) % n;</span><br><span class="line">            list.remove(idx);</span><br><span class="line">            n--;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list.get(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+
+
+<h2 id="Power-x-n-x的n次方"><a href="#Power-x-n-x的n次方" class="headerlink" title="Power(x,n) x的n次方"></a>Power(x,n) x的n次方</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">quickMul</span><span class="params">(<span class="keyword">double</span> x, <span class="keyword">long</span> N)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (N == <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="number">1.0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">double</span> y = quickMul(x, N / <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">return</span> N % <span class="number">2</span> == <span class="number">0</span> ? y * y : y * y * x;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">myPow</span><span class="params">(<span class="keyword">double</span> x, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> N = n;</span><br><span class="line">        <span class="keyword">return</span> N &gt;= <span class="number">0</span> ? quickMul(x, N) : <span class="number">1.0</span> / quickMul(x, -N);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
   </entry>
   <entry>
@@ -5320,7 +5491,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#105;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#117;&#98;&#46;&#x63;&#x6f;&#109;">&#x67;&#105;&#116;&#64;&#x67;&#x69;&#x74;&#104;&#117;&#98;&#46;&#x63;&#x6f;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#105;&#116;&#x40;&#x67;&#x69;&#116;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#x6d;">&#103;&#105;&#116;&#x40;&#x67;&#x69;&#116;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
