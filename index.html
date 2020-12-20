@@ -258,6 +258,82 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/20/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Yang">
+      <meta itemprop="description" content="醉后不知天在水，满船星梦压星河">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不斯">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/12/20/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" class="post-title-link" itemprop="url">Java设计模式</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-12-20 11:16:46 / 修改时间：13:14:13" itemprop="dateCreated datePublished" datetime="2020-12-20T11:16:46+08:00">2020-12-20</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>掌握常用的几种（最起码单例模式、工厂模式），了解其他的设计模式即可，做到手里有粮，心里不慌。首先，掌握每种模式的定义及使用场景。其次，掌握一个形象的例子，简单的过一遍代码。<br><strong>学习设计模式的真正目的：编程时，有意识地面向接口编程，多用封装、继承、组合、多态等OOP思想，而不仅仅是死记几类设计模式。</strong></p>
+<p><strong>常用的设计模式分类：</strong><br><strong>创建型</strong>（创建一个对象）：<strong>单例模式、工厂模式、抽象工厂模式</strong><br><strong>结构型</strong>（将几个对象组织成一个结构）：桥接模式、外观模式、代理模式<br><strong>行为型</strong>（多个对象间的通信）：观察者模式、策略模式<br>其中，<strong>工厂模式、桥接模式、策略模式</strong>有点像，放在一起理解（<strong>几个对象具有共同特征，因此继承共同的接口，然后通过工厂、桥去访问</strong>）。另外，<strong>工厂模式和外观模式</strong>（几个对象间有先后关系，是串行的，而非工厂模式中的并行，因此<strong>几个对象组合成一个外观类，通过这个外观类来访问</strong>）区别很明显，也因此放在一起理解。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2020/12/20/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/19/Mysql-Code/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -449,7 +525,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-19 18:52:26" itemprop="dateModified" datetime="2020-12-19T18:52:26+08:00">2020-12-19</time>
+                <time title="修改时间：2020-12-20 13:23:24" itemprop="dateModified" datetime="2020-12-20T13:23:24+08:00">2020-12-20</time>
               </span>
 
           
@@ -476,7 +552,35 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 实现接口Interface1</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyImplement</span> <span class="keyword">implements</span> <span class="title">Interface1</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        MyImplement myImplement = <span class="keyword">new</span> MyImplement();</span><br><span class="line">        <span class="comment">//直接调用helloWorld()方法</span></span><br><span class="line">        myImplement.helloWorld();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>可以看到，执行的结果为我们之前在接口Interface1中定义的默认方法。</p>
-<h3 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h3><h3 id="Final-Static关键字"><a href="#Final-Static关键字" class="headerlink" title="Final Static关键字"></a>Final Static关键字</h3><h4 id="final"><a href="#final" class="headerlink" title="final"></a>final</h4><p><strong>1.数据</strong></p>
+<h3 id="lambda表达式"><a href="#lambda表达式" class="headerlink" title="lambda表达式"></a>lambda表达式</h3><p>Lambda 表达式，也可称为闭包，它是推动 Java 8 发布的最重要新特性。</p>
+<p>Lambda 允许把函数作为一个方法的参数（函数作为参数传递进方法中）。</p>
+<p>使用 Lambda 表达式可以使代码变的更加简洁紧凑。</p>
+<p>以下是lambda表达式的重要特征:</p>
+<ul>
+<li><strong>可选类型声明：</strong>不需要声明参数类型，编译器可以统一识别参数值。</li>
+<li><strong>可选的参数圆括号：</strong>一个参数无需定义圆括号，但多个参数需要定义圆括号。</li>
+<li><strong>可选的大括号：</strong>如果主体包含了一个语句，就不需要使用大括号。</li>
+<li><strong>可选的返回关键字：</strong>如果主体只有一个表达式返回值则编译器会自动返回值，大括号需要指定明表达式返回了一个数值。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. 不需要参数,返回值为 5  </span></span><br><span class="line">() -&gt; <span class="number">5</span>   </span><br><span class="line"><span class="comment">// 2. 接收一个参数(数字类型),返回其2倍的值  </span></span><br><span class="line">x -&gt; <span class="number">2</span> * x    </span><br><span class="line"><span class="comment">// 3. 接受2个参数(数字),并返回他们的差值  </span></span><br><span class="line">(x, y) -&gt; x – y   </span><br><span class="line"><span class="comment">// 4. 接收2个int型整数,返回他们的和  </span></span><br><span class="line">(<span class="keyword">int</span> x, <span class="keyword">int</span> y) -&gt; x + y  </span><br><span class="line"><span class="comment">// 5. 接受一个 string 对象,并在控制台打印,不返回任何值(看起来像是返回void)  </span></span><br><span class="line">(String s) -&gt; System.out.print(s)</span><br></pre></td></tr></table></figure>
+
+<h3 id="方法引用实例"><a href="#方法引用实例" class="headerlink" title="方法引用实例"></a>方法引用实例</h3><ul>
+<li><p><strong>构造器引用：</strong>它的语法是Class::new，或者更一般的Class&lt; T &gt;::new实例如下：</p>
+<p>final Car car = Car.create( Car::new ); final List&lt; Car &gt; cars = Arrays.asList( car );</p>
+</li>
+<li><p><strong>静态方法引用：</strong>它的语法是Class::static_method，实例如下：</p>
+<p>cars.forEach( Car::collide );</p>
+</li>
+<li><p><strong>特定类的任意对象的方法引用：</strong>它的语法是Class::method实例如下：</p>
+<p>cars.forEach( Car::repair );</p>
+</li>
+<li><p><strong>特定对象的方法引用：</strong>它的语法是instance::method实例如下：</p>
+<p>final Car police = Car.create( Car::new ); cars.forEach( police::follow );</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Java8Tester</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String args[])</span></span>&#123;</span><br><span class="line">      List&lt;String&gt; names = <span class="keyword">new</span> ArrayList();</span><br><span class="line">        </span><br><span class="line">      names.add(<span class="string">&quot;Google&quot;</span>);</span><br><span class="line">      names.add(<span class="string">&quot;Runoob&quot;</span>);</span><br><span class="line">      names.add(<span class="string">&quot;Taobao&quot;</span>);</span><br><span class="line">      names.add(<span class="string">&quot;Baidu&quot;</span>);</span><br><span class="line">      names.add(<span class="string">&quot;Sina&quot;</span>);</span><br><span class="line">        </span><br><span class="line">      names.forEach(System.out::println);</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Final-Static关键字"><a href="#Final-Static关键字" class="headerlink" title="Final Static关键字"></a>Final Static关键字</h3><h4 id="final"><a href="#final" class="headerlink" title="final"></a>final</h4><p><strong>1.数据</strong></p>
 <p>声明数据为常量。可以是编译时常量，也可以是运行时被初始化后不能改变的常量。</p>
 <ul>
 <li>对于基本数据类型，final使其数值不变</li>
@@ -1306,11 +1410,8 @@
 <p>​     优化此类查询的一个最简单的方法是尽可能的使用索引覆盖扫描，而不是查询所有的列。然后根据需要做一次关联操作再返回所需的列。对于偏移量很大的时候这样做的效率会得到很大提升。</p>
 <p>​     对于下面的查询：</p>
 <p>​     select id,title from collect limit 90000,10;</p>
-<p>​     该语句存在的最大问题在于limit M,N中偏移量M太大（我们暂不考虑筛选字段上要不要添加索引的影响），导致每次查询都要先从整个表中找到满足条件 的前M条记录，</p>
-<p>​     之后舍弃这M条记录并从第M+1条记录开始再依次找到N条满足条件的记录。</p>
-<p>​     如果表非常大，且筛选字段没有合适的索引，且M特别大那么这样的代价是非常高的。 试想，如我们下一次的查询能从前一次查询结束后标记的位置开始查找，</p>
-<p>​     找到满足条件的100条记录，并记下下一次查询应该开始的位置，以便于下一次查询</p>
-<p>​     能直接从该位置 开始，这样就不必每次 查询都先从整个表中先找到满足条件的前M条记录，舍弃，在从M+1开始再找到100条满足条件的记录了。</p>
+<p>​     该语句存在的最大问题在于limit M,N中偏移量M太大（我们暂不考虑筛选字段上要不要添加索引的影响），导致每次查询都要先从整个表中找到满足条件 的前M条记录， 之后舍弃这M条记录并从第M+1条记录开始再依次找到N条满足条件的记录。</p>
+<p>​     如果表非常大，且筛选字段没有合适的索引，且M特别大那么这样的代价是非常高的。 试想，如我们下一次的查询能从前一次查询结束后标记的位置开始查找，找到满足条件的100条记录，并记下下一次查询应该开始的位置，以便于下一次查询能直接从该位置 开始，这样就不必每次 查询都先从整个表中先找到满足条件的前M条记录，舍弃，在从M+1开始再找到100条满足条件的记录了。</p>
 <p>​     方法一：考虑筛选字段（title）上加索引<br>​            title字段加索引 （此效率如何未加验证）</p>
 <p>​     方法二：先查询出主键id值</p>
 <p>​           select id,title from collect where id&gt;=(select id from collect order by id limit 90000,1) limit 10;</p>
@@ -2681,93 +2782,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/15/vue/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Yang">
-      <meta itemprop="description" content="醉后不知天在水，满船星梦压星河">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="不斯">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/15/vue/" class="post-title-link" itemprop="url">vue</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-10-15 13:12:21" itemprop="dateCreated datePublished" datetime="2020-10-15T13:12:21+08:00">2020-10-15</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-16 21:40:43" itemprop="dateModified" datetime="2020-10-16T21:40:43+08:00">2020-10-16</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Vue.js是一套构建用户界面的渐进式框架。与其他重量级框架不同的是，Vue 采用自底向上增量开发的设计。Vue 的核心库只关注视图层，并且非常容易学习，非常容易与其它库或已有项目整合。另一方面，Vue 完全有能力驱动采用单文件组件和Vue生态系统支持的库开发的复杂单页应用。</p>
-<p>Vue.js 的目标是通过尽可能简单的 API 实现响应的数据绑定和组合的视图组件  。</p>
-<p>Vue.js 自身不是一个全能框架——它只聚焦于视图层。因此它非常容易学习，非常容易与其它库或已有项目整合。另一方面，在与相关工具和支持库一起使用时 ，Vue.js 也能完美地驱动复杂的单页应用。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/15/vue/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -2835,7 +2853,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -2848,7 +2866,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
