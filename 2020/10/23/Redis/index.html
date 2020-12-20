@@ -31,7 +31,7 @@
 <meta property="og:description" content="Redis概述远程服务字典 免费和开源 当下最热门的NoSQL 技术  Redis作用   内存存储，持久化，内存中是断电即失，所以说持久化层很重要 效率高，可以用于高速缓存 发布订阅信息 地图信息分析 计时器，计数器（浏览量）   特性   多样的数据类型 持久化 支持集群 支持事物 。。。。。  Redis为什么快，为什么单线程 首先，采用了多路复用阻塞io机制; 然后，数据结构简单，操作节省">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-23T04:39:54.000Z">
-<meta property="article:modified_time" content="2020-12-14T02:39:02.483Z">
+<meta property="article:modified_time" content="2020-12-20T08:20:25.027Z">
 <meta property="article:author" content="Yang">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -232,7 +232,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-14 10:39:02" itemprop="dateModified" datetime="2020-12-14T10:39:02+08:00">2020-12-14</time>
+                <time title="修改时间：2020-12-20 16:20:25" itemprop="dateModified" datetime="2020-12-20T16:20:25+08:00">2020-12-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -290,6 +290,7 @@
 <li>最后，<strong>运行在内存中</strong>，自然速度快</li>
 <li><strong>单线程</strong>：Redis的瓶颈不是cpu的运行速度，而往往是网络带宽和机器的内存大小。单线程切换开销小，容易实现。</li>
 </ul>
+<p>多路复用是指使用一个线程来检查多个文件描述符（Socket）的就绪状态，比如调用select和poll函数，传入多个文件描述符（FileDescription，简称FD），如果有一个文件描述符（FileDescription）就绪，则返回，否则阻塞直到超时。得到就绪状态后进行真正的操作可以在同一个线程里执行，也可以启动线程执行（比如使用线程池）。虾米意思？就是派一个代表，同时监听多个文件描述符是否有数据到来。等着等着，如有有数据，就告诉某某你的数据来啦！赶紧来处理吧。有没有很感动，一个人待着，帮了很多人。医院的黄牛，一个人排队，大家只要把钱给它，它就会把号给需要的人，开个玩笑。。。。</p>
 <h2 id="Redis网络模型"><a href="#Redis网络模型" class="headerlink" title="Redis网络模型"></a>Redis网络模型</h2><h3 id="单线程模型原因"><a href="#单线程模型原因" class="headerlink" title="单线程模型原因"></a>单线程模型原因</h3><ol>
 <li><p>使用单线程模型能带来更好的可维护性，方便开发和调试；</p>
 </li>

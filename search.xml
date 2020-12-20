@@ -243,7 +243,7 @@
 <p>a. 从驱动表（左表）取出N条记录；<br>b. 拿着这N条记录，依次到被驱动表（右表）查找满足WHERE条件的记录；</p>
 <p>所以，官方sql的过程就是👇</p>
 <p>先把Person表搬过来</p>
-<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#x6a;&#x6f;&#x68;&#x6e;&#x40;&#101;&#120;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;">&#x6a;&#x6f;&#x68;&#x6e;&#x40;&#101;&#120;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;</a> |<br>| 2  | <a href="mailto:&#98;&#111;&#x62;&#64;&#x65;&#x78;&#x61;&#109;&#x70;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#98;&#111;&#x62;&#64;&#x65;&#x78;&#x61;&#109;&#x70;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#x6f;&#104;&#110;&#64;&#101;&#120;&#x61;&#109;&#x70;&#x6c;&#x65;&#x2e;&#99;&#111;&#109;">&#x6a;&#x6f;&#104;&#110;&#64;&#101;&#120;&#x61;&#109;&#x70;&#x6c;&#x65;&#x2e;&#99;&#111;&#109;</a> |<br>+—-+——————+</p>
+<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#x6f;&#x68;&#x6e;&#x40;&#x65;&#x78;&#97;&#109;&#x70;&#x6c;&#x65;&#46;&#x63;&#111;&#109;">&#106;&#x6f;&#x68;&#x6e;&#x40;&#x65;&#x78;&#97;&#109;&#x70;&#x6c;&#x65;&#46;&#x63;&#111;&#109;</a> |<br>| 2  | <a href="mailto:&#x62;&#x6f;&#x62;&#x40;&#101;&#x78;&#x61;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#x62;&#x6f;&#x62;&#x40;&#101;&#x78;&#x61;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#x6f;&#104;&#110;&#64;&#101;&#x78;&#x61;&#109;&#112;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;">&#x6a;&#x6f;&#104;&#110;&#64;&#101;&#x78;&#x61;&#109;&#112;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;</a> |<br>+—-+——————+</p>
 <p>a. 从表p1取出3条记录；<br>b. 拿着第1条记录去表p2查找满足WHERE的记录，代入该条件p1.Email = p2.Email AND p1.Id &gt; p2.Id后，发现没有满足的，所以不用删掉记录1；<br>c. 记录2同理；<br>d. 拿着第3条记录去表p2查找满足WHERE的记录，发现有一条记录满足，所以要从p1删掉记录3；<br>e. 3条记录遍历完，删掉了1条记录，这个DELETE也就结束了。</p>
 ]]></content>
       <categories>
@@ -542,9 +542,53 @@
 <p>唤醒在此对象监视器上等待的所有线程。（引出线程通信的提问）</p>
 <p><strong>13.finalize()</strong></p>
 <p>当垃圾回收器确定不存在对该对象的更多引用时，由对象的垃圾回收器调用此方法。（非重点，但小心引出垃圾回收的提问）</p>
-<h2 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h2><p>进程是计算机中运行的一个应用程序,运行时程序的封装，系统进行资源调度，分配的基本单位</p>
+<h3 id="垃圾回收"><a href="#垃圾回收" class="headerlink" title="垃圾回收"></a>垃圾回收</h3><p>垃圾收集GC（Garbage Collection）是Java语言的核心技术之一， 在Java中，程序员不需要去关心内存动态分配和垃圾回收的问题，这一切都交给了JVM来处理。针对GC我们这篇文章提出以下几个问题，GC中判定为垃圾的标准，标记垃圾的算法以及回收垃圾的算法。</p>
+<p><strong>什么样的对象才是垃圾？</strong></p>
+<p>这个问题其实很简单，对于Java对象来讲，如果说这个对象没有被其他对象所引用该对象就是无用的，此对象就被称为垃圾，其占用的内存也就要被销毁。那么自然而然的就引出了我们的第二个问题，判断对象为垃圾的算法都有哪些？</p>
+<p><strong>标记垃圾的算法</strong></p>
+<p>Java中标记垃圾的算法主要有两种， 引用计数法和可达性分析算法。我们首先来介绍引用计数法。</p>
+<h4 id="引用计数法"><a href="#引用计数法" class="headerlink" title="引用计数法"></a>引用计数法</h4><p>引用计数法就是给对象中添加一个引用计数器，每当有一个地方引用它，计数器就加 1；当引用失效，计数器就减 1；任何时候计数器为 0 的对象就是不可能再被使用的，可以当做垃圾收集。这种方法实现起来很简单而且优缺点都很明显。</p>
+<ul>
+<li><strong>优点 执行效率高，程序执行受影响较小</strong></li>
+<li><strong>缺点 无法检测出循环引用的情况，导致内存泄露</strong></li>
+</ul>
+<h4 id="可达性分析算法"><a href="#可达性分析算法" class="headerlink" title="可达性分析算法"></a>可达性分析算法</h4><p>这个算法的基本思想就是通过一系列的称为 “GC Roots” 的对象作为起点，从这些节点开始向下搜索，节点所走过的路径称为引用链，当一个对象到 GC Roots 没有任何引用链相连的话，则证明此对象是不可用的。</p>
+<p><strong>那么什么对象可以作为GCRoot？</strong></p>
+<ul>
+<li>虚拟机栈中的引用对象</li>
+<li>方法区中的常量引用对象</li>
+<li>方法区中的类静态属性引用对象</li>
+<li>本地方法栈中的引用对象</li>
+<li>活跃线程中的引用对象</li>
+</ul>
+<p><strong>那么不可达的对象是否是必死之局呢？答案也是否定的</strong></p>
+<p>在可达性分析法中不可达的对象，它们暂时处于“缓刑阶段”，要真正宣告一个对象死亡，至少要经历两次标记过程；可达性分析法中不可达的对象被第一次标记并且进行一次筛选，筛选的条件是此对象是否有必要执行 finalize 方法。当对象没有覆盖 finalize 方法，或 finalize 方法已经被虚拟机调用过时，虚拟机将这两种情况视为没有必要执行。被判定为需要执行的对象将会被放在一个队列中进行第二次标记，除非这个对象与引用链上的任何一个对象建立关联，否则就会被真的回收。</p>
+<h4 id="如何将垃圾回收？"><a href="#如何将垃圾回收？" class="headerlink" title="如何将垃圾回收？"></a>如何将垃圾回收？</h4><p>在Java中存在着四种垃圾回收算法，标记清除算法、复制算法、标记整理算法以及分代回收算法。</p>
+<p><strong>标记清除算法</strong></p>
+<p>该算法分为“标记”和“清除”两个阶段：标记阶段的任务是标记出所有需要被回收的对象，清除阶段就是回收被标记的对象所占用的空间。它是最基础的收集算法，效率也很高，但是会带来两个明显的问题：</p>
+<ul>
+<li><strong>效率问题</strong></li>
+<li><strong>空间问题（标记清除后会产生大量不连续的碎片）</strong></li>
+</ul>
+<p><strong>复制算法</strong></p>
+<p>为了解决效率问题，我们开发出了复制算法。它可以将内存分为大小相同的两块，每次使用其中的一块。当第一块的内存使用完后，就将还存活的对象复制到另一块去，然后再把使用的空间一次清理掉。这样就使每次的内存回收都是对内存区间的一半进行回收。</p>
+<p>简单来说就是该对象分为对象面以及空闲面，对象在对象面上创建，对象面上存活的对象会被复制到空闲面，接下来就可以清除对象面的内存。</p>
+<p>这种算法的优缺点也比较明显</p>
+<ul>
+<li><strong>优点：解决碎片化问题，顺序分配内存简单高效</strong></li>
+<li><strong>缺点：只适用于存活率低的场景，如果极端情况下如果对象面上的对象全部存活，就要浪费一半的存储空间。</strong></li>
+</ul>
+<p><strong>标记整理算法</strong></p>
+<p>为了解决复制算法的缺陷，充分利用内存空间，提出了标记整理算法。该算法标记阶段和标记清除一样，但是在完成标记之后，它不是直接清理可回收对象，而是将存活对象都向一端移动，然后清理掉端边界以外的内存。</p>
+<p><strong>分代收集算法</strong></p>
+<p>当前虚拟机的垃圾收集都采用分代收集算法，这种算法就是根据具体的情况选择具体的垃圾回收算法。一般将 java 堆分为新生代和老年代，这样我们就可以根据各个年代的特点选择合适的垃圾收集算法。</p>
+<p>比如在新生代中，每次收集都会有大量对象死去，所以可以选择复制算法，只需要付出少量对象的复制成本就可以完成每次垃圾收集。而老年代的对象存活几率是比较高的，而且没有额外的空间对它进行分配担保，所以我们必须选择“标记-清除”或“标记-整理”算法进行垃圾收集。</p>
+<h2 id="进程与线程（上下文）"><a href="#进程与线程（上下文）" class="headerlink" title="进程与线程（上下文）"></a>进程与线程（上下文）</h2><p>进程是计算机中运行的一个应用程序,运行时程序的封装，系统进行资源调度，分配的基本单位</p>
 <p>线程：执行该进程的逻辑单元。线程是用来执行进程的，进程的子任务，cpu调度分派的基本单位，保证程序的实时性</p>
 <p>进程在执行过程中拥有独立的内存单元，而多个线程共享进程的内存</p>
+<p>关于进程的定义有很多，一个经典的定义是一个执行中程序的实例，进程是程序的动态表现。 一个程序进行起来后，会使用很多资源，比如使用寄存器，内存，文件等。每当切换进程时，必须要考虑保存当前进程的状态。状态包括存放在内存中的程序的代码和数据，它<strong>的栈、通用目的寄存器的内容、程序计数器、环境变量以及打开的文件描述符的集合，这个状态叫做上下文（Context）。可见，想要切换进程，保存的状态还不少。</strong></p>
+<p>线程存在于进程中，一个进程可以有一个或多个线程。线程是运行在进程上下文中的逻辑流，简单说，线程可以理解为一个方法(Java)或函数（C），这个线程可以独立完成一项任务。同样线程有自己的上下文，包括<strong>唯一的整数线程ID， 栈、栈指针、程序计数器、通用目的寄存器和条件码。可以理解为线程上下文是进程上下文的子集。</strong></p>
+<p>由于保存线程的上下文明显比进程的上下文小，因此系统切换线程时，必然开销更小。</p>
 <p><strong>同一进程中的线程可以共享哪些数据</strong></p>
 <ul>
 <li>进程代码段</li>
@@ -583,18 +627,36 @@
 <p> run（）方法当作普通方法的方式调用，程序还是要顺序执行，还是要等待run方法体执行完毕后才可继续执行下面的代码： 而如果直接用run方法，这只是调用一个方法而已，程序中依然只有主线程–这一个线程，其程序执行路径还是只有一条，这样就没有达到多线程的目的</p>
 <h3 id="进程间的五种通信方式"><a href="#进程间的五种通信方式" class="headerlink" title="进程间的五种通信方式"></a>进程间的五种通信方式</h3><ul>
 <li><p>管道通信 </p>
-<p>管道是一种进程间通信的方式，在linux中分为有名管道和无dao名管道。zhuan有名管道就是把一shu个进程的输出写到一个文件中，再把此文件作为另一个进程的输入。<br>无名管道也是如此，只不过这个管道文件不直接可见而已，通常无名管道都作为一个进程组的形式完成，如ls | grep ‘a’，这就是一种进程间单向的通信方式。</p>
+<p>管道是一种进程间通信的方式，在linux中分为有名管道和无名管道。有名管道就是把一个进程的输出写到一个文件中，再把此文件作为另一个进程的输入。<br>无名管道也是如此，只不过这个管道文件不直接可见而已，通常无名管道都作为一个进程组的形式完成，如ls | grep ‘a’，这就是一种进程间单向的通信方式。</p>
 <p>管道是半双工的，数据只能向一个方向流动；需要双方通信时，需要建立起两个管道；</p>
 <p>一个进程向管道中写的内容被管道另一端的进程读出。写入的内容每次都添加在管道缓冲区的末尾，并且每次都是从缓冲区的头部读出数据；</p>
 <p>只能用于父子进程或者兄弟进程之间(具有亲缘关系的进程)</p>
 </li>
 <li><p>消息队列</p>
+<p>消息队列，是消息的链接表，存放在内核中。一个消息队列由一个标识符（即队列ID）来标识。    </p>
+<p>消息队列是面向记录的，其中的消息具有特定的格式以及特定的优先级。</p>
+<p>消息队列独立于发送与接收进程。进程终止时，消息队列及其内容并不会被删除。</p>
+<p>消息队列可以实现消息的随机查询,消息不一定要以先进先出的次序读取,也可以按消息的类型读取。</p>
 </li>
 <li><p>共享内存</p>
+<p>共享内存（Shared Memory），指两个或多个进程共享一个给定的存储区。</p>
+<ol>
+<li>共享内存是最快的一种 IPC，因为进程是直接对内存进行存取。</li>
+<li>因为多个进程可以同时操作，所以需要进行同步。</li>
+<li>信号量+共享内存通常结合在一起使用，信号量用来同步对共享内存的访问。</li>
+</ol>
 </li>
 <li><p>信号量</p>
+<p>信号量（semaphore），它是一个计数器。信号量用于实现进程间的互斥与同步，而不是用于存储进程间通信数据。</p>
+<ol>
+<li>信号量用于进程间同步，若要在进程间传递数据需要结合共享内存。</li>
+<li>信号量基于操作系统的 PV 操作，程序对信号量的操作都是原子操作。</li>
+<li>每次对信号量的 PV 操作不仅限于对信号量值加 1 或减 1，而且可以加减任意正整数。</li>
+<li>支持信号量组。</li>
+</ol>
 </li>
 <li><p>套接字socket通信</p>
+<p> 套解口也是一种进程间通信机制，与其他通信机制不同的是，它可用于不同及其间的进程通信</p>
 </li>
 </ul>
 <p>几种方式的比较：</p>
@@ -747,10 +809,10 @@
 <h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><p>线程池就是提前创建若干个线程，如果有任务需要处理，线程池里的线程就会处理任务，处理完之后线程并不会被销毁，而是等待下一个任务。由于创建和销毁线程都是消耗系统资源的，所以当你想要频繁的创建和销毁线程的时候就可以考虑使用线程池来提升系统的性能。</p>
 <p>java 提供了一个 java.util.concurrent.Executor接口的实现用于创建线程池。</p>
 <p><strong>四种线程池的创建：</strong></p>
-<p>1）newCachedThreadPool创建一个可缓存线程池</p>
-<p>2）newFixedThreadPool 创建一个定长线程池，可控制线程最大并发数。</p>
-<p>3）newScheduledThreadPool 创建一个定长线程池，支持定时及周期性任务执行。</p>
-<p>4）newSingleThreadExecutor 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务。</p>
+<p>1）newCachedThreadPool创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程</p>
+<p>2）newFixedThreadPool 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。</p>
+<p>3）newScheduledThreadPool 创建一个定长线程池，支持定时及周期性任务执行，创建一个可定期或者延时执行任务的定长线程池，支持定时及周期性任务执行。 </p>
+<p>4）newSingleThreadExecutor 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。</p>
 <p><strong>线程池的优点？</strong></p>
 <p>1）重用存在的线程，减少对象创建销毁的开销。</p>
 <p>2）可有效的控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。</p>
@@ -777,13 +839,13 @@
 <li>workQueue 工作队列</li>
 </ul>
 <p>新任务被提交后，会先进入到此工作队列中，任务调度时再从队列中取出任务。jdk中提供了四种工作队列：</p>
-<p>①ArrayBlockingQueue</p>
+<p>​    ①ArrayBlockingQueue</p>
 <p>基于数组的有界阻塞队列，按FIFO排序。新任务进来后，会放到该队列的队尾，有界的数组可以防止资源耗尽问题。当线程池中线程数量达到corePoolSize后，再有新任务进来，则会将任务放入该队列的队尾，等待被调度。如果队列已经是满的，则创建一个新线程，如果线程数量已经达到maxPoolSize，则会执行拒绝策略。</p>
-<p>②LinkedBlockingQuene</p>
+<p>​    ②LinkedBlockingQuene</p>
 <p>基于链表的无界阻塞队列（其实最大容量为Interger.MAX），按照FIFO排序。由于该队列的近似无界性，当线程池中线程数量达到corePoolSize后，再有新任务进来，会一直存入该队列，而不会去创建新线程直到maxPoolSize，因此使用该工作队列时，参数maxPoolSize其实是不起作用的。</p>
-<p>③SynchronousQuene</p>
+<p>​    ③SynchronousQuene</p>
 <p>一个不缓存任务的阻塞队列，生产者放入一个任务必须等到消费者取出这个任务。也就是说新任务进来时，不会缓存，而是直接被调度执行该任务，如果没有可用线程，则创建新线程，如果线程数量达到maxPoolSize，则执行拒绝策略。</p>
-<p>④PriorityBlockingQueue</p>
+<p>​    ④PriorityBlockingQueue</p>
 <p>具有优先级的无界阻塞队列，优先级通过参数Comparator实现。</p>
 <ul>
 <li>threadFactory 线程工厂</li>
@@ -793,11 +855,12 @@
 <li>handler 拒绝策略</li>
 </ul>
 <p><strong>线程池策略</strong></p>
-<p><strong>corePoolSize：核心线程数；maximunPoolSize：最大线程数</strong><br>每当有新的任务到线程池时，<br><strong>第一步：</strong> 先判断线程池中当前线程数量是否达到了<strong>corePoolSize</strong>，若未达到，则新建线程运行此任务，且任务结束后将该线程保留在线程池中，不做销毁处理，若当前线程数量已达到<strong>corePoolSize</strong>，则进入下一步；<br><strong>第二步：</strong> 判断工作队列(workQueue)是否已满，未满则将新的任务提交到工作队列中，满了则进入下一步；<br><strong>第三步：</strong> 判断线程池中的线程数量是否达到了<strong>maxumunPoolSize</strong>，如果未达到，则新建一个工作线程来执行这个任务，如果达到了则使用<strong>饱和策略</strong>来处理这个任务。<strong>注意：</strong> 在线程池中的线程数量超过<strong>corePoolSize</strong>时，每当有线程的空闲时间超过了keepAliveTime，这个线程就会被终止。直到线程池中线程的数量不大于<strong>corePoolSize</strong>为止。<br>（由第三步可知，在一般情况下，Java线程池中会长期保持<strong>corePoolSize</strong>个线程。）</p>
-<p><strong>饱和策略</strong></p>
-<p><strong>当工作队列满且线程个数达到maximunPoolSize后所采取的策略</strong><br>AbortPolicy：默认策略；新任务提交时直接抛出未检查的异常RejectedExecutionException，该异常可由调用者捕获。<br>CallerRunsPolicy：既不抛弃任务也不抛出异常，使用调用者所在线程运行新的任务。<br>DiscardPolicy：丢弃新的任务，且不抛出异常。<br>DiscardOldestPolicy：调用poll方法丢弃工作队列队头的任务，然后尝试提交新任务<br>自定义策略：根据用户需要定制。</p>
+<p><strong>corePoolSize：核心线程数；maximunPoolSize：最大线程数</strong><br>每当有新的任务到线程池时，<br><strong>第一步：</strong> 先判断线程池中当前线程数量是否达到了<strong>corePoolSize</strong>，若未达到，则新建线程运行此任务，且任务结束后将该线程保留在线程池中，不做销毁处理，若当前线程数量已达到<strong>corePoolSize</strong>，则进入下一步；<br><strong>第二步：</strong> 判断工作队列(workQueue)是否已满，未满则将新的任务提交到工作队列中，满了则进入下一步；<br><strong>第三步：</strong> 判断线程池中的线程数量是否达到了<strong>maxumunPoolSize</strong>，如果未达到，则新建一个工作线程来执行这个任务，如果达到了则使用<strong>拒绝策略</strong>来处理这个任务。<strong>注意：</strong> 在线程池中的线程数量超过<strong>corePoolSize</strong>时，每当有线程的空闲时间超过了keepAliveTime，这个线程就会被终止。直到线程池中线程的数量不大于<strong>corePoolSize</strong>为止。<br>（由第三步可知，在一般情况下，Java线程池中会长期保持<strong>corePoolSize</strong>个线程。）</p>
+<p><strong>拒绝策略</strong></p>
+<p><strong>当工作队列满且线程个数达到maximunPoolSize后所采取的策略</strong>：<br>1.AbortPolicy：<strong>默认策略；</strong>新任务提交时直接抛出未检查的异常RejectedExecutionException，该异常可由调用者捕获。<br>2.CallerRunsPolicy：既不抛弃任务也不抛出异常，使用调用者所在线程运行新的任务。<br>3.DiscardPolicy：丢弃新的任务，且不抛出异常。<br>4.DiscardOldestPolicy：调用poll方法丢弃工作队列队头的任务，然后尝试提交新任务<br>5.自定义策略：根据用户需要定制。</p>
 <h3 id="多线程中的上下文切换"><a href="#多线程中的上下文切换" class="headerlink" title="多线程中的上下文切换"></a>多线程中的上下文切换</h3><p>即使是单核CPU也支持多线程执行代码，CPU通过给每个线程分配CPU时间片来实现这个机制。时间片是CPU分配给各个线程的时间，因为时间片非常短，所以CPU通过不停地切换线程执行，让我们感觉多个线程时同时执行的，时间片一般是几十毫秒（ms）。</p>
 <p>CPU通过时间片分配算法来循环执行任务，当前任务执行一个时间片后会切换到下一个任务。但是，在切换前会保存上一个任务的状态，以便下次切换回这个任务时，可以再次加载这个任务的状态，<strong>从任务保存到再加载的过程就是一次上下文切换</strong>。</p>
+<p>进程上下文和中断上下文是操作系统中很重要的两个概念，这两个概念在操作系统课程中不断被提及，是最经常接触、看上去很懂但又说不清楚到底怎么回事的两个概念。造成这种局面的原因，可能是原来接触到的操作系统课程的教学总停留在一种浅层次的理论层面上，没有深入去研究。<br>　　处理器总处于以下三种状态之一：<br>1、内核态，运行于进程上下文，内核代表进程运行于内核空间；<br>2、内核态，运行于中断上下文，内核代表硬件运行于内核空间；<br>3、用户态，运行于用户空间。<br>　　用户空间的应用程序，通过系统调用，进入内核空间。这个时候用户空间的进程要传递 很多变量、参数的值给内核，内核态运行的时候也要保存用户进程的一些寄存 器值、变量等。<strong>所谓的“进程上下文”，可以看作是用户进程传递给内核的这些参数以及内核要保存的那一整套的变量和寄存器值和当时的环境等。</strong><br>　　硬件通过触发信号，导致内核调用中断处理程序，进入内核空间。这个过程中，硬件的 一些变量和参数也要传递给内核，内核通过这些参数进行中断处理。<strong>所谓的“ 中断上下文”，其实也可以看作就是硬件传递过来的这些参数和内核需要保存的一些其他环境（主要是当前被打断执行的进程环境）。</strong><br>　　LINUX完全注释中的一段话：<br>　　<strong>当一个进程在执行时,CPU的所有寄存器中的值、进程的状态以及堆栈中的内容被称 为该进程的上下文</strong>。当内核需要切换到另一个进程时，它需要保存当前进程的 所有状态，即保存当前进程的上下文，以便在再次执行该进程时，能够必得到切换时的状态执行下去。在LINUX中，当前进程上下文均保存在进程的任务数据结 构中。在发生中断时,内核就在被中断进程的上下文中，在内核态下执行中断服务例程。但同时会保留所有需要用到的资源，以便中继服务结束时能恢复被中断进程 的执行。<br>　　上下文context： 上下文简单说来就是一个环境，相对于进程而言，就是进程执行时的环境。具体来说就是各个变量和数据，包括所有的寄存器变量、进程打开的文件、内存信息等。<br><strong>一个进程的上下文可以分为三个部分:用户级上下文、寄存器上下文以及系统级上下文。</strong><br>用户级上下文: 正文、数据、用户堆栈以及共享存储区；<br>寄存器上下文: 通用寄存器、程序寄存器(IP)、处理器状态寄存器(EFLAGS)、栈指针(ESP)；<br>系统级上下文: 进程控制块task_struct、内存管理信息(mm_struct、vm_area_struct、pgd、pte)、内核栈。<br>当发生进程调度时，进行进程切换就是上下文切换(context switch).操作系统必须对上面提到的全部信息进行切换，新调度的进程才能运行。而系统调用进行的模式切换(mode switch)。模式切换与进程切换比较起来，容易很多，而且节省时间，因为模式切换最主要的任务只是切换进程寄存器上下文的切换。</p>
 <h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>两个或多个并发的进程中，每个进程持有资源而等待其他进程释放资源</p>
 <p>条件：互斥 请求与等待 不可抢占 环路等待</p>
 <p><strong>死锁避免</strong></p>
@@ -1057,6 +1120,14 @@
 </ul>
 <p><strong>MyISAM</strong> 管理非事务表。它提供高速存储和检索（MyISAM强调的是性能，每次查询具有原子性，其执行速度比InnoDB更快），以及全文搜索能力。如果表比较小，或者是只读数据（有大量的SELECT），还是可以使用MyISAM；</p>
 <p><strong>InnoDB</strong> 支持事务，并发情况下有很好的性能，基本可以替代MyISAM</p>
+<h3 id="查询流程"><a href="#查询流程" class="headerlink" title="查询流程"></a>查询流程</h3><p>1.客户端发送一条查询给服务器</p>
+<p>2.服务器先检查<strong>查询缓存</strong>(见下面注释),如果命中了缓存,则立刻返回存储在缓存中的结果.否则,进入下一个阶段</p>
+<p>3.服务器进行SQL解析.预处理,再由优化器生成对应的执行计划.</p>
+<p>4.MySQL根据优化器生成的执行计划,调用存储引擎的API来执行查询.</p>
+<p>5.将结果返回给客户端</p>
+<p>注释</p>
+<p><strong>查询缓存</strong></p>
+<p>在解析一个查询语句之前，如果查询缓存是打开的，那么MySQL会优先检查这个查询是否命中查询缓存中的数据。这个检查是通过一个对大小写敏感的哈希查找实现的。查询和缓存中的查询即使只有一个字节不同，那也不会匹配缓存结果，这种情况查询会进入下一个阶段的处理。<br>如果当前的查询恰好命中了查询缓存，那么在返回查询结果之前MySQL会检查一次用户权限。这仍然是无须解析查询SQL语句的，因为在查询缓存中已经存放了当前查询需要访问的表信息。如果权限没有问题，MySQL会跳过所有其他阶段，直接从缓存中拿到结果并返回给客户端。这种情况下，查询不会被解析，不用生成执行计划，不会被执行。</p>
 <h3 id="事务的特点-ACID"><a href="#事务的特点-ACID" class="headerlink" title="事务的特点 ACID"></a>事务的特点 ACID</h3><p>ACID</p>
 <ul>
 <li>原子性：事务是数据库的逻辑工作单位，事务中包含的各操作要么完成，要么都不完成</li>
@@ -1308,6 +1379,72 @@
 <li><p>游标（Cursor）：用于定位在查询返回的<strong>结果集的特定行</strong>，以对特定行进行操作。使用游标可以方便地对结果集进行移动遍历，根据需要滚动或对浏览/修改任意行中的数据。主要用于交互式应用。</p>
 </li>
 </ul>
+<h3 id="Redo日志"><a href="#Redo日志" class="headerlink" title="Redo日志"></a>Redo日志</h3><p>MySQL的崩溃恢复crash_safe能力依赖于Redo Log事务日志。当MySQL更改数据的时候，它的设计思想是先对内存中的数据进行修改，并且写Redo Log，即更改数据，总是遵循WAL日志先行机制。</p>
+<p>当MySQL更新数据的时候，其内部流程是怎么实现的呢？</p>
+<p>假设我要执行一条SQL：update T set name = ‘winner’ where ID=2，那么内部执行流程为：</p>
+<p>1、优化器找存储引擎取出ID=2这一行，如果ID=2这一行记录所在的数据页本身就在内存当中，那么就直接返回给执行器；否则需要从磁盘读取到内存当中，然后再返回给优化器；</p>
+<p>2、优化器拿到行数据之后，会对内存中的数据页进行修改，同时将这个更新操作记录到Redo Log。此时Redo Log处于 perpare 状态，然后告知执行器已经完成了，可以随时提交事务；</p>
+<p>3、接下来执行器会生成这个更新操作的binlog；</p>
+<p>4、执行器调用存储引擎的提交事务的接口，将刚刚写入的Redo Log改成commit状态；</p>
+<p><strong>为什么需要两阶段</strong></p>
+<p>这里它的2阶段是对应于不同类型的日志，所以两阶段为的就是让这个2个不同的日志做好处理与准备。</p>
+<p>1、假设是先写Redo Log，后写binlog。如果这个时候MySQL发生了进程的异常重启，由于Redo Log已经写完，MySQL崩溃之后通过crash_safe能力，能够把数据恢复回来。但是由于binlog还没写完就crash了，所以binlog里面并没有记录该SQL语句，所以使用binlog回档数据的时候，恢复出来的数据其实是少了一次更新操作的，这样就造成了灾难恢复出来的库和原库数据不一致；</p>
+<p>2、假设是先写binlog，后写Redo Log。Binlog写完之后发生了crash，由于Redo Log还没有写，崩溃恢复之后这个事务的更新是无效的。但是binlog里面记录了这条更新的语句，所以使用binlog回档的时候就多了一条事务的更新。造成回档出来的数据和原库的数据不一致。</p>
+<p><strong>那么两阶段提交就是：</strong></p>
+<p>1、prepare阶段，写redo log；</p>
+<p>2、commit阶段，写binlog并且将redo log的状态改成commit状态；</p>
+<p>mysql发生崩溃恢复的过程中，会根据redo log日志，结合 binlog 记录来做事务回滚：</p>
+<p>1、如果redo log 和 binlog都存在，逻辑上一致，那么提交事务；</p>
+<p>2、如果redo log存在而binlog不存在，逻辑上不一致，那么回滚事务；</p>
+<p>最后大家可发现，这里的两阶段提交，实际是存在与redo log与binlog。所以当未开启binlog，那就是提交事务直接写到redo log里面。这也就是redo log事务两阶段提交，看场景区分的原因。</p>
+<p><strong>了解下redo log、bin log的区别:</strong></p>
+<ul>
+<li><p>Binlog是server层的日志，主要做mysql功能层面的事情</p>
+</li>
+<li><p>与redo日志的区别:</p>
+<ul>
+<li><p>redo是innodb独有的，binlog是所有引擎都可以使用的</p>
+</li>
+<li><p>redo是物理日志，记录的是在某个数据页上做了什么修改，binlog是逻</p>
+<p>辑日志，记录的是这个语句的原始逻辑</p>
+</li>
+<li><p>redo是循环写的，空间会用完，binlog是可以追加写的，不会覆盖之前</p>
+<p>的日志信息</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>binlog</strong>：</p>
+<ul>
+<li><p>Binlog中会记录所有的逻辑，并且采用追加写的方式</p>
+</li>
+<li><p>一般在企业中数据库会有备份系统，可以定期执行备份，备份的</p>
+<p>周期可以自己设置</p>
+</li>
+<li><p>恢复数据的过程：</p>
+<p>– 1、找到最近一次的全量备份数据</p>
+<p>– 2、从备份的时间点开始，将备份的binlog取出来，重放到要恢复的那个时</p>
+<p>刻</p>
+</li>
+</ul>
+<h3 id="与Redis的区别"><a href="#与Redis的区别" class="headerlink" title="与Redis的区别"></a>与Redis的区别</h3><p>1.mysql和redis的数据库类型</p>
+<p>mysql是关系型数据库，主要用于存放持久化数据，将数据存储在硬盘中，读取速度较慢。</p>
+<p>redis是NOSQL，即非关系型数据库，也是缓存数据库，即将数据存储在缓存中，缓存的读取速度快，能够大大的提高运行效率，但是保存时间有限</p>
+<p>2.mysql的运行机制</p>
+<p>mysql作为持久化存储的关系型数据库，相对薄弱的地方在于每次请求访问数据库时，都存在着I/O操作，如果反复频繁的访问数据库。第一：会在反复链接数据库上花费大量时间，从而导致运行效率过慢；第二：反复的访问数据库也会导致数据库的负载过高，那么此时缓存的概念就衍生了出来。</p>
+<p>3.缓存</p>
+<p>缓存就是数据交换的缓冲区（cache），当浏览器执行请求时，首先会对在缓存中进行查找，如果存在，就获取；否则就访问数据库。</p>
+<p>缓存的好处就是读取速度快</p>
+<p>4.redis数据库</p>
+<p>redis数据库就是一款缓存数据库，用于存储使用频繁的数据，这样减少访问数据库的次数，提高运行效率。</p>
+<p>5.redis和mysql的区别总结</p>
+<p>（1）类型上</p>
+<p>从类型上来说，mysql是关系型数据库，redis是缓存数据库</p>
+<p>（2）作用上</p>
+<p>mysql用于持久化的存储数据到硬盘，功能强大，但是速度较慢</p>
+<p>redis用于存储使用较为频繁的数据到缓存中，读取速度快</p>
+<p>（3）需求上</p>
+<p>mysql和redis因为需求的不同，一般都是配合使用。</p>
 <h2 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h2><p><img src="/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/3.png"></p>
 <p><strong>冒泡排序</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 冒泡排序</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> array</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] bubbleSort(<span class="keyword">int</span>[] array) &#123;</span><br><span class="line">        <span class="keyword">if</span> (array.length == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> array;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++)</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; array.length - <span class="number">1</span> - i; j++)</span><br><span class="line">                <span class="keyword">if</span> (array[j + <span class="number">1</span>] &lt; array[j]) &#123;</span><br><span class="line">                    <span class="keyword">int</span> temp = array[j + <span class="number">1</span>];</span><br><span class="line">                    array[j + <span class="number">1</span>] = array[j];</span><br><span class="line">                    array[j] = temp;</span><br><span class="line">                &#125;</span><br><span class="line">        <span class="keyword">return</span> array;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -1578,6 +1715,8 @@
 <p>其次</p>
 <p>tcp提供可靠的传输协议，传输前需要建立连接，面向字节流，传输慢，效率低 适合一对一 无界的连续数据分成多块发送</p>
 <p>udp无法保证传输的可靠性，无需创建连接，以报文的方式传输，效率高 广播多播</p>
+<p>TCP应用场景：<br>效率要求相对低，但对准确性要求相对高的场景。因为传输中需要对数据确认、重发、排序等操作，相比之下效率没有UDP高。举几个例子：文件传输（准确高要求高、但是速度可以相对慢）、接受邮件、远程登录。</p>
+<p>UDP应用场景：<br>效率要求相对高，对准确性要求相对低的场景。举几个例子：QQ聊天、在线视频、网络语音电话（即时通讯，速度要求高，但是出现偶尔断续不是太大问题，并且此处完全不可以使用重发机制）、广播通信（广播、多播）。</p>
 <h4 id="TCP三次握手"><a href="#TCP三次握手" class="headerlink" title="TCP三次握手"></a><strong>TCP三次握手</strong></h4><p>第一次握手：建立连接时，客户端发送syn包（syn=1，seq=j）到服务器，并进入SYN_SENT状态，等待服务器确认；SYN：同步序列编号（Synchronize Sequence Numbers）。</p>
 <p>第二次握手：服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；</p>
 <p>第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK(ack=k+1），此包发送完毕，客户端和服务器进入ESTABLISHED（TCP连接成功）状态，完成三次握手</p>
@@ -1589,7 +1728,7 @@
 <p>TCP连接的一方A，随机选择一个32位的序列号（Sequence Number）作为发送数据的初始序列号（Initial Sequence Number，ISN），比如为1000，以该序列号为原点，对要传送的数据进行编号：1001、1002…三次握手时，把这个初始序列号传送给另一方B，以便在传输数据时，B可以确认什么样的数据编号是合法的；同时在进行数据传输时，A还可以确认B收到的每一个字节，如果A收到了B的确认编号（acknowledge number）是2001，就说明编号为1001-2000的数据已经被B成功接受。</p>
 <h4 id="tcp四次挥手"><a href="#tcp四次挥手" class="headerlink" title="tcp四次挥手"></a><strong>tcp四次挥手</strong></h4><p>1）客户端进程发出连接释放报文，并且停止发送数据。释放数据报文首部，FIN=1，其序列号为seq=u（等于前面已经传送过来的数据的最后一个字节的序号加1），此时，客户端进入FIN-WAIT-1（终止等待1）状态。 TCP规定，FIN报文段即使不携带数据，也要消耗一个序号。<br>2）服务器收到连接释放报文，发出确认报文，ACK=1，ack=u+1，并且带上自己的序列号seq=v，此时，服务端就进入了CLOSE-WAIT（关闭等待）状态。TCP服务器通知高层的应用进程，客户端向服务器的方向就释放了，这时候处于半关闭状态，即客户端已经没有数据要发送了，但是服务器若发送数据，客户端依然要接受。这个状态还要持续一段时间，也就是整个CLOSE-WAIT状态持续的时间。<br>3）客户端收到服务器的确认请求后，此时，客户端就进入FIN-WAIT-2（终止等待2）状态，等待服务器发送连接释放报文（在这之前还需要接受服务器发送的最后的数据）。<br>4）服务器将最后的数据发送完毕后，就向客户端发送连接释放报文，FIN=1，ack=u+1，由于在半关闭状态，服务器很可能又发送了一些数据，假定此时的序列号为seq=w，此时，服务器就进入了LAST-ACK（最后确认）状态，等待客户端的确认。<br>5）客户端收到服务器的连接释放报文后，必须发出确认，ACK=1，ack=w+1，而自己的序列号是seq=u+1，此时，客户端就进入了TIME-WAIT（时间等待）状态。注意此时TCP连接还没有释放，必须经过2∗∗MSL（最长报文段寿命）的时间后，当客户端撤销相应的TCB后，才进入CLOSED状态。<br>6）服务器只要收到了客户端发出的确认，立即进入CLOSED状态。同样，撤销TCB后，就结束了这次的TCP连接。可以看到，服务器结束TCP连接的时间要比客户端早一些</p>
 <h4 id="time-wait状态"><a href="#time-wait状态" class="headerlink" title="time_wait状态"></a>time_wait状态</h4><p>  为什么TIME_WAIT状态需要经过2MSL(最大报文段生存时间)才能返回到CLOSE状态？ </p>
-<p>  – 虽然按道理，四个报文都发送完毕，我们可以直接进入CLOSE状态了，但是我们必须假象网络是不可靠的，有可以最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文。在Client发送出最后的ACK回复，但该ACK可能丢失。Server如果没有收到ACK，将不断重复发送FIN片段。所以Client不能立即关闭，它必须确认Server接收到了该ACK。Client会在发送出ACK之后进入到TIME_WAIT状态。Client会设置一个计时器，等待2MSL的时间。如果在该时间内再次收到FIN，那么Client会重发ACK并再次等待2MSL。所谓的2MSL是两倍的MSL(Maximum Segment Lifetime)。MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复所需的最大时间。如果直到2MSL，Client都没有再次收到FIN，那么Client推断ACK已经被成功接收，则结束TCP连接。</p>
+<p>  – 虽然按道理，四个报文都发送完毕，我们可以直接进入CLOSE状态了，但是我们必须假象网络是不可靠的，有可能最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文。在Client发送出最后的ACK回复，但该ACK可能丢失。Server如果没有收到ACK，将不断重复发送FIN片段。所以Client不能立即关闭，它必须确认Server接收到了该ACK。Client会在发送出ACK之后进入到TIME_WAIT状态。Client会设置一个计时器，等待2MSL的时间。如果在该时间内再次收到FIN，那么Client会重发ACK并再次等待2MSL。所谓的2MSL是两倍的MSL(Maximum Segment Lifetime)。MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复所需的最大时间。如果直到2MSL，Client都没有再次收到FIN，那么Client推断ACK已经被成功接收，则结束TCP连接。</p>
 <h4 id="半关闭状态"><a href="#半关闭状态" class="headerlink" title="半关闭状态"></a>半关闭状态</h4><p>TCP提供了连接的一端在结束它的发送后还能接收来自另一端数据的能力。这就是所谓的半关闭。</p>
 <p><strong>为什么需要半关闭</strong></p>
 <p>为了保证数据的完全交换，应该留出足够长的连接时间，但是应该留出多长的时间呢？</p>
@@ -1615,9 +1754,9 @@
 <p><strong>拥塞控制</strong></p>
 <p>在某段时间，若对网络中某一资源的需求超过了该资源所能提供的可用部分，网络的性能就要变坏。这种情况就叫拥塞。拥塞控制就是为了防止过多的数据注入到网络中，这样就可以使网络中的路由器或链路不致过载。拥塞控制所要做的都有一个前提，就是网络能够承受现有的网络负荷。</p>
 <p>TCP的拥塞控制四种算法  慢开始 拥塞避免 快重传 快恢复</p>
-<p>慢开始：由小到大逐渐增大发送窗口 ，要注意，发送方每收到一个确认报文段，cwnd+1（不包括缺失重传的确认），也就是说，每经过一个传输伦次（RTT时间），cwnd加倍。</p>
-<p>拥塞避免：设置一个窗口值，大于时采用拥塞避免，让拥塞窗口cwnd缓慢增大，每经过一个往返时间RTT就把发送的cwnd+1</p>
-<p>快重传与快恢复：当接收方收到了一个失序的报文，马上报告给发送方，我没收到，赶紧重传（<strong>天下武功唯快不破</strong>），假如M2收到了，M3没有收到，之后的M4,M5,M6又发送了，此时接收方一共连续给发送方反馈了4个M2确认报文。那么快重传规定，发送方只要连续收到3个重复确认，立即重传对方发来的M3</p>
+<p><strong>慢开始</strong>：由小到大逐渐增大发送窗口 ，要注意，发送方每收到一个确认报文段，cwnd+1（不包括缺失重传的确认），也就是说，每经过一个传输伦次（RTT时间），cwnd加倍。</p>
+<p><strong>拥塞避免</strong>：设置一个窗口值，大于时采用拥塞避免，让拥塞窗口cwnd缓慢增大，每经过一个往返时间RTT就把发送的cwnd+1</p>
+<p><strong>快重传与快恢复</strong>：当接收方收到了一个失序的报文，马上报告给发送方，我没收到，赶紧重传（<strong>天下武功唯快不破</strong>），假如M2收到了，M3没有收到，之后的M4,M5,M6又发送了，此时接收方一共连续给发送方反馈了4个M2确认报文。那么快重传规定，发送方只要连续收到3个重复确认，立即重传对方发来的M3</p>
 <h3 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h3><p>　　这是为了实现以上的通信过程而建立成来的通信管道，其真实的代表是客户端和服务器端的一个通信进程，双方进程通过socket进行通信，而通信的规则采用指定的协议。</p>
 <p>　　socket只是一种连接模式，不是协议，socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口（API）。</p>
 <p>　　通过Socket，我们才能使用TCP/IP协议。tcp、udp，简单的说（虽然不准确）是两个最基本的协议。</p>
@@ -1658,6 +1797,7 @@
 <p><strong>这是用户态进程主动要求切换到内核态的一种方式</strong>，<strong>用户态进程通过系统调用申请使用操作系统提供的服务程序完成工作。</strong>比如前例中fork()实际上就是执行了一个创建新进程的系统调用。</p>
 <p>而系统调用的机制其核心还是使用了操作系统为用户特别开放的一个中断来实现，例如Linux的int 80h中断。</p>
 <p>用户程序通常调用库函数，由库函数再调用系统调用，因此有的库函数会使用户程序进入内核态（只要库函数中某处调用了系统调用），有的则不会。</p>
+<p>read write 文件读写操作</p>
 <ul>
 <li>异常</li>
 </ul>
@@ -1681,6 +1821,48 @@
 <p>epoll的优点：<br>并没有最大连接限制，没有监听上限，效率提升不是轮询的方式，只有活跃的FD才会调用callback函数</p>
 <p>两种工作模式：<br>LT模式：当epoll检测到描述符事件发生并将此事件通知应用程序，应用程序可以不立即处理该事件。下次调用epoll时，会再次响应应用程序并通知此事件。</p>
 <p>ET模式：当epoll检测到描述符事件发生并将此事件通知应用程序，应用程序必须立即处理该事件。如果不处理，下次调用epoll时，不会再次响应应用程序并通知此事件。</p>
+<h2 id="CPU调度算法"><a href="#CPU调度算法" class="headerlink" title="CPU调度算法"></a>CPU调度算法</h2><p>1、先到先服务调度算法（FCFS）</p>
+<p>　　根据就绪队列的到达时间来服务，此时就绪队列是一个FIFO队列，先到先服务，后到的线程不能抢占前面正在服务的线程。这种算法的优点是实现简单，缺点也很明显，就是CPU进程区间变化很大时，平均等待时间会变化很大。</p>
+<p>2、最短作业优先调度（SJF）</p>
+<p>　　顾名思义，就是CPU进程区间最短的先执行，如果两个进程区间具有同样的长度，那么按照FCFS来调度。</p>
+<p>　　SJF可以是抢占的，也可以是不抢占的。它的平均等待时间优于FCFS。</p>
+<p>3、优先级调度</p>
+<p>　　其实上面的SJF算法就是一种特殊的优先级调度，只不过这里的优先级定义更加广泛一些，SJF算法的优先级是按照CPU进程区间长短来定义的，这里的优先级可以是其他的一些定义。</p>
+<p>　　优先级调度可以是抢占的，也可以是非抢占的。</p>
+<p>　　优先级调度的一个主要问题是无穷阻塞（也称为饥饿），如果一个线程的优先级很低，可能需要等待很长的时间才能到这个线程执行，甚至永远不执行，一种解决方法是老化（随着时间的增长，增加线程的优先级）</p>
+<p>4、轮转法调度（RR）</p>
+<p>　　轮转法调度专门是为分时系统设计的。它类似于FCFS，但是增加了抢占为了切换线程。定义一个较小的时间单元，称为时间片，通常为10-100ms。为了实现RR算法，将就绪队列保存为FIFO队列，新进程增加到就绪队列队尾，CPU调度程序从就绪队列选择第一个进程，设置定时器在一个时间片之后再中断，再分派这个进程。</p>
+<p>　　如果该进程的CPU区间小于时间片，进程本身就会释放CPU，调度程序继续处理下一个进程，如果当前进程的CPU区间比时间片长，定时器会产生CPU中断，实行上下文切换，然后将此进程放到就绪队列队尾，继续调度就绪队列第一个进程。</p>
+<p>5、多级队列调度：</p>
+<p>　　这里对进程进行分组，在组内使用FCFS和SJF算法，在组间实行优先级调度或者轮转法调度。但是不允许进程在组间切换。</p>
+<p>6、多级反馈队列调度</p>
+<p>　　允许进程在组间切换，主要思想是根据不同区间的特点区分进程，如果CPU进程占用过多CPU时间，那么它会被转移到更低优先级队列。这种形式老化阻止饥饿。</p>
+<h2 id="操作系统中断和异常"><a href="#操作系统中断和异常" class="headerlink" title="操作系统中断和异常"></a>操作系统中断和异常</h2><h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p><strong>中断是为了实现多道程序并发执行而引入的一种技术</strong></p>
+<ol>
+<li>当中断发生时，CPU立即进入核心态</li>
+<li>当中断发生后，当前运行的进程暂停运行，并由操作系统内核对中断进行处理</li>
+<li>对于不同的中断信号，会进行不同的处理</li>
+</ol>
+<p>发生了中断，就意味着需要操作系统介入，开展管理工作。由于操作系统的管理工作（比如进程切换、分配I/0设备等）需要使用特权指令，因此CPU要从用户态转为核心态。<strong>中断可以使CPU从用户态切换为核心态，使操作系统获得计算机的控制权</strong>。有了中断，才能实现多道程序并发执行。</p>
+<p><strong>用户态 → 核心态：</strong> 通过中断实现的。并且中断是唯一途径。</p>
+<p><strong>核心态 → 用户态：</strong> 通过执行一个特权指令，将程序状态字（PSW）的标志位设置为“用户态”</p>
+<p><strong>中断分类</strong></p>
+<ul>
+<li>内中断：信号的来源在CPU内部，与当前执行的指令有关</li>
+<li>外中断：信号的来源在CPU外部，与当前执行的指令无关</li>
+</ul>
+<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a><strong>异常</strong></h3><p>​    当下述情况发生，CPU中断当前的执行流程，转到相应的错误处理程序或陷入处理程序：</p>
+<ul>
+<li>CPU执行指令时本身出现算术异常、零做除数、访存指令越界、虚存缺页等；</li>
+<li>正常异常，即执行了一条trap指令，用于实现系统调用</li>
+</ul>
+<h3 id="中断和异常的区分"><a href="#中断和异常的区分" class="headerlink" title="中断和异常的区分"></a>中断和异常的区分</h3><p>1、中断：通道（或设备）完成输入输出后，通道会“通知”CPU此次输入输出结束，这个“通知”就是中断。<br>可以看到，中断与CPU正在执行的指令并没有关系。</p>
+<p>2、异常：而异常则是正在执行的指令本身出现了错误（如算术溢出、地址越界）等。</p>
+<p>3、但中断和异常的结果都是使得“CPU暂停正在执行的程序”：</p>
+<p>  CPU接受“中断”后停止当前的任务，去继续上一个任务或继续当时在执行的任务（如何选择则是与调度有关）。</p>
+<p>  CPU接受“异常”后停止当前任务，去处理这些错误。 处理完成后CPU返回暂停点继续工作。</p>
+<p>4、中断：与正在执行的指令无关，可以屏蔽</p>
+<p>  异常：与正在执行的指令有关，不可屏蔽</p>
 ]]></content>
       <tags>
         <tag>other</tag>
@@ -1717,6 +1899,7 @@
 <li>最后，<strong>运行在内存中</strong>，自然速度快</li>
 <li><strong>单线程</strong>：Redis的瓶颈不是cpu的运行速度，而往往是网络带宽和机器的内存大小。单线程切换开销小，容易实现。</li>
 </ul>
+<p>多路复用是指使用一个线程来检查多个文件描述符（Socket）的就绪状态，比如调用select和poll函数，传入多个文件描述符（FileDescription，简称FD），如果有一个文件描述符（FileDescription）就绪，则返回，否则阻塞直到超时。得到就绪状态后进行真正的操作可以在同一个线程里执行，也可以启动线程执行（比如使用线程池）。虾米意思？就是派一个代表，同时监听多个文件描述符是否有数据到来。等着等着，如有有数据，就告诉某某你的数据来啦！赶紧来处理吧。有没有很感动，一个人待着，帮了很多人。医院的黄牛，一个人排队，大家只要把钱给它，它就会把号给需要的人，开个玩笑。。。。</p>
 <h2 id="Redis网络模型"><a href="#Redis网络模型" class="headerlink" title="Redis网络模型"></a>Redis网络模型</h2><h3 id="单线程模型原因"><a href="#单线程模型原因" class="headerlink" title="单线程模型原因"></a>单线程模型原因</h3><ol>
 <li><p>使用单线程模型能带来更好的可维护性，方便开发和调试；</p>
 </li>
@@ -4751,6 +4934,11 @@
 <p>新建一个needs[128] 用来统计t中每个字符出现次数，新建一个 window[128]用来统计滑动窗口中每个字符出现次数。首先统计出T中每个字母出现的次数. 新建两个变量left和right分别用来表示滑动窗口的左边和右边。新建一个变量count来表示目前窗口中已经找到了多少个字符。<br>以S = “ADOBECODEBANC”, T = “ABC”为例，然后按照如图所示的规律滑动窗口。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">minWindow</span><span class="params">(String s, String t)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 发现字符串的题 很多情况都是找子串问题</span></span><br><span class="line">        <span class="comment">// 问题：如何从字符串中找到目标子串</span></span><br><span class="line">        <span class="comment">// 滑动窗口</span></span><br><span class="line">        <span class="comment">// 方法：整型数组存放 Char， Char 的 int 值范围为 0 ~ 127</span></span><br><span class="line">        <span class="comment">// 利用数组 window 存放窗口中字符个数</span></span><br><span class="line">        <span class="comment">// 利用数组 need 存放匹配子串中需要的字符个数</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果字符串为空，或者长度小于需要匹配的长度</span></span><br><span class="line">        <span class="keyword">if</span>(s.length() == <span class="number">0</span> || t.length() == <span class="number">0</span> || s.length() &lt; t.length())&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] need = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">128</span>];</span><br><span class="line">        <span class="keyword">int</span>[] window = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">128</span>];</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 窗口中已经匹配的字符个数</span></span><br><span class="line">        <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> left = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> right = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> minLength = s.length();</span><br><span class="line">        String minString = <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// need 初始化</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; t.length(); i ++ )&#123;</span><br><span class="line">            need[t.charAt(i)] ++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(right &lt; s.length())&#123;</span><br><span class="line">            <span class="keyword">char</span> ch = s.charAt(right);</span><br><span class="line">            window[ch] ++;</span><br><span class="line">            <span class="comment">// 如果需要该字符，并且已有窗口内的字符个数 小于需要的字符个数</span></span><br><span class="line">            <span class="keyword">if</span>(need[ch] &gt; <span class="number">0</span> &amp;&amp; need[ch] &gt;= window[ch])&#123;</span><br><span class="line">                count ++;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 当需要的字符都已经包含在窗口中后，开始收缩 left</span></span><br><span class="line">            <span class="keyword">while</span>(count == t.length())&#123;</span><br><span class="line">                ch = s.charAt(left);</span><br><span class="line">                <span class="comment">// 当需要删除的字符，是必须留在窗口内时</span></span><br><span class="line">                <span class="keyword">if</span>(need[ch] &gt; <span class="number">0</span> &amp;&amp; need[ch] == window[ch])&#123;</span><br><span class="line">                    count --;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">// 这边需要取 = ，因为可能一开始两个字符串就是匹配的，如 a , a return a</span></span><br><span class="line">                <span class="keyword">if</span>(right - left + <span class="number">1</span> &lt;= minLength)&#123;</span><br><span class="line">                    minLength = right - left + <span class="number">1</span>;</span><br><span class="line">                    minString = s.substring(left, right + <span class="number">1</span>);</span><br><span class="line">                &#125;</span><br><span class="line">                window[ch] --;</span><br><span class="line">                left ++;</span><br><span class="line">            &#125;</span><br><span class="line">            right ++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> minString;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+
+
+<h2 id="求平衡点"><a href="#求平衡点" class="headerlink" title="求平衡点"></a>求平衡点</h2><p><strong>平衡点问题</strong>: 一个数组中的元素，如果其前面的部分等于后面的部分，那么这个点的位序就是平衡点。<br>  比如列表numbers = [1, 3, 5, 7, 8, 25, 4, 20]，25前面的总和为24，25，后面的总和也是24，那么25就是这个列表的平衡点。<br>  要求编写程序，寻找并返回任意一个列表的平衡点。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">balance_point_opt</span><span class="params">(ArrayList&lt;Integer&gt; a)</span></span>&#123;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">int</span> left_sum = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">int</span> right_sum = <span class="number">0</span>;</span><br><span class="line">       <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;a.size();i++)</span><br><span class="line">           right_sum += a.get(i);</span><br><span class="line"></span><br><span class="line">       <span class="comment">// 下标为1,2,3,...,a.length-2时的情形</span></span><br><span class="line">       <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">1</span>; i&lt;a.size()-<span class="number">1</span>;i++)&#123;</span><br><span class="line">           left_sum += a.get(i-<span class="number">1</span>);</span><br><span class="line">           right_sum -= a.get(i);</span><br><span class="line">           <span class="keyword">if</span>(left_sum == right_sum)</span><br><span class="line">               <span class="keyword">return</span> i;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
 ]]></content>
   </entry>
   <entry>
@@ -5970,7 +6158,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#105;&#116;&#64;&#103;&#x69;&#x74;&#104;&#117;&#x62;&#x2e;&#99;&#111;&#109;">&#103;&#105;&#116;&#64;&#103;&#x69;&#x74;&#104;&#117;&#x62;&#x2e;&#99;&#111;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#x69;&#116;&#64;&#103;&#105;&#116;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#109;">&#103;&#x69;&#116;&#64;&#103;&#105;&#116;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
