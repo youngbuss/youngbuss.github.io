@@ -243,7 +243,7 @@
 <p>a. 从驱动表（左表）取出N条记录；<br>b. 拿着这N条记录，依次到被驱动表（右表）查找满足WHERE条件的记录；</p>
 <p>所以，官方sql的过程就是👇</p>
 <p>先把Person表搬过来</p>
-<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#x6f;&#x68;&#x6e;&#x40;&#x65;&#x78;&#97;&#109;&#x70;&#x6c;&#x65;&#46;&#x63;&#111;&#109;">&#106;&#x6f;&#x68;&#x6e;&#x40;&#x65;&#x78;&#97;&#109;&#x70;&#x6c;&#x65;&#46;&#x63;&#111;&#109;</a> |<br>| 2  | <a href="mailto:&#x62;&#x6f;&#x62;&#x40;&#101;&#x78;&#x61;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#x62;&#x6f;&#x62;&#x40;&#101;&#x78;&#x61;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#x6f;&#104;&#110;&#64;&#101;&#x78;&#x61;&#109;&#112;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;">&#x6a;&#x6f;&#104;&#110;&#64;&#101;&#x78;&#x61;&#109;&#112;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;</a> |<br>+—-+——————+</p>
+<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#x6a;&#x6f;&#x68;&#x6e;&#x40;&#x65;&#120;&#x61;&#109;&#x70;&#108;&#x65;&#x2e;&#x63;&#111;&#109;">&#x6a;&#x6f;&#x68;&#x6e;&#x40;&#x65;&#120;&#x61;&#109;&#x70;&#108;&#x65;&#x2e;&#x63;&#111;&#109;</a> |<br>| 2  | <a href="mailto:&#x62;&#x6f;&#98;&#64;&#x65;&#x78;&#97;&#109;&#x70;&#108;&#x65;&#x2e;&#99;&#111;&#x6d;">&#x62;&#x6f;&#98;&#64;&#x65;&#x78;&#97;&#109;&#x70;&#108;&#x65;&#x2e;&#99;&#111;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#x6f;&#104;&#110;&#x40;&#x65;&#120;&#x61;&#109;&#112;&#108;&#101;&#46;&#x63;&#111;&#109;">&#x6a;&#x6f;&#104;&#110;&#x40;&#x65;&#120;&#x61;&#109;&#112;&#108;&#101;&#46;&#x63;&#111;&#109;</a> |<br>+—-+——————+</p>
 <p>a. 从表p1取出3条记录；<br>b. 拿着第1条记录去表p2查找满足WHERE的记录，代入该条件p1.Email = p2.Email AND p1.Id &gt; p2.Id后，发现没有满足的，所以不用删掉记录1；<br>c. 记录2同理；<br>d. 拿着第3条记录去表p2查找满足WHERE的记录，发现有一条记录满足，所以要从p1删掉记录3；<br>e. 3条记录遍历完，删掉了1条记录，这个DELETE也就结束了。</p>
 ]]></content>
       <categories>
@@ -455,7 +455,12 @@
 
 <h3 id="String创建对象"><a href="#String创建对象" class="headerlink" title="String创建对象"></a>String创建对象</h3><p>字符串创建对象方式有两种：直接赋值，new构造方法<br>比如 a,String name=”tom”；<br>b,String address=new String(“很恩贡特大学“）；<br>两个的区别<br>a,直接赋值；对象存入常量池中；当JVM创建字符串对象前会先去常量池中找有没有一个字符串内容与当前字符串相同，有：将已有的地址赋值给变量；无：创建新的对象。在字符串的比较是地址数的比较。</p>
 <p>在String创建的类中是先把存入的字符串放到堆中变量池中，在栈中开辟个空间name来存入地址调用的。</p>
-<p>new:直接存入堆内存，每new一次就会创建一个新的对象，在存入相同的内容时也不会设置两个引用变量指向同一块地方。<br>当我们在创建对象时就会在堆中自动创建个空间给new的对象了。</p>
+<p>new:直接存入<strong>堆内存</strong>，每new一次就会创建一个新的对象，在存入相同的内容时也不会设置两个引用变量指向同一块地方。<br>当我们在创建对象时就会在堆中自动创建个空间给new的对象了。</p>
+<p>如果不是用双引号声明的 String 对象，可以使用 String 提供的 intern 方法。String.intern() 是一个 Native 方法，它的作用是：如果运行时常量池中已经包含一个等于此 String 对象内容的字符串，则返回常量池中该字符串的引用；如果没有，JDK1.7之前（不包含1.7）的处理方式是在常量池中创建与此 String 内容相同的字符串，并返回常量池中创建的字符串的引用，JDK1.7以及之后的处理方式是在常量池中记录此字符串的引用，并返回该引用。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">String s1 = <span class="keyword">new</span> String(<span class="string">&quot;计算机&quot;</span>);</span><br><span class="line">String s2 = s1.intern();</span><br><span class="line">String s3 = <span class="string">&quot;计算机&quot;</span>;</span><br><span class="line">System.out.println(s2);<span class="comment">//计算机</span></span><br><span class="line">System.out.println(s1 == s2);<span class="comment">//false，因为一个是堆内存中的 String 对象一个是常量池中的 String 对象，</span></span><br><span class="line">System.out.println(s3 == s2);<span class="comment">//true，因为两个都是常量池中的 String 对象</span></span><br><span class="line">String str1 = <span class="string">&quot;str&quot;</span>;</span><br><span class="line">String str2 = <span class="string">&quot;ing&quot;</span>;</span><br><span class="line"></span><br><span class="line">String str3 = <span class="string">&quot;str&quot;</span> + <span class="string">&quot;ing&quot;</span>;<span class="comment">//常量池中的对象</span></span><br><span class="line">String str4 = str1 + str2; <span class="comment">//在堆上创建的新的对象      </span></span><br><span class="line">String str5 = <span class="string">&quot;string&quot;</span>;<span class="comment">//常量池中的对象</span></span><br><span class="line">System.out.println(str3 == str4);<span class="comment">//false</span></span><br><span class="line">System.out.println(str3 == str5);<span class="comment">//true</span></span><br><span class="line">System.out.println(str4 == str5);<span class="comment">//false</span></span><br></pre></td></tr></table></figure>
+
+
+
 <p><strong>String a=”abc”与String b=new String(“abc”)一样吗</strong></p>
 <p>从字节码中可以看到，String a=“abc”只创建了一个对象（就是”abc”，在运行时常量池）。然而String a=new String(“abc”)会<strong>创建额外的对象</strong>，看见new没有（意思是在堆上有创建了一个对象）。</p>
 <p>a,b两个对象都是用ldc指令将常量”abc”（本身就是一个String类型）加载进操作数栈的，所以a= =b是true。然而String d=new String(“abc”)会在堆中新new一个String对象，所以d == b为false。</p>
@@ -583,30 +588,39 @@
 <p><strong>分代收集算法</strong></p>
 <p>当前虚拟机的垃圾收集都采用分代收集算法，这种算法就是根据具体的情况选择具体的垃圾回收算法。一般将 java 堆分为新生代和老年代，这样我们就可以根据各个年代的特点选择合适的垃圾收集算法。</p>
 <p>比如在新生代中，每次收集都会有大量对象死去，所以可以选择复制算法，只需要付出少量对象的复制成本就可以完成每次垃圾收集。而老年代的对象存活几率是比较高的，而且没有额外的空间对它进行分配担保，所以我们必须选择“标记-清除”或“标记-整理”算法进行垃圾收集。</p>
-<h2 id="进程与线程（上下文）"><a href="#进程与线程（上下文）" class="headerlink" title="进程与线程（上下文）"></a>进程与线程（上下文）</h2><p>进程是计算机中运行的一个应用程序,运行时程序的封装，系统进行资源调度，分配的基本单位</p>
-<p>线程：执行该进程的逻辑单元。线程是用来执行进程的，进程的子任务，cpu调度分派的基本单位，保证程序的实时性</p>
-<p>进程在执行过程中拥有独立的内存单元，而多个线程共享进程的内存</p>
-<p>关于进程的定义有很多，一个经典的定义是一个执行中程序的实例，进程是程序的动态表现。 一个程序进行起来后，会使用很多资源，比如使用寄存器，内存，文件等。每当切换进程时，必须要考虑保存当前进程的状态。状态包括存放在内存中的程序的代码和数据，它<strong>的栈、通用目的寄存器的内容、程序计数器、环境变量以及打开的文件描述符的集合，这个状态叫做上下文（Context）。可见，想要切换进程，保存的状态还不少。</strong></p>
-<p>线程存在于进程中，一个进程可以有一个或多个线程。线程是运行在进程上下文中的逻辑流，简单说，线程可以理解为一个方法(Java)或函数（C），这个线程可以独立完成一项任务。同样线程有自己的上下文，包括<strong>唯一的整数线程ID， 栈、栈指针、程序计数器、通用目的寄存器和条件码。可以理解为线程上下文是进程上下文的子集。</strong></p>
-<p>由于保存线程的上下文明显比进程的上下文小，因此系统切换线程时，必然开销更小。</p>
-<p><strong>同一进程中的线程可以共享哪些数据</strong></p>
+<h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><h3 id="Java内存模型JMM"><a href="#Java内存模型JMM" class="headerlink" title="Java内存模型JMM"></a>Java内存模型JMM</h3><p>JMM规范了Java虚拟机与计算机内存是如何协同工作的：规定了一个线程如何和何时可以看到由其他线程修改过后的共享变量的值，以及在必须时如何同步的访问共享变量。</p>
+<p><img src="/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/4.png"></p>
+<p><strong>线程私有的：</strong></p>
 <ul>
-<li>进程代码段</li>
-<li>进程的公有数据（全局变量、静态变量…）</li>
-<li>进程打开的文件描述符</li>
-<li>进程的当前目录</li>
-<li>信号处理器/信号处理函数：对收到的信号的处理方式</li>
-<li>进程ID与进程组ID</li>
+<li><p><strong>程序计数器</strong></p>
+<ol>
+<li>字节码解释器通过改变程序计数器来依次读取指令，从而实现代码的流程控制，如：顺序执行、选择、循环、异常处理。</li>
+<li>在多线程的情况下，程序计数器用于记录当前线程执行的位置，从而当线程被切换回来的时候能够知道该线程上次运行到哪儿了。</li>
+</ol>
+</li>
+<li><p><strong>虚拟机栈</strong></p>
+<p>与程序计数器一样，Java 虚拟机栈也是线程私有的，它的生命周期和线程相同，描述的是 Java 方法执行的内存模型，每次方法调用的数据都是通过栈传递的。</p>
+</li>
+<li><p><strong>本地方法栈</strong></p>
+<p>和虚拟机栈所发挥的作用非常相似，区别是： <strong>虚拟机栈为虚拟机执行 Java 方法 （也就是字节码）服务，而本地方法栈则为虚拟机使用到的 Native 方法服务。</strong> 在 HotSpot 虚拟机中和 Java 虚拟机栈合二为一。</p>
+<p>本地方法被执行的时候，在本地方法栈也会创建一个栈帧，用于存放该本地方法的局部变量表、操作数栈、动态链接、出口信息。</p>
+<p>方法执行完毕后相应的栈帧也会出栈并释放内存空间，也会出现 StackOverFlowError 和 OutOfMemoryError 两种错误。</p>
+</li>
 </ul>
-<p><strong>线程独占哪些资源</strong></p>
+<p><strong>线程共享的：</strong></p>
 <ul>
-<li>线程ID</li>
-<li>一组寄存器的值</li>
-<li>线程自身的栈（堆是共享的）</li>
-<li>错误返回码：线程可能会产生不同的错误返回码，一个线程的错误返回码不应该被其它线程修改；</li>
-<li>信号掩码/信号屏蔽字(Signal mask)：表示是否屏蔽/阻塞相应的信号（SIGKILL,SIGSTOP除外）</li>
+<li><p>堆</p>
+<p>Java 虚拟机所管理的内存中最大的一块，Java 堆是所有线程共享的一块内存区域，在虚拟机启动时创建。<strong>此内存区域的唯一目的就是存放对象实例，几乎所有的对象实例以及数组都在这里分配内存。</strong></p>
+<p><strong>Java世界中“几乎”所有的对象都在堆中分配，但是，随着JIT编译期的发展与逃逸分析技术逐渐成熟，栈上分配、标量替换优化技术将会导致一些微妙的变化，所有的对象都分配到堆上也渐渐变得不那么“绝对”了。从jdk 1.7开始已经默认开启逃逸分析，如果某些方法中的对象引用没有被返回或者未被外面使用（也就是未逃逸出去），那么对象可以直接在栈上分配内存。</strong></p>
+<p>Java 堆是垃圾收集器管理的主要区域，因此也被称作<strong>GC 堆（Garbage Collected Heap）</strong>.</p>
+</li>
+<li><p>方法区</p>
+<p>它用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。虽然 <strong>Java 虚拟机规范把方法区描述为堆的一个逻辑部分</strong>，但是它却有一个别名叫做 <strong>Non-Heap（非堆）</strong>，目的应该是与 Java 堆区分开来。</p>
+</li>
+<li><p>直接内存 (非运行时数据区的一部分)</p>
+</li>
 </ul>
-<h3 id="创建进程的方式"><a href="#创建进程的方式" class="headerlink" title="创建进程的方式"></a>创建进程的方式</h3><ul>
+<h2 id="Java进程与线程"><a href="#Java进程与线程" class="headerlink" title="Java进程与线程"></a>Java进程与线程</h2><h3 id="创建进程的方式"><a href="#创建进程的方式" class="headerlink" title="创建进程的方式"></a>创建进程的方式</h3><ul>
 <li><p>继承Thread类，并复写run方法，创建该类对象，调用start方法开启线程</p>
 </li>
 <li><p>实现runnable接口，复写run方法，创建Thread类对象，将Runnable子类对象传递给Thread类对象，调用start方法开启线程</p>
@@ -625,109 +639,9 @@
 <p><strong>Thread类中的start()和run()方法有什么区别？</strong></p>
 <p> start（）方法来启动线程，真正实现了多线程运行，这时无需等待run方法体代码执行完毕而直接继续执行下面的代码： 通过调用Thread类的start()方法来启动一个线程，这时此线程是处于就绪状态，并没有运行。然后通过此Thread类调用方法run()来完成其运行操作的，这里方法run()称为线程体，它包含了要执行的这个线程的内容，Run方法运行结束，此线程终止，而CPU再运行其它线程。</p>
 <p> run（）方法当作普通方法的方式调用，程序还是要顺序执行，还是要等待run方法体执行完毕后才可继续执行下面的代码： 而如果直接用run方法，这只是调用一个方法而已，程序中依然只有主线程–这一个线程，其程序执行路径还是只有一条，这样就没有达到多线程的目的</p>
-<h3 id="进程间的五种通信方式"><a href="#进程间的五种通信方式" class="headerlink" title="进程间的五种通信方式"></a>进程间的五种通信方式</h3><ul>
-<li><p>管道通信 </p>
-<p>管道是一种进程间通信的方式，在linux中分为有名管道和无名管道。有名管道就是把一个进程的输出写到一个文件中，再把此文件作为另一个进程的输入。<br>无名管道也是如此，只不过这个管道文件不直接可见而已，通常无名管道都作为一个进程组的形式完成，如ls | grep ‘a’，这就是一种进程间单向的通信方式。</p>
-<p>管道是半双工的，数据只能向一个方向流动；需要双方通信时，需要建立起两个管道；</p>
-<p>一个进程向管道中写的内容被管道另一端的进程读出。写入的内容每次都添加在管道缓冲区的末尾，并且每次都是从缓冲区的头部读出数据；</p>
-<p>只能用于父子进程或者兄弟进程之间(具有亲缘关系的进程)</p>
-</li>
-<li><p>消息队列</p>
-<p>消息队列，是消息的链接表，存放在内核中。一个消息队列由一个标识符（即队列ID）来标识。    </p>
-<p>消息队列是面向记录的，其中的消息具有特定的格式以及特定的优先级。</p>
-<p>消息队列独立于发送与接收进程。进程终止时，消息队列及其内容并不会被删除。</p>
-<p>消息队列可以实现消息的随机查询,消息不一定要以先进先出的次序读取,也可以按消息的类型读取。</p>
-</li>
-<li><p>共享内存</p>
-<p>共享内存（Shared Memory），指两个或多个进程共享一个给定的存储区。</p>
-<ol>
-<li>共享内存是最快的一种 IPC，因为进程是直接对内存进行存取。</li>
-<li>因为多个进程可以同时操作，所以需要进行同步。</li>
-<li>信号量+共享内存通常结合在一起使用，信号量用来同步对共享内存的访问。</li>
-</ol>
-</li>
-<li><p>信号量</p>
-<p>信号量（semaphore），它是一个计数器。信号量用于实现进程间的互斥与同步，而不是用于存储进程间通信数据。</p>
-<ol>
-<li>信号量用于进程间同步，若要在进程间传递数据需要结合共享内存。</li>
-<li>信号量基于操作系统的 PV 操作，程序对信号量的操作都是原子操作。</li>
-<li>每次对信号量的 PV 操作不仅限于对信号量值加 1 或减 1，而且可以加减任意正整数。</li>
-<li>支持信号量组。</li>
-</ol>
-</li>
-<li><p>套接字socket通信</p>
-<p> 套解口也是一种进程间通信机制，与其他通信机制不同的是，它可用于不同及其间的进程通信</p>
-</li>
-</ul>
-<p>几种方式的比较：</p>
-<ul>
-<li>管道：速度慢，容量有限</li>
-<li>消息队列：容量受到系统限制，且要注意第一次读的时候，要考虑上一次没有读完数据的问题。</li>
-<li>信号量：不能传递复杂消息，只能用来同步</li>
-<li>共享内存区：能够很容易控制容量，速度快，但要保持同步，比如一个进程在写的时候，另一个进程要注意读写的问题，相当于线程中的线程安全，当然，共享内存区同样可以用作线程间通讯，不过没这个必要，线程间本来就已经共享了一块内存的。</li>
-</ul>
 <h3 id="线程间通信"><a href="#线程间通信" class="headerlink" title="线程间通信"></a>线程间通信</h3><p>​    <strong>Object类方法wait(),notify(),notifyAll()</strong><br>   线程执行wait()后，就放弃了运行资格，处于冻结状态；线程运行时，内存中会建立一个线程池，冻结状态的线程都存在于线程池中，notify()执行时唤醒的也是线程池中的线程，线程池中有多个线程时唤醒第一个被冻结的线程。<br>   notifyall(), 唤醒线程池中所有线程。<br>   wait(), notify(),notifyall()都用在同步里面，因为这3个函数是对持有锁的线程进行操作，而只有同步才有锁，所以要使用在同步中。<br>   wait(),notify(),notifyall(), 在使用时必须标识它们所操作的线程持有的锁，因为等待和唤醒必须是同一锁下的线程；而锁可以是任意对象，所以这3个方法都是Object类中的方法。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Resource</span></span>&#123;  <span class="comment">//生产者和消费者都要操作的资源  </span></span><br><span class="line">    <span class="keyword">private</span> String name;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count=<span class="number">1</span>;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> flag=<span class="keyword">false</span>;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(String name)</span></span>&#123;  </span><br><span class="line">        <span class="keyword">if</span>(flag)  </span><br><span class="line">            <span class="keyword">try</span>&#123;wait();&#125;<span class="keyword">catch</span>(Exception e)&#123;&#125;  </span><br><span class="line">        <span class="keyword">this</span>.name=name+<span class="string">&quot;---&quot;</span>+count++;  </span><br><span class="line">        System.out.println(Thread.currentThread().getName()+<span class="string">&quot;...生产者...&quot;</span>+<span class="keyword">this</span>.name);  </span><br><span class="line">        flag=<span class="keyword">true</span>;  </span><br><span class="line">        <span class="keyword">this</span>.notify();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">out</span><span class="params">()</span></span>&#123;  </span><br><span class="line">        <span class="keyword">if</span>(!flag)  </span><br><span class="line">            <span class="keyword">try</span>&#123;wait();&#125;<span class="keyword">catch</span>(Exception e)&#123;&#125;  </span><br><span class="line">        System.out.println(Thread.currentThread().getName()+<span class="string">&quot;...消费者...&quot;</span>+<span class="keyword">this</span>.name);  </span><br><span class="line">        flag=<span class="keyword">false</span>;  </span><br><span class="line">        <span class="keyword">this</span>.notify();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Producer</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> Resource res;  </span><br><span class="line">    Producer(Resource res)&#123;  </span><br><span class="line">        <span class="keyword">this</span>.res=res;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;  </span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;  </span><br><span class="line">            res.set(<span class="string">&quot;商品&quot;</span>);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Consumer</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> Resource res;  </span><br><span class="line">    Consumer(Resource res)&#123;  </span><br><span class="line">        <span class="keyword">this</span>.res=res;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;  </span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;  </span><br><span class="line">            res.out();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducerConsumerDemo</span></span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;  </span><br><span class="line">        Resource r=<span class="keyword">new</span> Resource();  </span><br><span class="line">        Producer pro=<span class="keyword">new</span> Producer(r);  </span><br><span class="line">        Consumer con=<span class="keyword">new</span> Consumer(r);  </span><br><span class="line">        Thread t1=<span class="keyword">new</span> Thread(pro);  </span><br><span class="line">        Thread t2=<span class="keyword">new</span> Thread(con);  </span><br><span class="line">        t1.start();  </span><br><span class="line">        t2.start();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;<span class="comment">//运行结果正常，生产者生产一个商品，紧接着消费者消费一个商品。  </span></span><br></pre></td></tr></table></figure>
 
-<h3 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h3><p><strong>一、先来先去服务</strong></p>
-<p>　　先来先去服务调度算法是一种最简单的调度算法，也称为先进先出或严格排队方案。当每个进程就绪后，它加入就绪队列。当前正运行的进程停止执行，选择在就绪队列中存在时间最长的进程运行。该算法既可以用于作业调度，也可以用于进程调度。先来先去服务比较适合于常作业（进程），而不利于段作业（进程）。</p>
-<p><strong>二、时间片轮转法</strong></p>
-<p>　　轮转法是基于适中的抢占策略的，以一个周期性间隔产生时钟中断，当中断发生后，当前正在运行的进程被置于就绪队列中，然后基于先来先去服务策略选择下一个就绪作业的运行。这种技术也称为时间片，因为每个进程再被抢占之前都给定一片时间。</p>
-<p><strong>三、最短进程优先</strong></p>
-<p>　　最短进程优先是一个非抢占策略，他的原则是下一次选择预计处理时间最短的进程，因此短进程将会越过长作业，跳至队列头。该算法即可用于作业调度，也可用于进程调度。但是他对长作业不利，不能保证紧迫性作业（进程）被及时处理，作业的长短只是被估算出来的。</p>
-<p><strong>四、最短剩余时间优先</strong></p>
-<p>　　最短剩余时间是针对最短进程优先增加了抢占机制的版本。在这种情况下，进程调度总是选择预期剩余时间最短的进程。当一个进程加入到就绪队列时，他可能比当前运行的进程具有更短的剩余时间，因此只要新进程就绪，调度程序就能可能抢占当前正在运行的进程。像最短进程优先一样，调度程序正在执行选择函数是必须有关于处理时间的估计，并且存在长进程饥饿的危险。</p>
-<p><strong>五、最高响应比优先</strong></p>
-<p>根据比率：R=(w+s)/s （R为响应比，w为等待处理的时间，s为预计的服务时间）</p>
-<p>　　如果该进程被立即调用，则R值等于归一化周转时间（周转时间和服务时间的比率）。R最小值为1.0，只有第一个进入系统的进程才能达到该值。调度规则为：当前进程完成或被阻塞时，选择R值最大的就绪进程，它说明了进程的年龄。当偏向短作业时，长进程由于得不到服务，等待时间不断增加，从而增加比值，最终在竞争中赢了短进程。</p>
-<p>　　和最短进程优先、最短剩余时间优先一样，使用最高响应比策略需要估计预计服务时间。</p>
-<p><strong>六、反馈法</strong></p>
-<p>　　如果没有关于进程相对长度的任何信息，则最短进程优先，最短剩余时间、最高响应优先比都不能使用。另一种导致偏向短作业的方法是处罚运行时间较长的作业，换句话说，如果不能获得剩余的执行时间，那就关注已执行了的时间。</p>
-<p>　　方法为：调度基于被抢占原则（按时间片）并使用动态优先级机制。当一个进程第一次进入系统中时，他被放置在一个优先级队列中，当第一次被抢占后并返回就绪状态时，它被放置在下一个低优先级队列中，在随后的时间里，每当被抢占时，他被降级到下一个低优先级队列中。一个短进程很快被执行完，不会在就绪队列中降很多级，一个长进程会逐渐降级。因此先到的进程和短进程优先于长进程和老进程。在每个队列中，除了优先级在最低的队列中之外，都是用简单的先来先去服务机制，一旦一个进程处于优先级最低的队列中，它就不可能在降级，但会重复的返回该队列，直到运行结束。因此，该队列课按照轮转方式调度。</p>
-<p> <strong>七、多级反馈队列调度算法</strong></p>
-<p>　　多级反馈队列算法，不必事先知道各种进程所需要执行的时间，他是当前被公认的一种较好的进程调度算法。其实施过程如下：</p>
-<p>　　1)设置多个就绪队列，并为各个队列赋予不同的优先级。在优先权越高的队列中，为每个进程所规定的执行时间片就越小。</p>
-<p>　　2)当一个新进程进入内存后，首先放入第一队列的末尾，按照先来先去原则排队等候调度。如果他能在一个时间片中完成，便可撤离；如果未完成，就转入第二队列的末尾，同样等待调度…..如此下去，当一个长作业（进程）从第一队列依次将到第n队列（最后队列）后，便按第n队列时间片轮转运行。</p>
-<p>　　3)仅当第一队列空闲的时候，调度程序才调度第二队列中的进程运行；仅当第1到（i-1）队列空时，才会调度第i队列中的进程运行，并执行相应的时间片轮转。</p>
-<p>　　4)如果处理机正在处理第i队列中某进程，又有新进程进入优先权较高的队列，则此新队列抢占正在运行的处理机，并把正在运行的进程放在第i队列的队尾。</p>
-<h3 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h3><p><strong>运行态</strong>：该进程正在执行。</p>
-<p><strong>就绪态</strong>：进程已经做好了准备，只要有机会就开始执行。</p>
-<p><strong>阻塞态</strong>（等待态）：进程在某些事情发生前不能执行，等待阻塞进程的事件完成。</p>
-<p>主要是上面三个</p>
-<p><strong>新建态</strong>：刚刚创建的进程，操作系统还没有把它加入到可执行进程组中，通常是进程控制块已经创建但是还没有加载到内存中的进程。</p>
-<p><strong>退出态</strong>：操作系统从可执行进程组中释放出的进程，或由于自身或某种原因停止运行。</p>
-<p><strong>空-&gt;新建</strong>：创建执行一个程序的新进程，可能的事件有：新的批处理作业、交互登录（终端用户登录到系统）、操作系统因为提供一项服务而创建、由现有的进程派生等。</p>
-<p>新建-&gt;就绪：操作系统准备好再接纳一个进程时，把一个进程从新建态转换为就绪态。</p>
-<p><strong>就绪-&gt;运行</strong>：需要选择一个新进程运行时，操作系统的调度器或分配器根据某种调度算法选择一个处于就绪态的进程。</p>
-<p><strong>运行-&gt;退出</strong>：导致进程终止的原因有：正常完成、超过时限、系统无法满足进程需要的内存空间、进程试图访问不允许访问的内存单元（越界）、算术错误（如除以0或存储大于硬件可以接纳的数字）、父进程终止（操作系统可能会自动终止该进程所有的后代进程）、父进程请求终止后代进程等。</p>
-<p><strong>运行-&gt;就绪</strong>：最常见的原因是，正在运行的进程到达了“允许不中断执行”的最大时间段，该把处理器的资源释放给其他在就绪态的进程使用了；还有一中原因可能是由于具有更改优先级的就绪态进程抢占了该进程的资源，使其被中断转换到就绪态。</p>
-<p><strong>运行-&gt;阻塞</strong>：如果进程请求它必须等待的某些事件，例如一个无法立即得到的资源（如I/O操作），只有在获得等待的资源后才能继续进程的执行，则进入等待态（阻塞态）。</p>
-<p><strong>阻塞-&gt;就绪</strong>：当等待的事件发生时，处于阻塞态的进程转换到就绪态。</p>
-<p><strong>就绪-&gt;退出</strong>：在上图中没有标出这种转换，在某些进程中，父进程可以在任何时刻终止一个子进程，如果一个父进程终止，所有相关的子进程都被终止。</p>
-<p><strong>阻塞-&gt;退出</strong>：跟上一项原因类似。</p>
-<h3 id="僵尸进程"><a href="#僵尸进程" class="headerlink" title="僵尸进程"></a>僵尸进程</h3><p>一个子进程结束后，它的父进程并没有等待它（调用wait或者waitpid），那么这个子进程将成为一个僵尸进程。僵尸进程是一个已经死亡的进程，但是并没有真正被销毁。它已经放弃了几乎所有内存空间，没有任何可执行代码，也不能被调度，仅仅在进程表中保留一个位置，记载该进程的进程ID、终止状态以及资源利用信息(CPU时间，内存使用量等等)供父进程收集，除此之外，僵尸进程不再占有任何内存空间。这个僵尸进程可能会一直留在系统中直到系统重启。</p>
-<p>危害：占用进程号，而系统所能使用的进程号是有限的；占用内存。</p>
-<h3 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h3><p>new runnable blocked waiting time-waiting terminated</p>
-<ol>
-<li>当进入到同步代码块或者同步方法时，且没有获取到锁，线程就进入到了blocked状态，直到被释放锁，重新进入到runnable状态</li>
-<li>当线程调用wait或者join时，线程都会进入到waiting状态，当调用notify或notifyAll时，或者join的线程执行结束后，会进入到runnable状态</li>
-<li>当线程调用sleep(time),或者wait(time)时，进入到timed waiting状态 当休眠结束时，或者调用otify或notifyAll时会重新进入到runnable状态</li>
-<li>程序结束后，线程进入到terminated状态</li>
-</ol>
-<h3 id="进程的同步方式"><a href="#进程的同步方式" class="headerlink" title="进程的同步方式"></a>进程的同步方式</h3><ol>
-<li>互斥量 采用互斥对象机制</li>
-<li>信号量 允许同一时刻多个线程访问同一资源</li>
-<li>事件</li>
-</ol>
-<h3 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h3><blockquote>
-<p>为什么需要线程同步：线程有时候会和其他线程共享一些资源，比如内存、数据库等。当多个线程同时读写同一份共享资源的时候，可能会发生冲突。因此需要线程的同步，多个线程按顺序访问资源。</p>
-</blockquote>
-<ul>
-<li><strong>互斥量</strong> Mutex：互斥量是内核对象，只有拥有互斥对象的线程才有访问互斥资源的权限。因为互斥对象只有一个，所以可以保证互斥资源不会被多个线程同时访问；当前拥有互斥对象的线程处理完任务后必须将互斥对象交出，以便其他线程访问该资源；</li>
-<li><strong>信号量</strong> Semaphore：信号量是内核对象，它允许同一时刻多个线程访问同一资源，但是需要控制同一时刻访问此资源的最大线程数量。信号量对象保存了<strong>最大资源计数</strong>和<strong>当前可用资源计数</strong>，每增加一个线程对共享资源的访问，当前可用资源计数就减1，只要当前可用资源计数大于0，就可以发出信号量信号，如果为0，则将线程放入一个队列中等待。线程处理完共享资源后，应在离开的同时通过<code>ReleaseSemaphore</code>函数将当前可用资源数加1。如果信号量的取值只能为0或1，那么信号量就成为了互斥量；</li>
-<li><strong>事件</strong> Event：允许一个线程在处理完一个任务后，主动唤醒另外一个线程执行任务。事件分为手动重置事件和自动重置事件。手动重置事件被设置为激发状态后，会唤醒所有等待的线程，而且一直保持为激发状态，直到程序重新把它设置为未激发状态。自动重置事件被设置为激发状态后，会唤醒<strong>一个</strong>等待中的线程，然后自动恢复为未激发状态。</li>
-<li><strong>临界区</strong> Critical Section：任意时刻只允许一个线程对临界资源进行访问。拥有临界区对象的线程可以访问该临界资源，其它试图访问该资源的线程将被挂起，直到临界区对象被释放。</li>
-</ul>
 <h3 id="Sleep-Wait区别"><a href="#Sleep-Wait区别" class="headerlink" title="Sleep Wait区别"></a>Sleep Wait区别</h3><p><strong>所属的类不同</strong> sleep是定义在Thread上，wait是定义在Object上</p>
 <p><strong>对于锁资源的处理方式不同</strong>  sleep不会释放锁，wait会释放锁</p>
 <p><strong>使用范围</strong>：sleep可以使用在任何代码块，wait必须在同步方法或者同步代码块中执行</p>
@@ -858,252 +772,278 @@
 <p><strong>corePoolSize：核心线程数；maximunPoolSize：最大线程数</strong><br>每当有新的任务到线程池时，<br><strong>第一步：</strong> 先判断线程池中当前线程数量是否达到了<strong>corePoolSize</strong>，若未达到，则新建线程运行此任务，且任务结束后将该线程保留在线程池中，不做销毁处理，若当前线程数量已达到<strong>corePoolSize</strong>，则进入下一步；<br><strong>第二步：</strong> 判断工作队列(workQueue)是否已满，未满则将新的任务提交到工作队列中，满了则进入下一步；<br><strong>第三步：</strong> 判断线程池中的线程数量是否达到了<strong>maxumunPoolSize</strong>，如果未达到，则新建一个工作线程来执行这个任务，如果达到了则使用<strong>拒绝策略</strong>来处理这个任务。<strong>注意：</strong> 在线程池中的线程数量超过<strong>corePoolSize</strong>时，每当有线程的空闲时间超过了keepAliveTime，这个线程就会被终止。直到线程池中线程的数量不大于<strong>corePoolSize</strong>为止。<br>（由第三步可知，在一般情况下，Java线程池中会长期保持<strong>corePoolSize</strong>个线程。）</p>
 <p><strong>拒绝策略</strong></p>
 <p><strong>当工作队列满且线程个数达到maximunPoolSize后所采取的策略</strong>：<br>1.AbortPolicy：<strong>默认策略；</strong>新任务提交时直接抛出未检查的异常RejectedExecutionException，该异常可由调用者捕获。<br>2.CallerRunsPolicy：既不抛弃任务也不抛出异常，使用调用者所在线程运行新的任务。<br>3.DiscardPolicy：丢弃新的任务，且不抛出异常。<br>4.DiscardOldestPolicy：调用poll方法丢弃工作队列队头的任务，然后尝试提交新任务<br>5.自定义策略：根据用户需要定制。</p>
-<h3 id="多线程中的上下文切换"><a href="#多线程中的上下文切换" class="headerlink" title="多线程中的上下文切换"></a>多线程中的上下文切换</h3><p>即使是单核CPU也支持多线程执行代码，CPU通过给每个线程分配CPU时间片来实现这个机制。时间片是CPU分配给各个线程的时间，因为时间片非常短，所以CPU通过不停地切换线程执行，让我们感觉多个线程时同时执行的，时间片一般是几十毫秒（ms）。</p>
-<p>CPU通过时间片分配算法来循环执行任务，当前任务执行一个时间片后会切换到下一个任务。但是，在切换前会保存上一个任务的状态，以便下次切换回这个任务时，可以再次加载这个任务的状态，<strong>从任务保存到再加载的过程就是一次上下文切换</strong>。</p>
-<p>进程上下文和中断上下文是操作系统中很重要的两个概念，这两个概念在操作系统课程中不断被提及，是最经常接触、看上去很懂但又说不清楚到底怎么回事的两个概念。造成这种局面的原因，可能是原来接触到的操作系统课程的教学总停留在一种浅层次的理论层面上，没有深入去研究。<br>　　处理器总处于以下三种状态之一：<br>1、内核态，运行于进程上下文，内核代表进程运行于内核空间；<br>2、内核态，运行于中断上下文，内核代表硬件运行于内核空间；<br>3、用户态，运行于用户空间。<br>　　用户空间的应用程序，通过系统调用，进入内核空间。这个时候用户空间的进程要传递 很多变量、参数的值给内核，内核态运行的时候也要保存用户进程的一些寄存 器值、变量等。<strong>所谓的“进程上下文”，可以看作是用户进程传递给内核的这些参数以及内核要保存的那一整套的变量和寄存器值和当时的环境等。</strong><br>　　硬件通过触发信号，导致内核调用中断处理程序，进入内核空间。这个过程中，硬件的 一些变量和参数也要传递给内核，内核通过这些参数进行中断处理。<strong>所谓的“ 中断上下文”，其实也可以看作就是硬件传递过来的这些参数和内核需要保存的一些其他环境（主要是当前被打断执行的进程环境）。</strong><br>　　LINUX完全注释中的一段话：<br>　　<strong>当一个进程在执行时,CPU的所有寄存器中的值、进程的状态以及堆栈中的内容被称 为该进程的上下文</strong>。当内核需要切换到另一个进程时，它需要保存当前进程的 所有状态，即保存当前进程的上下文，以便在再次执行该进程时，能够必得到切换时的状态执行下去。在LINUX中，当前进程上下文均保存在进程的任务数据结 构中。在发生中断时,内核就在被中断进程的上下文中，在内核态下执行中断服务例程。但同时会保留所有需要用到的资源，以便中继服务结束时能恢复被中断进程 的执行。<br>　　上下文context： 上下文简单说来就是一个环境，相对于进程而言，就是进程执行时的环境。具体来说就是各个变量和数据，包括所有的寄存器变量、进程打开的文件、内存信息等。<br><strong>一个进程的上下文可以分为三个部分:用户级上下文、寄存器上下文以及系统级上下文。</strong><br>用户级上下文: 正文、数据、用户堆栈以及共享存储区；<br>寄存器上下文: 通用寄存器、程序寄存器(IP)、处理器状态寄存器(EFLAGS)、栈指针(ESP)；<br>系统级上下文: 进程控制块task_struct、内存管理信息(mm_struct、vm_area_struct、pgd、pte)、内核栈。<br>当发生进程调度时，进行进程切换就是上下文切换(context switch).操作系统必须对上面提到的全部信息进行切换，新调度的进程才能运行。而系统调用进行的模式切换(mode switch)。模式切换与进程切换比较起来，容易很多，而且节省时间，因为模式切换最主要的任务只是切换进程寄存器上下文的切换。</p>
-<h3 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h3><p>两个或多个并发的进程中，每个进程持有资源而等待其他进程释放资源</p>
-<p>条件：互斥 请求与等待 不可抢占 环路等待</p>
-<p><strong>死锁避免</strong></p>
-<p>死锁避免的基本思想：系统对进程发出的每一个系统能够满足的资源申请进行动态检查，并根据检查结果决定是否分配资源，如果分配后系统可能发生死锁，则不予分配，否则予以分配，这是一种保证系统不进入死锁状态的动态策略。<br>如果操作系统能保证所有进程在有限时间内得到需要的全部资源，则系统处于安全状态否则系统是不安全的。</p>
+<h2 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h2><h3 id="七层模型"><a href="#七层模型" class="headerlink" title="七层模型"></a>七层模型</h3><p>应用层 表示层 会话层  为<strong>操作系统</strong>或<strong>网络应用程序</strong>提供访问网络服务的接口</p>
+<p>传输层(TCP UDP) 实现两个<strong>应用程序</strong>之间的数据透明传送（<strong>不一定可靠(UDP)**）。将上层数据分段，提供</strong>端到端**的可靠的(TCP)和不可靠的(UDP)服务。</p>
+<p>网络层  实现两个<strong>主机</strong>之间的数据透明传送（<strong>不一定可靠(IP)**）。主要功能：路由选择Routing；存储转发Forwarding；（一部分的）拥塞控制 **ICMP</strong>  路由器</p>
+<p>数据链路层  将源自网络层来的数据<strong>可靠地</strong>传输到<strong>相邻节点</strong>的目标机网络层 **Ethernet以太网协议，用于实现链路层的数据传输和地址封装 **交换机</p>
+<p>物理层 确保原始的数据可在各种物理媒体上以比特流的形式<strong>可靠地</strong>传输</p>
+<p><strong>应用层协议如下：</strong></p>
+<p>(1)域名系统(Domain Name System，DNS)：用于实现网络设备名字到baiIP地址映射的网络服务。</p>
+<p>(2)文件传输协议(File Transfer Protocol，FTP)：用于实现交互式文件传输功能。</p>
+<p>(3)简单邮件传送协议(Simple Mail Transfer Protocol, SMTP)：用于实现电子邮箱传送功能。</p>
+<p>(4)超文本传输协议(HyperText Transfer Protocol，HTTP)：用于实现WWW服务。</p>
+<p>(5)简单网络管理协议(simple Network Management Protocol，SNMP)：用于管理与监视网络设备。</p>
+<p>(6)远程登录协议(Telnet)：用于实现远程登录功能。</p>
+<p><strong>ICMP</strong>是（Internet Control Message Protocol）baiInternet控制报文协议。它是TCP/IP协议簇的一个子协议，用于在IP主机、路由器之间传递控制消息。属于网络层协议</p>
+<p>控制消息是指网络通不通、主机是否可达、路由是否可用等网络本身的消息。这些控制消息虽然并不传输用户数据，但是对于用户数据的传递起着重要的作用。</p>
+<h3 id="端到端，点到点的区别"><a href="#端到端，点到点的区别" class="headerlink" title="端到端，点到点的区别"></a>端到端，点到点的区别</h3><ul>
+<li><strong>端到端是针对传输层</strong>说的。在数据传输之前，先为数据的传输开辟一条通道，然后在进行传输。</li>
+<li><strong>点到点通信是针对数据链路层或网络层</strong>来说的，是指一个设备发数据给<strong>直接连接</strong>的其他设备，通过一台一台直接相连的设备把数据传递到接收端。</li>
+<li>端到端的优点是，链路建立之后，发送端知道接收端<strong>一定能收到</strong>。而点到点发送端发出数据后，<strong>不知道</strong>接收端能否收到或何时能收到数据。</li>
+<li>端到端传输的缺点是直到接收端收到数据为止，<strong>发送端的设备一直要参与</strong>传输。点到点传输则在发送端设备送出数据后，它的<strong>任务已经完成</strong>。</li>
+<li>端到端经过中间交换设备时不需要进行存储转发（至少不可见），而点到点需要。但如果接收端设备关机或故障，点到点传输可以采用<strong>存储转发技术进行缓冲</strong>，端到端则传输失败。</li>
+</ul>
+<h3 id="GET和POST的区别"><a href="#GET和POST的区别" class="headerlink" title="GET和POST的区别"></a>GET和POST的区别</h3><ol>
+<li>GET是<strong>幂等</strong>的，即读取同一个资源总是得到相同的数据，POST不是幂等的；</li>
+<li>GET一般用于从服务器<strong>获取</strong>资源，而POST有可能<strong>改变</strong>服务器上的资源；</li>
+<li>GET请求（包括参数）<strong>可被保存</strong>到收藏夹，POST则不可以</li>
+<li>GET请求的数据明文附在<strong>URL之后</strong>；POST请求的数据在HTTP <strong>body中</strong>；</li>
+<li>GET只允许ASCII字符，POST对<strong>数据类型</strong>没有要求，也允许二进制数据；</li>
+<li>GET的长度有限制（操作系统或者浏览器），而POST<strong>数据大小</strong>无限制</li>
+</ol>
+<h3 id="HTTP常见状态码"><a href="#HTTP常见状态码" class="headerlink" title="HTTP常见状态码"></a>HTTP常见状态码</h3><ul>
+<li>1xx：信息服务器收到请求，需要请求者继续执行操作</li>
+<li>2xx：成功 </li>
+<li>3xx：重定向</li>
+<li>4xx:客户端错误</li>
+<li>5xx:服务器错误</li>
+</ul>
+<p>301（永久移动）请求的网页已永久移动到新位置。服务器返回此响应（对 GET 或 HEAD 请求的响应）时，会自动将请求者转到新位置。您应使用此代码告诉 Googlebot 某个网页或网站已永久移动到新位置。</p>
+<p>302（临时移动）服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来响应以后的请求。此代码与响应 GET 和 HEAD 请求的 301 代码类似，会自动将请求者转到不同的位置，但您不应使用此代码来告诉 Googlebot 某个网页或网站已经移动，因为 Googlebot 会继续抓取原有位置并编制索引。</p>
+<p>400（错误请求）服务器不理解请求的语法。</p>
+<p>401（未授权）请求要求身份验证。对于登录后请求的网页，服务器可能返回此响应。</p>
+<p>403（禁止）服务器拒绝请求。如果您在 Googlebot 尝试抓取您网站上的有效网页时看到此状态码（您可以在 Google 网站管理员工具诊断下的网络抓取页面上看到此信息），可能是您的服务器或主机拒绝了 Googlebot 访问。</p>
+<p>404（未找到）服务器找不到请求的网页。例如，对于服务器上不存在的网页经常会返回此代码。</p>
+<p>如果您的网站上没有 robots.txt 文件，而您在 Google 网站管理员工具“诊断”标签的 robots.txt 页上看到此状态码，则这是正确的状态码。但是，如果您有 robots.txt 文件而又看到此状态码，则说明您的 robots.txt 文件可能命名错误或位于错误的位置（该文件应当位于顶级域，名为 robots.txt）。</p>
+<p>如果对于 Googlebot 抓取的网址看到此状态码（在”诊断”标签的 HTTP 错误页面上），则表示 Googlebot 跟随的可能是另一个页面的无效链接（是旧链接或输入有误的链接）。</p>
+<p>500（服务器内部错误）服务器遇到错误，无法完成请求。</p>
+<p>501（尚未实施）服务器不具备完成请求的功能。例如，服务器无法识别请求方法时可能会返回此代码。</p>
+<p>502（错误网关）服务器作为网关或代理，从上游服务器收到无效响应。</p>
+<p>503（服务不可用）服务器目前无法使用（由于超载或停机维护）。通常，这只是暂时状态。</p>
+<h3 id="HTTP与Https"><a href="#HTTP与Https" class="headerlink" title="HTTP与Https"></a>HTTP与Https</h3><p><strong>HTTP：80端口 keep-alive：请求应答模式无连接协议，输入这个客户端到服务端连接持续有效</strong></p>
+<p><strong>https: 443端口 http+ssl</strong> </p>
 <ol>
-<li><ol>
-<li>安全状态是指：如果系统存在 由所有的安全序列{P1，P2，…Pn},则系统处于安全状态。一个进程序列是安全的，如果对其中每一个进程Pi(i &gt;=1 &amp;&amp; i &lt;= n)他以后尚需要的资源不超过系统当前剩余资源量与所有进程Pj(j &lt; i)当前占有资源量之和，系统处于安全状态则不会发生死锁。</li>
-<li>不安全状态：如果不存在任何一个安全序列，则系统处于不安全状态</li>
+<li>端口不同：HTTP使用的是80端口，HTTPS使用443端口；</li>
+<li>HTTP（超文本传输协议）信息是明文传输，HTTPS运行在SSL(Secure Socket Layer)之上，添加了加密和认证机制，更加安全；</li>
+<li>HTTPS由于加密解密会带来更大的CPU和内存开销；</li>
+<li>HTTPS通信需要证书，一般需要向证书颁发机构（CA）购买</li>
+</ol>
+<p><strong>http长连接 短连接</strong></p>
+<p>在HTTP/1.0中默认使用短连接。也就是说，客户端和服务器每进行一次HTTP操作，就建立一次连接，任务结束就中断连接。当客户端浏览器访问的某个HTML或其他类型的Web页中包含有其他的Web资源（如JavaScript文件、图像文件、CSS文件等），每遇到这样一个Web资源，浏览器就会重新建立一个HTTP会话。</p>
+<p>而从HTTP/1.1起，默认使用长连接，用以保持连接特性。使用长连接的HTTP协议，会在响应头加入这行代码：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">Connection:keep-alive</span><br></pre></td></tr></table></figure>
+
+<p>在使用长连接的情况下，当一个网页打开完成后，客户端和服务器之间用于传输HTTP数据的TCP连接不会关闭，客户端再次访问这个服务器时，会继续使用这一条已经建立的连接。Keep-Alive不会永久保持连接，它有一个保持时间，可以在不同的服务器软件（如Apache）中设定这个时间。实现长连接需要客户端和服务端都支持长连接。</p>
+<p><strong>http无状态，如何保存用户信息</strong></p>
+<p>HTTP 是一种不保存状态，即无状态（stateless）协议。也就是说 HTTP 协议自身不对请求和响应之间的通信状态进行保存。那么我们保存用户状态呢？Session 机制的存在就是为了解决这个问题，Session 的主要作用就是通过服务端记录用户的状态。典型的场景是购物车，当你要添加商品到购物车的时候，系统不知道是哪个用户操作的，因为 HTTP 协议是无状态的。服务端给特定的用户创建特定的 Session 之后就可以标识这个用户并且跟踪这个用户了（一般情况下，服务器会在一定时间内保存这个 Session，过了时间限制，就会销毁这个Session）。</p>
+<p>在服务端保存 Session 的方法很多，最常用的就是内存和数据库(比如是使用内存数据库redis保存)。既然 Session 存放在服务器端，那么我们如何实现 Session 跟踪呢？大部分情况下，我们都是通过在 Cookie 中附加一个 Session ID 来方式来跟踪。</p>
+<p><strong>Cookie 被禁用怎么办?</strong></p>
+<p>最常用的就是利用 URL 重写把 Session ID 直接附加在URL路径的后面。</p>
+<h3 id="https建立连接过程"><a href="#https建立连接过程" class="headerlink" title="https建立连接过程"></a>https建立连接过程</h3><p>非对称加密+对称加密结合 而且得尽量减少非对称加密的次数。非对称加密、解密各只需用一次即可。<br>请看一下这个过程：</p>
+<ol>
+<li>某网站拥有用于非对称加密的公钥A、私钥A’。</li>
+<li>浏览器像网站服务器请求，服务器把公钥A明文给传输浏览器。</li>
+<li>浏览器随机生成一个用于对称加密的密钥X，用公钥A加密后传给服务器。</li>
+<li>服务器拿到后用私钥A’解密得到密钥X。</li>
+<li>这样双方就都拥有密钥X了，且别人无法知道它。之后双方所有数据都用密钥X加密解密。</li>
+</ol>
+<p>完美！HTTPS基本就是采用了这种方案。完美？还是有漏洞的。</p>
+<p>漏洞就是无法保证就是服务器发送的，可能会有中间人攻击</p>
+<p>此时就需要证书与签名</p>
+<h4 id="中间人攻击"><a href="#中间人攻击" class="headerlink" title="中间人攻击"></a><strong>中间人攻击</strong></h4><p>中间人的确无法得到浏览器生成的密钥B，这个密钥本身被公钥A加密了，只有服务器才有私钥A’解开拿到它呀！然而中间人却完全不需要拿到密钥A’就能干坏事了。请看：</p>
+<ol>
+<li>某网站拥有用于非对称加密的公钥A、私钥A’。</li>
+<li>浏览器向网站服务器请求，服务器把公钥A明文给传输浏览器。</li>
+<li><strong>中间人劫持到公钥A，保存下来，把数据包中的公钥A替换成自己伪造的公钥B（它当然也拥有公钥B对应的私钥B’）</strong>。</li>
+<li>浏览器随机生成一个用于对称加密的密钥X，用<strong>公钥B</strong>（浏览器不知道公钥被替换了）加密后传给服务器。</li>
+<li><strong>中间人劫持后用私钥B’解密得到密钥X，再用公钥A加密后传给服务器</strong>。</li>
+<li>服务器拿到后用私钥A’解密得到密钥X。</li>
+</ol>
+<p>这样在双方都不会发现异常的情况下，中间人得到了密钥B。<strong>根本原因是浏览器无法确认自己收到的公钥是不是网站自己的</strong>。那么下一步就是解决下面这个问题：</p>
+<h4 id="如何证明浏览器收到的公钥一定是该网站的公钥？"><a href="#如何证明浏览器收到的公钥一定是该网站的公钥？" class="headerlink" title="如何证明浏览器收到的公钥一定是该网站的公钥？"></a><strong>如何证明浏览器收到的公钥一定是该网站的公钥？</strong></h4><p>现实生活中，如果想证明某身份证号一定是小明的，怎么办？看身份证。这里政府机构起到了“公信”的作用，身份证是由它颁发的，它本身的权威可以对一个人的身份信息作出证明。互联网中能不能搞这么个公信机构呢？给网站颁发一个“身份证”？</p>
+<h4 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a><strong>数字证书</strong></h4><p>网站在使用HTTPS前，需要向“<strong>CA机构</strong>”申请颁发一份<strong>数字证书</strong>，数字证书里有证书持有者、证书持有者的公钥等信息，服务器把证书传输给浏览器，浏览器从证书里取公钥就行了，证书就如身份证一样，可以证明“该公钥对应该网站”。然而这里又有一个显而易见的问题了，证书本身的传输过程中，如何防止被篡改？即如何证明证书本身的真实性？身份证有一些防伪技术，数字证书怎么防伪呢？解决这个问题我们就基本接近胜利了！</p>
+<h4 id="如何放防止数字证书被篡改？"><a href="#如何放防止数字证书被篡改？" class="headerlink" title="如何放防止数字证书被篡改？"></a><strong>如何放防止数字证书被篡改？</strong></h4><p>我们把证书内容生成一份“签名”，比对证书内容和签名是否一致就能察觉是否被篡改。这种技术就叫<code>数字签名</code>：</p>
+<h4 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a><strong>数字签名</strong></h4><p>这部分内容建议看下图并结合后面的文字理解，图中左侧是数字签名的制作过程，右侧是验证过程（原图出处找不到了，可以看出来这图已经被转载了无数次了。。。）</p>
+<p><img src="/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/4.jpg" alt="img"></p>
+<p><strong>数字签名的制作过程</strong>：</p>
+<ol>
+<li>CA拥有非对称加密的私钥和公钥。</li>
+<li>CA对证书明文信息进行hash。</li>
+<li>对hash后的值用私钥加密，得到数字签名。</li>
+</ol>
+<p>明文和数字签名共同组成了数字证书，这样一份数字证书就可以颁发给网站了。<br>那浏览器拿到服务器传来的数字证书后，如何验证它是不是真的？（有没有被篡改、掉包）</p>
+<p><strong>浏览器验证过程：</strong></p>
+<ol>
+<li>拿到证书，得到明文T，数字签名S。</li>
+<li>用CA机构的公钥对S解密（由于是浏览器信任的机构，所以浏览器保有它的公钥。详情见下文），得到S’。</li>
+<li>用证书里说明的hash算法对明文T进行hash得到T’。</li>
+<li>比较S’是否等于T’，等于则表明证书可信。</li>
+</ol>
+<p>为什么这样可以证明证书可信呢？我们来仔细想一下。</p>
+<h4 id="中间人有可能篡改该证书吗？"><a href="#中间人有可能篡改该证书吗？" class="headerlink" title="中间人有可能篡改该证书吗？"></a><strong>中间人有可能篡改该证书吗？</strong></h4><p>假设中间人篡改了证书的原文，由于他没有CA机构的私钥，所以无法得到此时加密后签名，无法相应地篡改签名。浏览器收到该证书后会发现原文和签名解密后的值不一致，则说明证书已被篡改，证书不可信，从而终止向服务器传输信息，防止信息泄露给中间人。<br>既然不可能篡改，那整个证书被掉包呢？</p>
+<h4 id="中间人有可能把证书掉包吗？"><a href="#中间人有可能把证书掉包吗？" class="headerlink" title="中间人有可能把证书掉包吗？"></a><strong>中间人有可能把证书掉包吗？</strong></h4><p>假设有另一个网站B也拿到了CA机构认证的证书，它想搞垮网站A，想劫持网站A的信息。于是它成为中间人拦截到了A传给浏览器的证书，然后替换成自己的证书，传给浏览器，之后浏览器就会错误地拿到B的证书里的公钥了，会导致上文提到的漏洞。<br>其实这并不会发生，因为证书里包含了网站A的信息，包括域名，浏览器把证书里的域名与自己请求的域名比对一下就知道有没有被掉包了。</p>
+<h4 id="为什么制作数字签名时需要hash一次？"><a href="#为什么制作数字签名时需要hash一次？" class="headerlink" title="为什么制作数字签名时需要hash一次？"></a><strong>为什么制作数字签名时需要hash一次？</strong></h4><p>我初学HTTPS的时候就有这个问题，似乎以上过程中hash有点多余，把hash过程去掉也能保证证书没有被篡改。<br>最显然的是性能问题，前面我们已经说了非对称加密效率较差，证书信息一般较长，比较耗时。而hash后得到的是固定长度的信息（比如用md5算法hash后可以得到固定的128位的值），这样加密解密就会快很多。<br>当然还有安全上的原因，这部分内容相对深一些，感兴趣的可以看这篇解答：<a href="https://link.zhihu.com/?target=https://link.juejin.im/?target=https://crypto.stackexchange.com/a/12780">crypto.stackexchange.com/a/12780</a></p>
+<h4 id="怎么证明CA机构的公钥是可信的？"><a href="#怎么证明CA机构的公钥是可信的？" class="headerlink" title="怎么证明CA机构的公钥是可信的？"></a><strong>怎么证明CA机构的公钥是可信的？</strong></h4><p>你们可能会发现上文中说到CA机构的公钥，我几乎一笔带过，“浏览器保有它的公钥”，这是个什么保有法？怎么证明这个公钥是否可信？<br>让我们回想一下数字证书到底是干啥的？没错，为了证明某公钥是可信的，即“该公钥是否对应该网站/机构等”，那这个CA机构的公钥是不是也可以用数字证书来证明？没错，操作系统、浏览器本身会预装一些它们信任的根证书，如果其中有该CA机构的根证书，那就可以拿到它对应的可信公钥了。<br>实际上证书之间的认证也可以不止一层，可以A信任B，B信任C，以此类推，我们把它叫做<code>信任链</code>或<code>数字证书链</code>，也就是一连串的数字证书，由根证书为起点，透过层层信任，使终端实体证书的持有者可以获得转授的信任，以证明身份。<br>另外，不知你们是否遇到过网站访问不了、提示要安装证书的情况？这里安装的就是跟证书。说明浏览器不认给这个网站颁发证书的机构，那么没有该机构的根证书，你就得手动下载安装（风险自己承担XD）。安装该机构的根证书后，你就有了它的公钥，就可以用它验证服务器发来的证书是否可信了。</p>
+<h4 id="HTTPS必须在每次请求中都要先在SSL-TLS层进行握手传输密钥吗？"><a href="#HTTPS必须在每次请求中都要先在SSL-TLS层进行握手传输密钥吗？" class="headerlink" title="HTTPS必须在每次请求中都要先在SSL/TLS层进行握手传输密钥吗？"></a><strong>HTTPS必须在每次请求中都要先在SSL/TLS层进行握手传输密钥吗？</strong></h4><p>这也是我当时的困惑之一，显然每次请求都经历一次密钥传输过程非常耗时，那怎么达到只传输一次呢？用session就行。<br>服务器会为每个浏览器（或客户端软件）维护一个session ID，在TSL握手阶段传给浏览器，浏览器生成好密钥传给服务器后，服务器会把该密钥存到相应的session ID下，之后浏览器每次请求都会携带session ID，服务器会根据session ID找到相应的密钥并进行解密加密操作，这样就不必要每次重新制作、传输密钥了！</p>
+<ol>
+<li>客户端向服务器发送请求，同时发送客户端支持的一套加密规则（包括对称加密、非对称加密、摘要算法）；</li>
+<li>服务器从中选出一组加密算法与HASH算法，并将自己的身份信息以证书的形式发回给浏览器。证书里面包含了网站地址，<strong>加密公钥</strong>（用于非对称加密），以及证书的颁发机构等信息（证书中的私钥只能用于服务器端进行解密）；</li>
+<li>客户端验证服务器的合法性，包括：证书是否过期，CA 是否可靠，发行者证书的公钥能否正确解开服务器证书的“发行者的数字签名”，服务器证书上的域名是否和服务器的实际域名相匹配；</li>
+<li>如果证书受信任，或者用户接收了不受信任的证书，浏览器会生成一个<strong>随机密钥</strong>（用于对称算法），并用服务器提供的公钥加密（采用非对称算法对密钥加密）；使用Hash算法对握手消息进行<strong>摘要</strong>计算，并对摘要使用之前产生的密钥加密（对称算法）；将加密后的随机密钥和摘要一起发送给服务器；</li>
+<li>服务器使用自己的私钥解密，得到对称加密的密钥，用这个密钥解密出Hash摘要值，并验证握手消息是否一致；如果一致，服务器使用对称加密的密钥加密握手消息发给浏览器；</li>
+<li>浏览器解密并验证摘要，若一致，则握手结束。之后的数据传送都使用对称加密的密钥进行加密</li>
+</ol>
+<p>总结：非对称加密算法用于在握手过程中加密生成的密码；对称加密算法用于对真正传输的数据进行加密；HASH算法用于验证数据的完整性。</p>
+<h3 id="输入url到页面加载"><a href="#输入url到页面加载" class="headerlink" title="输入url到页面加载"></a>输入url到页面加载</h3><p>1、输入地址</p>
+<p>2、浏览器查找域名的 IP 地址　　</p>
+<p>3、浏览器向 web 服务器发送一个 HTTP 请求</p>
+<p>4、服务器的永久重定向响应</p>
+<p>5、浏览器跟踪重定向地址</p>
+<p>6、服务器处理请求</p>
+<p>7、服务器返回一个 HTTP 响应　</p>
+<p>8、浏览器显示 HTML</p>
+<p>9、浏览器发送请求获取嵌入在 HTML 中的资源（如CSS、JS、图片、音频、视频等）</p>
+<p><strong>查找ip过程</strong></p>
+<p>请求一旦发起，浏览器首先要做的事情就是解析这个域名，一般来说，浏览器会首先查看本地硬盘的 hosts 文件，看看其中有没有和这个域名对应的规则，如果有的话就直接使用 hosts 文件里面的 ip 地址。</p>
+<p>如果在本地的 hosts 文件没有能够找到对应的 ip 地址，浏览器会发出一个 DNS请求到本地的DNS服务器 ，本地DNS服务器一般都是由你的网络接入服务器商提供，比如中国电信、中国移动。</p>
+<p>你输入的网址的DNS请求到达本地DNS服务器之后，本地DNS服务器会首先查询它的缓存记录，如果缓存中有此条记录，就直接返回结果，此过程是递归的方式进行查询。如果没有，本地DNS服务器还要向DNS根服务器进行查询。</p>
+<p>根DNS服务器没有记录具体的域名和IP地址的对应关系，而是告诉本地DNS服务器，你可以到域服务器上去继续查询，并给出域服务器的地址，这个过程是迭代的过程。</p>
+<p>本地DNS服务器继续向域服务器发出请求，在这个例子中，请求的对象是.com域服务器， .com域服务器收到请求之后，也不会直接返回域名和IP地址的对应关系，而是告诉本地DNS服务器请求的域名的解析服务器地址。</p>
+<p>最后，本地DNS服务器向域名的解析服务器发出请求，这时就能收到一个域名和IP地址对应关系，本地DNS服务器不仅要把IP地址返回给用户电脑，还会把这个对应关系保存在缓存中，以备下次别的用户查询时，可以直接返回结果，加快网络访问。</p>
+<h3 id="Cookie-Session区别"><a href="#Cookie-Session区别" class="headerlink" title="Cookie,Session区别"></a>Cookie,Session区别</h3><h4 id="存储位置"><a href="#存储位置" class="headerlink" title="存储位置"></a>存储位置</h4><ul>
+<li>Session: 服务端</li>
+<li>Cookie:客户端</li>
+</ul>
+<h4 id="存储的数据格式"><a href="#存储的数据格式" class="headerlink" title="存储的数据格式"></a>存储的数据格式</h4><ul>
+<li>Session:value为对象，Object为类型</li>
+<li>Cookie:value为字符串，如果我们存储一个对象，这个时候，就需要将对象转换为JSON</li>
+</ul>
+<h4 id="存储的数据大小"><a href="#存储的数据大小" class="headerlink" title="存储的数据大小"></a>存储的数据大小</h4><ul>
+<li>Session:受服务器内存控制</li>
+<li>Cookie：一般来说，最大为4k</li>
+</ul>
+<h4 id="声明周期"><a href="#声明周期" class="headerlink" title="声明周期"></a>声明周期</h4><ul>
+<li>Session:服务器段控制，默认是30分钟，注意当用户关闭了浏览器，session并不会消失</li>
+<li>Cookie:客户端控制，其实是客户端的一个文件，分两种情况<ol>
+<li>默认的事会话级的cookie,这种随着浏览器的关闭而消失，比如保存sessionid的cookie</li>
+<li>非会话级的cookie，通过设置有效期来控制，比如这种7天免登录这种功能，就需要设置有效期，setMaxAge</li>
 </ol>
 </li>
-</ol>
-<p><strong>死锁预防</strong></p>
-<p>我们可以通过破坏死锁产生的4个必要条件来 预防死锁，由于资源互斥是资源使用的固有特性是无法改变的。</p>
-<ol>
-<li>破坏“不可剥夺”条件：一个进程不能获得所需要的全部资源时便处于等待状态，等待期间他占有的资源将被隐式的释放重新加入到 系统的资源列表中，可以被其他的进程使用，而等待的进程只有重新获得自己原有的资源以及新申请的资源才可以重新启动，执行。</li>
-<li>破坏”请求与保持条件“：第一种方法静态分配即每个进程在开始执行时就申请他所需要的全部资源。第二种是动态分配即每个进程在申请所需要的资源时他本身不占用系统资源。</li>
-<li>破坏“循环等待”条件：采用资源有序分配其基本思想是将系统中的所有资源顺序编号，将紧缺的，稀少的采用较大的编号，在申请资源时必须按照编号的顺序进行，一个进程只有获得较小编号的进程才能申请较大编号的进程。</li>
-</ol>
-<h3 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h3><p>信号量(Semaphore)，有时被称为信号灯，是在多线程环境下使用的一种设施，是可以用来保证两个或多个关键代码段不被并发调用。在进入一个关键代码段之前，线程必须获取一个信号量；一旦该关键代码段完成了，那么该线程必须释放信号量。其它想进入该关键代码段的线程必须等待直到 第一个线程释放信号量。为了完成这个过程，需要创建一个信号量VI，然后将Acquire Semaphore VI以及Release Semaphore VI分别放置在每个关键代码段的首末端。确认这些信号量VI引用的是初始创建的信号量。</p>
-<h3 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h3><p>IO多路复用（IO Multiplexing）是指单个进程/线程就可以同时处理多个IO请求。</p>
-<p>实现原理：用户将想要监视的文件描述符（File Descriptor）添加到select/poll/epoll函数中，由内核监视，函数阻塞。一旦有文件描述符就绪（读就绪或写就绪），或者超时（设置timeout），函数就会返回，然后该进程可以进行相应的读/写操作。</p>
-<h2 id="分页和分段"><a href="#分页和分段" class="headerlink" title="分页和分段"></a>分页和分段</h2><ul>
-<li>页式存储：用户空间划分为大小相等的部分称为页（page），内存空间划分为同样大小的区域称为页框，分配时以页为单位，按进程需要的页数分配，逻辑上相邻的页物理上不一定相邻；</li>
-<li>段式存储：用户进程地址空间按照自身逻辑关系划分为若干个段（segment）（如代码段，数据段，堆栈段），内存空间被动态划分为长度不同的区域，分配时以段为单位，每段在内存中占据连续空间，各段可以不相邻；</li>
-<li>段页式存储：用户进程先按段划分，段内再按页划分，内存划分和分配按页。</li>
+<li>Cookie 可以设置任意时间有效，而 Session 一般失效时间短</li>
 </ul>
-<p>区别：</p>
+<h4 id="二者联系"><a href="#二者联系" class="headerlink" title="二者联系"></a>二者联系</h4><p>http协议本身是一个无状态协议，服务器为了记住用户的状态，我们采用session的机制，而session机制背后的原理是，服务器会自动生成会话级的cookie来保存session的标识</p>
+<p>session.setAttribute()  get</p>
+<p><strong>浏览器关闭，session就销毁了嘛？</strong></p>
 <ul>
-<li>目的不同：分页的目的是管理内存，用于虚拟内存以获得更大的地址空间；分段的目的是满足用户的需要，使程序和数据可以被划分为逻辑上独立的地址空间；</li>
-<li>大小不同：段的大小不固定，由其所完成的功能决定；页的大小固定，由系统决定；</li>
-<li>地址空间维度不同：分段是二维地址空间（段号+段内偏移），分页是一维地址空间（每个进程一个页表/多级页表，通过一个逻辑地址就能找到对应的物理地址）；</li>
-<li>分段便于信息的保护和共享；分页的共享收到限制；</li>
-<li>碎片：分段没有内碎片，但会产生外碎片；分页没有外碎片，但会产生内碎片（一个页填不满）</li>
+<li>要看session是否过期，和浏览器是否关闭无关。</li>
 </ul>
-<h2 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h2><p>每个程序都拥有自己的地址空间，这个地址空间被分成大小相等的页，这些页被映射到物理内存；但不需要所有的页都在物理内存中，当程序引用到不在物理内存中的页时，由操作系统将缺失的部分装入物理内存。这样，对于程序来说，逻辑上似乎有很大的内存空间，只是实际上有一部分是存储在磁盘上，因此叫做虚拟内存。</p>
-<p>虚拟内存的优点是让程序可以获得更多的可用内存。</p>
-<h2 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h2><h3 id="和-的区别是什么？"><a href="#和-的区别是什么？" class="headerlink" title="#{}和${}的区别是什么？"></a>#{}和${}的区别是什么？</h3><ul>
-<li><code>$&#123;&#125;</code>是 Properties 文件中的变量占位符，它可以用于标签属性值和 sql 内部，属于静态文本替换，比如${driver}会被静态替换为<code>com.mysql.jdbc.Driver</code>。</li>
-<li><code>#&#123;&#125;</code>是 sql 的参数占位符，Mybatis 会将 sql 中的<code>#&#123;&#125;</code>替换为?号，在 sql 执行前会使用 PreparedStatement 的参数设置方法，按序给 sql 的?号占位符设置参数值，比如 ps.setInt(0, parameterValue)，<code>#&#123;item.name&#125;</code> 的取值方式为使用反射从参数对象中获取 item 对象的 name 属性值，相当于 <code>param.getItem().getName()</code>。</li>
-</ul>
-<h3 id="有哪些分页方式"><a href="#有哪些分页方式" class="headerlink" title="有哪些分页方式"></a>有哪些分页方式</h3><p>正常人，一般使用物理分页</p>
-<p>分为物理分页和逻辑分页</p>
-<p>所谓逻辑分页，是指使用MyBatis自带的RowBound进行分页，它会一次性查出多条数据，然后再检索分页中的数据，具体一次性查询多少条数据，受封装jdbc配置的fetch-size决定</p>
-<p>而物理分页，是从数据库中查询指定条数的数据，而我们用的分页插件PageHelper实现的就是物理分页</p>
-<h2 id="Hash相关知识"><a href="#Hash相关知识" class="headerlink" title="Hash相关知识"></a>Hash相关知识</h2><h3 id="Hash冲突"><a href="#Hash冲突" class="headerlink" title="Hash冲突"></a>Hash冲突</h3><p>1.开放地址方法</p>
-<p>　　（1）线性探测</p>
-<p>　　　按顺序决定值时，如果某数据的值已经存在，则在原来值的基础上往后加一个单位，直至不发生哈希冲突。　</p>
-<p>　　（2）再平方探测</p>
-<p>　　　按顺序决定值时，如果某数据的值已经存在，则在原来值的基础上先加1的平方个单位，若仍然存在则减1的平方个单位。随之是2的平方，3的平方等等。直至不发生哈希冲突。</p>
-<p>　　（3）伪随机探测</p>
-<p>　　　按顺序决定值时，如果某数据已经存在，通过随机函数随机生成一个数，在原来值的基础上加上随机数，直至不发生哈希冲突。</p>
-<p>2.链式地址法（HashMap的哈希冲突解决方法）</p>
-<p>　　对于相同的值，使用链表进行连接。使用数组存储每一个链表。</p>
-<p>　　优点：</p>
-<p>　　（1）拉链法处理冲突简单，且无堆积现象，即非同义词决不会发生冲突，因此平均查找长度较短；</p>
-<p>　　（2）由于拉链法中各链表上的结点空间是动态申请的，故它更适合于造表前无法确定表长的情况；</p>
-<p>　　（3）开放定址法为减少冲突，要求装填因子α较小，故当结点规模较大时会浪费很多空间。而拉链法中可取α≥1，且结点较大时，拉链法中增加的指针域可忽略不计，因此节省空间；</p>
-<p>　　（4）在用拉链法构造的散列表中，删除结点的操作易于实现。只要简单地删去链表上相应的结点即可。<br>　　缺点：</p>
-<p>　　指针占用较大空间时，会造成空间浪费，若空间用于增大散列表规模进而提高开放地址法的效率。</p>
-<p>3.建立公共溢出区</p>
-<p>　　建立公共溢出区存储所有哈希冲突的数据。</p>
-<p>4.再哈希法</p>
-<p>　　对于冲突的哈希值再次进行哈希处理，直至没有哈希冲突。</p>
-<h3 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h3><p>上面通过数据库的例子介绍了哈希算法，然后也分析了它的劣势，当机器数量发生变动的时候，几乎所有的数据都会移动 (不移动的应该是运气比较好吧前后取模都是同一个值)，这个代价很大。此时的问题从水平如何拆分变成了，当增加或者删除节点时，对于大多数记录，保证原来分配到的某个节点，现在仍然应该分配到那个节点，将数据迁移量的降到最低，这就是一致性哈希要做的事情。在这里我们不指定是数据库还是什么，反正都是分布式存储节点。</p>
-<p>一致性 Hash 算法也是使用取模的思想，只是，刚才描述的取模法是对节点数量进行取模，而一致性 Hash 算法是对 <code>2^32</code> 取模，什么意思呢？简单来说，一致性 Hash 算法将整个哈希值空间组织成一个虚拟的圆环，如假设某哈希函数 H 的值空间为 0-2^32-1（即哈希值是一个 32 位无符号整形），整个哈希环如下，从 0 ~ 2^32-1 代表的分别是一个个的节点，这个环也叫哈希环。</p>
-<p>然后我们将我们的节点进行一次哈希，按照一定的规则，比如按照 ip 地址的哈希值，让节点落在哈希环上。</p>
-<p>然后就是需要通过数据 key 找到对应的服务器然后存储了，我们约定，通过数据 key 的哈希值落在哈希环上的节点，如果命中了机器节点就落在这个机器上，否则落在顺时针直到碰到第一个机器。</p>
-<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><p>HashMap是基于hashing的原理，我们使用put(key,value)存储对象到HashMap中，使用get(key)从中获取键值对。</p>
-<p>当我们使用put方法来传递健和值的时候，我们先对健调用hashcode()方法，返回的hashCode用于找到bucket位置来储存Entry对象。需要注意的是，HashMap是在bucket中储存键对象和值对象，作为Map.entry</p>
-<p>HashMap是基于hashing的原理，我们使用put(key, value)存储对象到HashMap中，使用get(key)从HashMap中获取对象。当我们给put()方法传递键和值时，我们先对键调用hashCode()方法，返回的hashCode用于找到bucket位置来储存Entry对象。”这里关键点在于指出， HashMap是在bucket中储存键对象和值对象，作为Map.Entry</p>
-<p>当两个对象的hashcode相同的时候会发生什么呢？</p>
-<p>hashcode相同，而HashMap使用链表存储对象</p>
-<p>因为hashcode相同，所以它们的bucket位置相同，‘碰撞’会发生。因为HashMap使用链表存储对象，这个Entry(包含有键值对的Map.Entry对象)会存储在链表中。</p>
-<p>之前已经提过，在获取HashMap的元素时，基本分两步：</p>
-<ol>
-<li>首先根据hashCode()做hash，然后确定bucket的index；</li>
-<li>如果bucket的节点的key不是我们需要的，则通过keys.equals()在链中找。</li>
-</ol>
-<p>在Java 8之前的实现中是用链表解决冲突的，在产生碰撞的情况下，进行get时，两步的时间复杂度是O(1)+O(n)。因此，当碰撞很厉害的时候n很大，O(n)的速度显然是影响速度的。</p>
-<p>因此在Java 8中，利用红黑树替换链表，这样复杂度就变成了O(1)+O(logn)了，这样在n很大的时候，能够比较理想的解决这个问题，在<a href="http://www.importnew.com/14417.html">Java 8：HashMap的性能提升</a>一文中有性能测试的结果。</p>
-<p>HashMap<a href="https://www.nowcoder.com/jump/super-jump/word?word=%E9%93%BE%E8%A1%A8">链表</a>太长怎么办（突然java。我答的是把<a href="https://www.nowcoder.com/jump/super-jump/word?word=%E9%93%BE%E8%A1%A8">链表</a>变成树，如字符串可以变成字典树。更通用的办法也是HashMap真正用的是<a href="https://www.nowcoder.com/jump/super-jump/word?word=%E7%BA%A2%E9%BB%91%E6%A0%91">红黑树</a>）</p>
-<p><strong>rehashing</strong></p>
-<p>如果HashMap的大小超过了负载因子(load factor)定义的容量，怎么办？”除非你真正知道HashMap的工作原理，否则你将回答不出这道题。默认的负载因子大小为0.75，也就是说，当一个map填满了75%的bucket时候，和其它集合类(如ArrayList等)一样，将会创建原来HashMap大小的两倍的bucket数组，来重新调整map的大小，并将原来的对象放入新的bucket数组中。这个过程叫作rehashing，因为它调用hash方法找到新的bucket位置。</p>
-<p>1） 首先创建一个比现有哈希表更大的新哈希表（expand）<br>2） 然后将旧哈希表的所有元素都迁移到新哈希表去（rehash）</p>
-<p><strong>为什么String, Interger这样的wrapper类适合作为键？</strong> String, Interger这样的wrapper类作为HashMap的键是再适合不过了，而且String最为常用。因为String是不可变的，也是final的，而且已经重写了equals()和hashCode()方法了。其他的wrapper类也有这个特点。不可变性是必要的，因为为了要计算hashCode()，就要防止键值改变，如果键值在放入时和获取时返回不同的hashcode的话，那么就不能从HashMap中找到你想要的对象。不可变性还有其他的优点如线程安全。如果你可以仅仅通过将某个field声明成final就能保证hashCode是不变的，那么请这么做吧。因为获取对象的时候要用到equals()和hashCode()方法，那么键对象正确的重写这两个方法是非常重要的。如果两个不相等的对象返回不同的hashcode的话，那么碰撞的几率就会小些，这样就能提高HashMap的性能。</p>
-<p><strong>我们可以使用自定义的对象作为键吗？</strong> 这是前一个问题的延伸。当然你可能使用任何对象作为键，只要它遵守了equals()和hashCode()方法的定义规则，并且当对象插入到Map中之后将不会再改变了。如果这个自定义对象时不可变的，那么它已经满足了作为键的条件，因为当它创建之后就已经不能改变了。</p>
-<p><strong>我们可以使用CocurrentHashMap来代替Hashtable吗</strong>？这是另外一个很热门的面试题，因为ConcurrentHashMap越来越多人用了。我们知道Hashtable是synchronized的，但是ConcurrentHashMap同步性能更好，因为它仅仅根据同步级别对map的一部分进行上锁。ConcurrentHashMap当然可以代替HashTable，但是HashTable提供更强的线程安全性。看看<a href="http://javarevisited.blogspot.sg/2011/04/difference-between-concurrenthashmap.html">这篇博客</a>查看Hashtable和ConcurrentHashMap的区别。</p>
-<p>Hashtable HashMap  ConcurrentHashMap</p>
-<p>Hashtable 线程安全的对象，内部有上锁的控制，sychronized put的时候不能get 效率不高</p>
-<p>HashMap 线程不安全的对象，内部没有上锁 优点就是效率高，缺点是 如果多个线程同时操作可能会出现线程不安全甚至出现死锁的情况</p>
-<p>ConcurrentHashMap 分段锁，将锁的力度变小，兼顾安全与性能</p>
-<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>最底层用的是map来做这些事,其值作为hashmap的key</p>
-<p>其实原理就是HashMap</p>
-<h3 id="HashSet-HashMap区别"><a href="#HashSet-HashMap区别" class="headerlink" title="HashSet HashMap区别"></a>HashSet HashMap区别</h3><p>HashSet实现了Set接口，它不允许集合中有重复的值，当我们提到HashSet时，第一件事情就是在将对象存储在HashSet之前，要先确保对象重写equals()和hashCode()方法，这样才能比较对象的值是否相等，以确保set中没有储存相等的对象。如果我们没有重写这两个方法，将会使用这个方法的默认实现。</p>
-<p>public boolean add(Object o)方法用来在Set中添加元素，当元素值重复时则会立即返回false，如果成功添加的话会返回true。</p>
-<p>HashMap实现了Map接口，Map接口对键值对进行映射。Map中不允许重复的键。Map接口有两个基本的实现，HashMap和TreeMap。TreeMap保存了对象的排列次序，而HashMap则不能。HashMap允许键和值为null。HashMap是非synchronized的，但collection框架提供方法能保证HashMap synchronized，这样多个线程同时访问HashMap时，能保证只有一个线程更改Map。</p>
-<p>public Object put(Object Key,Object value)方法用来将元素添加到map中。</p>
-<table>
-<thead>
-<tr>
-<th><em>HashMap</em></th>
-<th><em>HashSet</em></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>HashMap实现了Map接口</td>
-<td>HashSet实现了Set接口</td>
-</tr>
-<tr>
-<td>HashMap储存键值对</td>
-<td>HashSet仅仅存储对象</td>
-</tr>
-<tr>
-<td>使用put()方法将元素放入map中</td>
-<td>使用add()方法将元素放入set中</td>
-</tr>
-<tr>
-<td>HashMap中使用键对象来计算hashcode值</td>
-<td>HashSet使用成员对象来计算hashcode值，对于两个对象来说hashcode可能相同，所以equals()方法用来判断对象的相等性，如果两个对象不同的话，那么返回false</td>
-</tr>
-<tr>
-<td>HashMap比较快，因为是使用唯一的键来获取对象</td>
-<td>HashSet较HashMap来说比较慢</td>
-</tr>
-</tbody></table>
-<p><strong>为什么要采用hash算法，有什么优势，解决了什么问题？</strong></p>
-<p>保证数据的唯一性，存储数据底层采用的是数组</p>
-<p>当我们放数据的时候，如何判断唯一？</p>
-<p>采用hash算法，通过计算存储对象的hashcode,然后再跟数组长度-1进行位运算，得到我们想要存储的位置，如果此位置没有数据，直接存储不用计较。</p>
-<p>此处，我们只会用到hashcode</p>
-<p>但是随着元素不断添加，可能会发生hash冲突，不同的值计算出来的hash值是相同的，这个时候就要进行比较，才需要用到equals方法</p>
-<p>如果不相同，则形成链表</p>
-<p><strong>哈希表是一张什么表？</strong>本质是数组，而数组的元素是链表</p>
-<p>JDK1.8做了优化，随着元素的不断添加，链表可能会越来越长，会优化为红黑树</p>
-<h2 id="面向对象思想的理解"><a href="#面向对象思想的理解" class="headerlink" title="面向对象思想的理解"></a>面向对象思想的理解</h2><p>更多的是考虑如何去选择合适的工具</p>
-<p>封装 继承 多态</p>
-<p>多态：同一个行为具有多个不同表现形式称为多态 有继承 子类重写父类，父类引用子类</p>
-<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p> 封装是指将对象的实现细节隐藏起来，对外提供公共访问方法，将对象的功能暴露出来。</p>
-<p>封装可以被认为是一个保护屏障，防止该类的代码和数据被外部类定义的代码随机访问。</p>
-<p>适当的封装可以让程式码更容易理解与维护，也加强了程序代码的安全性。最终目的是实现模块设计的”高内聚低耦合“。</p>
-<p>从上图可以得出，实现一个类封装的步骤如下：</p>
-<p>♦ 修改属性的可见性（访问级别）来限制对属性的访问（一般限制为private），例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">这段代码中，将 name 和 age 属性设置为私有的，只能本类才能访问，其他类都访问不了，如此就对信息进行了隐藏。 </span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;<span class="comment">//姓名</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;<span class="comment">//年龄</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p> 　♦ 对每个值属性提供对外的公共方法访问，也就是创建一对赋值取值的方法，用于对私有属性的访问，例如：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span></span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>　　采用 this 关键字是为了解决实例变量（private String name）和局部变量（setName(String name)中的name变量）之间发生的同名的冲突，this指当前对象。</p>
-<p>因此，一个类定义时，一般用private修饰成员变量，public修饰成员方法。获取成员变量应该用对象.get变量名()而不是对象.成员变量名。</p>
-<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p> 继承是指子类可以复用父类的属性和方法，Java的继承是单继承，每个子类只有一个直接父类。Java的继承通过extends关键字实现，实现继承的类称为子类，被继承的类称为父类（基类或超类）。Java继承语法格式如下：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">修饰符 <span class="class"><span class="keyword">class</span> <span class="title">SubClass</span> <span class="keyword">extends</span> <span class="title">SuperClass</span></span>&#123;</span><br><span class="line">  <span class="comment">//类定义部分      </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>需要注意的是 Java 不支持多继承，但支持多重继承。</p>
-<p>子类包含与父类同名方法的现象称为方法重写，也称为方法覆盖。</p>
-<p>　　方法的重写要遵循“两大两小一大”规则，“两同”即方法名相同、形参列表相同；“两小”指子类方法返回值类型应该比父类方法返回值类型要小或相等，子类方法声明抛出的异常应该比父类方法声明抛出的异常类要小或相等；“一大”指子类方法的访问权限应比父类方法的访问权限更大或相等。</p>
-<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><p>多态是指子类对象可以直接赋给父类变量（父类引用指向子类对象），但运行时依然表现出子类的行为特征，也就是说，同一类型的对象在执行同一个方法时，可能表现出多种行为特征。</p>
-<p>　<strong>多态存在的三个必要条件</strong></p>
+<p><strong>服务器关闭，session就销毁了嘛？</strong></p>
 <ul>
-<li>继承</li>
-<li>重写</li>
-<li>父类引用指向子类对象</li>
+<li>正常关闭不会。非正常关闭可能就…销毁了。</li>
 </ul>
-<p>　　比如：Parent p = new Child();</p>
-<p>　　当使用多态方式调用方法时，首先检查父类中是否有该方法，如果没有，则编译错误；如果有，再去调用子类的同名方法。</p>
-<p>　　多态的好处：可以使程序有良好的扩展，并可以对所有类的对象进行通用处理。</p>
-<p>　　下面举一个多态的例子：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      show(<span class="keyword">new</span> Cat());  <span class="comment">// 以 Cat 对象调用 show 方法</span></span><br><span class="line">      show(<span class="keyword">new</span> Dog());  <span class="comment">// 以 Dog 对象调用 show 方法</span></span><br><span class="line">                </span><br><span class="line">      Animal a = <span class="keyword">new</span> Cat();  <span class="comment">// 向上转型  </span></span><br><span class="line">      a.eat();               <span class="comment">// 调用的是 Cat 的 eat</span></span><br><span class="line">      Cat c = (Cat)a;        <span class="comment">// 向下转型  </span></span><br><span class="line">      c.work();        <span class="comment">// 调用的是 Cat 的 work</span></span><br><span class="line">  &#125;  </span><br><span class="line">            </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Animal a)</span>  </span>&#123;</span><br><span class="line">      a.eat();  </span><br><span class="line">        <span class="comment">// 类型判断</span></span><br><span class="line">        <span class="keyword">if</span> (a <span class="keyword">instanceof</span> Cat)  &#123;  <span class="comment">// 猫做的事情 </span></span><br><span class="line">            Cat c = (Cat)a;  </span><br><span class="line">            c.work();  </span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (a <span class="keyword">instanceof</span> Dog) &#123; <span class="comment">// 狗做的事情 </span></span><br><span class="line">            Dog c = (Dog)a;  </span><br><span class="line">            c.work();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span></span>;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;吃鱼&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;抓老鼠&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;吃骨头&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;看家&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">执行以上程序，输出结果为：</span><br><span class="line"></span><br><span class="line">吃鱼</span><br><span class="line">抓老鼠</span><br><span class="line">吃骨头</span><br><span class="line">看家</span><br><span class="line">吃鱼</span><br><span class="line">抓老鼠</span><br></pre></td></tr></table></figure>
-
-<h2 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h2><h3 id="SpringIoc"><a href="#SpringIoc" class="headerlink" title="SpringIoc"></a>SpringIoc</h3><p>IoC（Inverse of Control:控制反转）是一种<strong>设计思想</strong>，就是 <strong>将原本在程序中手动创建对象的控制权，交由Spring框架来管理。</strong> IoC 在其他语言中也有应用，并非 Spring 特有。 <strong>IoC 容器是 Spring 用来实现 IoC 的载体， IoC 容器实际上就是个Map（key，value）,Map 中存放的是各种对象。</strong></p>
-<p>将对象之间的相互依赖关系交给 IoC 容器来管理，并由 IoC 容器完成对象的注入。这样可以很大程度上简化应用的开发，把应用从复杂的依赖关系中解放出来。 <strong>IoC 容器就像是一个工厂一样，当我们需要创建一个对象的时候，只需要配置好配置文件/注解即可，完全不用考虑对象是如何被创建出来的。</strong> 在实际项目中一个 Service 类可能有几百甚至上千个类作为它的底层，假如我们需要实例化这个 Service，你可能要每次都要搞清这个 Service 所有底层类的构造函数，这可能会把人逼疯。如果利用 IoC 的话，你只需要配置好，然后在需要的地方引用就行了，这大大增加了项目的可维护性且降低了开发难度。</p>
-<p>Spring 时代我们一般通过 XML 文件来配置 Bean，后来开发人员觉得 XML 文件来配置不太好，于是 SpringBoot 注解配置就慢慢开始流行起来。</p>
-<p>使用方式：</p>
-<ol>
-<li>配置文件 bean  解析XML，调用方法实现注入（反射）</li>
-<li>注解的方式 Autowrie 解析类，这个类是Spring管理的 赋值</li>
-</ol>
-<p>完成两个事情 解释和实现赋值</p>
-<h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h3><p>AOP(Aspect-Oriented Programming:面向切面编程)能够将那些与业务无关，<strong>却为业务模块所共同调用的逻辑或责任（例如事务处理、日志管理、权限控制等）封装起来</strong>，便于<strong>减少系统的重复代码</strong>，<strong>降低模块间的耦合度</strong>，并<strong>有利于未来的可拓展性和可维护性</strong>。</p>
-<p><strong>Spring AOP就是基于动态代理的</strong>，如果要代理的对象，实现了某个接口，那么Spring AOP会使用<strong>JDK Proxy</strong>，去创建代理对象，而对于没有实现接口的对象，就无法使用 JDK Proxy 去进行代理了，这时候Spring AOP会使用<strong>Cglib</strong> ，这时候Spring AOP会使用 <strong>Cglib</strong> 生成一个被代理对象的子类来作为代理，</p>
-<p>当然你也可以使用 AspectJ ,Spring AOP 已经集成了AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。</p>
-<p>使用 AOP 之后我们可以把一些通用功能抽象出来，在需要用到的地方直接使用即可，这样大大简化了代码量。我们需要增加新功能时也方便，这样也提高了系统扩展性。日志功能、事务管理等等场景都用到了 AOP 。</p>
-<h3 id="Spring事务传播机制"><a href="#Spring事务传播机制" class="headerlink" title="Spring事务传播机制"></a>Spring事务传播机制</h3><p>PROPAGATION_REQUIRED – 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。</p>
-<p>PROPAGATION_SUPPORTS – 支持当前事务，如果当前没有事务，就以非事务方式执行。</p>
-<p>PROPAGATION_MANDATORY – 支持当前事务，如果当前没有事务，就抛出异常。</p>
-<p>PROPAGATION_REQUIRES_NEW – 新建事务，如果当前存在事务，把当前事务挂起。</p>
-<p>PROPAGATION_NOT_SUPPORTED – 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。</p>
-<p>PROPAGATION_NEVER – 以非事务方式执行，如果当前存在事务，则抛出异常。</p>
-<p>PROPAGATION_NESTED – 如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则进行与PROPAGATION_REQUIRED类似的操作。</p>
-<h2 id="IO流的分类以及选择"><a href="#IO流的分类以及选择" class="headerlink" title="IO流的分类以及选择"></a>IO流的分类以及选择</h2><p>按方向分：输入流 输出流 输入流用于读文件 输出流用于写文件</p>
-<p>按读取的单位分：字节流( 二进制文件)字符流(文本文件)</p>
-<p>按处理的方式分：节点流 处理流</p>
-<p>IO流的4大基本类：InputStream OutPutStream Reader,Writer</p>
-<h2 id="序列化和反序列化的定义"><a href="#序列化和反序列化的定义" class="headerlink" title="序列化和反序列化的定义"></a>序列化和反序列化的定义</h2><p>  (1)Java序列化就是指把Java对象转换为字节序列的过程</p>
-<p>​    Java反序列化就是指把字节序列恢复为Java对象的过程。</p>
-<p>  (2)序列化最重要的作用：在传递和保存对象时.保证对象的完整性和可传递性。对象转换为有序字节流,以便在网络上传输或者保存在本地文件中。</p>
-<p>​    反序列化的最重要的作用：根据字节流中保存的对象状态及描述信息，通过反序列化重建对象。</p>
-<p>  总结：核心作用就是对象状态的保存和重建。（整个过程核心点就是字节流中所保存的对象状态及描述信息）</p>
-<h3 id="serialVersionUID"><a href="#serialVersionUID" class="headerlink" title="serialVersionUID"></a>serialVersionUID</h3><p>当执行序列化时，我们写对象到磁盘中，会根据当前这个类的结构生成一个版本号id</p>
-<p>当反序列化时，程序会比较磁盘中的序列化版本号ID跟当前的类结构生成的版本号ID是否一致，如果一致则成功，否则失败</p>
-<p>加上版本号，有助于当我们的类结构发生了变化，依然可以之前已经序列化的对象反序列化成功</p>
-<h2 id="Java的异常体系"><a href="#Java的异常体系" class="headerlink" title="Java的异常体系"></a>Java的异常体系</h2><p>异常体系保证程序的健壮性</p>
-<p><img src="/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/2.png"></p>
-<p>常见的5个运行时异常</p>
-<p>这类异常，编译时没有提示异常处理，因此通常此类异常的正确理解应该是逻辑错误</p>
+<p><strong>禁用cookie，如何使用Session ID</strong></p>
 <ul>
-<li>算数异常</li>
-<li>空指针异常</li>
-<li>类型转化异常</li>
-<li>数组越界</li>
-<li>NumberFormateException 数字格式异常，转化失败，比如a12转化失败</li>
+<li>url重写</li>
 </ul>
-<p>常见的5个非运行时异常</p>
+<p>Session存在哪里，怎么把session_id返回给客户端？</p>
 <ul>
-<li>IOException</li>
-<li>SQLException</li>
-<li>FileNotFoundException</li>
-<li>NoSuchFileException</li>
-<li>NoSuchMethodException</li>
+<li>服务器端（内存，数据库，文件）</li>
+<li>在<strong>返回头</strong>中有setCookie，把session_id存到cookie中</li>
 </ul>
-<h2 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h2><p> JVM 文件中</p>
-<p>Java 核心类由一个名为BootstrapClassLoader来加载 ——-jre/lib   getClassLoader得到的结果是null</p>
-<p>Java扩展类，是由ExtClassLoader——jre/lib/ext</p>
-<p>项目中编写的类 由AppClassLoader——-第三方的jar包和自己开发的类</p>
-<p>从上到下寻找类 </p>
-<p>这里面就要基于双亲委托机制？</p>
-<p>所谓双亲委托机制，就是加载一个类，会先获取到一个系统类加载器AppClassLoader的实例，然后往上层层请求，先由BootstarpClassLoader去加载，如果BootStrapClassLoader发现没有，再下发给ExtClassLoader去加载，还是没有，才由AppClassLoader去加载。如果还是没有，则报错</p>
-<h2 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h2><p>Web层：负责与用户交互并对外提供服务接口</p>
-<p>业务逻辑层：实现业务逻辑模块</p>
-<p>数据存取层：将业务逻辑层处理的结果持久化，方便后续查询</p>
-<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><p>Model 模型代表一个存取数据的对象或JAVA POJO</p>
-<p>View 视图代表模型包含的数据的可视化 HTML JSP Thymeleaf</p>
-<p>Controller 控制器作用于模型和视图上，它控制数据流向模型对象，并在数据变化时更新视图，它将视图与模型分开，目前的代表技术是servlet</p>
-<h2 id="并发并行"><a href="#并发并行" class="headerlink" title="并发并行"></a>并发并行</h2><p>并发：同一个CPU执行多个任务，按细分的时间片交替执行</p>
-<p>并行：多个CPU上同时执行多个任务</p>
-<h2 id="堆和栈的区别？"><a href="#堆和栈的区别？" class="headerlink" title="堆和栈的区别？"></a>堆和栈的区别？</h2><ul>
-<li><strong>大小限制</strong>：<strong>栈底</strong>的地址和栈的<strong>最大容量</strong>是系统预先规定好的（2M/1M，总之是一个编译时就确定的常数），如果申请的空间超过栈的剩余空间, stack overflow。因此，能从栈获得的空间较小。<strong>堆</strong>是用<strong>链表</strong>来存储的<strong>不连续</strong>内存区域，大小受限于计算机系统中有效的虚拟内存。由此可见，堆获得的空间比较<strong>灵活</strong>，也比较<strong>大</strong>。</li>
-<li><strong>申请效率</strong>：栈由系统自动分配，速度较<strong>快</strong>。但程序员是<strong>无法控制</strong>的。堆是由new分配的内存，一般速度比较<strong>慢</strong>，而且容易产生内存<strong>碎片</strong>,不过用起来最<strong>方便</strong>.</li>
-<li><strong>存储内容</strong>：栈存储<strong>返回地址，参数，局部变量</strong>。<strong>堆</strong>在这块内存空间中的首地址处记录本次分配的大小，具体内容由程序员安排。</li>
-<li><strong>数据访问</strong>：存储在堆中的对象是<strong>全局可以被访问</strong>的，然而栈内存<strong>不能</strong>被其他线程所访问，且遵循<strong>LIFO</strong>原则。</li>
-<li><strong>生命周期</strong>：栈内存的生命周期很短，而堆内存的生命周期从程序的运行开始到运行结束。</li>
+<h3 id="Token"><a href="#Token" class="headerlink" title="Token"></a>Token</h3><p>对于初学者来说，对Token和Session的使用难免会限于困境，开发过程中知道有这个东西，但却不知道为什么要用他？更不知道其原理，今天我就带大家一起分析分析这东西。</p>
+<p>  一、我们先解释一下他的含义：</p>
+<p>1、Token的引入：Token是在客户端频繁向服务端请求数据，服务端频繁的去数据库查询用户名和密码并进行对比，判断用户名和密码正确与否，并作出相应提示，在这样的背景下，Token便应运而生。</p>
+<p>2、Token的定义：Token是服务端生成的一串字符串，以作客户端进行请求的一个令牌，当第一次登录后，服务器生成一个Token便将此Token返回给客户端，以后客户端只需带上这个Token前来请求数据即可，无需再次带上用户名和密码。</p>
+<p>3、使用Token的目的：Token的目的是为了减轻服务器的压力，减少频繁的查询数据库，使服务器更加健壮。</p>
+<p>  了解了Token的意义后，我们就更明确的知道为什么要用他了。</p>
+<p>  二、如何使用Token？</p>
+<p>  这是本文的重点，在这里我就介绍常用的两种方式。</p>
+<p>1、用设备号/设备mac地址作为Token（推荐）</p>
+<p>  客户端：客户端在登录的时候获取设备的设备号/mac地址，并将其作为参数传递到服务端。</p>
+<p>  服务端：服务端接收到该参数后，便用一个变量来接收同时将其作为Token保存在数据库，并将该Token设置到session中，客户端每次请求的时候都要统一拦截，并将客户端传递的token和服务器端session中的token进行对比，如果相同则放行，不同则拒绝。</p>
+<p>分析：此刻客户端和服务器端就统一了一个唯一的标识Token，而且保证了每一个设备拥有了一个唯一的会话。该方法的缺点是客户端需要带设备号/mac地址作为参数传递，而且服务器端还需要保存；优点是客户端不需重新登录，只要登录一次以后一直可以使用，至于超时的问题是有服务器这边来处理，如何处理？若服务器的Token超时后，服务器只需将客户端传递的Token向数据库中查询，同时并赋值给变量Token，如此，Token的超时又重新计时。</p>
+<p>2、用session值作为Token</p>
+<p>  客户端：客户端只需携带用户名和密码登陆即可。</p>
+<p>  客户端：客户端接收到用户名和密码后并判断，如果正确了就将本地获取sessionID作为Token返回给客户端，客户端以后只需带上请求数据即可。</p>
+<p>分析：这种方式使用的好处是方便，不用存储数据，但是缺点就是当session过期后，客户端必须重新登录才能进行访问数据。</p>
+<h3 id="转发重定向区别"><a href="#转发重定向区别" class="headerlink" title="转发重定向区别"></a>转发重定向区别</h3><h4 id="转发"><a href="#转发" class="headerlink" title="转发"></a>转发</h4><p>发生在服务器内部的跳转，所以对于客户端来说，至始至终就是一个请求，所以这期间，保存在request对象中的数据可以进行传递</p>
+<h4 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h4><p>发生在客户端的跳转，所以是多次请求，这个时候，如果需要在多次请求之间传递数据，就需要用session对象</p>
+<p>在后台程序，想要跳转到百度应该使用重定向，因为转发的范围限制在服务器内部</p>
+<h3 id="Restful"><a href="#Restful" class="headerlink" title="Restful"></a>Restful</h3><h4 id="RestFul-风格"><a href="#RestFul-风格" class="headerlink" title="RestFul 风格"></a>RestFul 风格</h4><p>概念 Restful就是一个资源定位及资源操作的风格。不是标准也不是协议，只是一种风格。基于这个风格设计的软件可以更简洁，更有层次，更易于实现缓存等机制。<br>功能 资源：互联网所有的事物都可以被抽象为资源 资源操作：使用POST、DELETE、PUT、GET，使用不同方法对资源进行操作。 分别对应 添加、 删除、修改、查询。<br>传统方式操作资源 ：通过不同的参数来实现不同的效果！方法单一，post 和 get</p>
+<p><a href="http://127.0.0.1/item/queryItem.action?id=1">http://127.0.0.1/item/queryItem.action?id=1</a> 查询,GET</p>
+<p><a href="http://127.0.0.1/item/saveItem.action">http://127.0.0.1/item/saveItem.action</a> 新增,POST</p>
+<p><a href="http://127.0.0.1/item/updateItem.action">http://127.0.0.1/item/updateItem.action</a> 更新,POST</p>
+<p><a href="http://127.0.0.1/item/deleteItem.action?id=1">http://127.0.0.1/item/deleteItem.action?id=1</a> 删除,GET或POST<br>使用RESTful操作资源 ： 可以通过不同的请求方式来实现不同的效果！如下：请求地址一样，但是功能可以不同！<br><a href="http://127.0.0.1/item/1">http://127.0.0.1/item/1</a> 查询,GET</p>
+<p><a href="http://127.0.0.1/item">http://127.0.0.1/item</a> 新增,POST</p>
+<p><a href="http://127.0.0.1/item">http://127.0.0.1/item</a> 更新,PUT</p>
+<p><a href="http://127.0.0.1/item/1">http://127.0.0.1/item/1</a> 删除,DELETE</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RestFulController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//原来的： http://localhost:8080/add?a=1&amp;b=2</span></span><br><span class="line">    <span class="comment">//RestFul: http://localhost:8080/add/a/b</span></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/add&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  String <span class="title">test1</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b, Model model)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = a+b;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;msg&quot;</span>,<span class="string">&quot;结果为&quot;</span>+res);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;test&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//@RequestMapping(value = &quot;/add/&#123;a&#125;/&#123;b&#125;&quot;,method = RequestMethod.GET)</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/add/&#123;a&#125;/&#123;b&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  String <span class="title">test2</span><span class="params">(<span class="meta">@PathVariable</span> <span class="keyword">int</span> a,<span class="meta">@PathVariable</span> <span class="keyword">int</span> b, Model model)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = a+b;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;msg&quot;</span>,<span class="string">&quot;结果为&quot;</span>+res);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;test&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>思考：使用路径变量的好处？<br>使路径变得更加简洁；<br>获得参数更加方便，框架会自动进行类型转换。<br>通过路径变量的类型可以约束访问参数，如果类型不一样，则访问不到对应的请求方法，如这<br>里访问是的路径是/commit/1/a，则路径与方法不匹配，而不会是参数转换失败。</p>
+<p>使用method属性指定请求类型<br>用于约束请求的类型，可以收窄请求范围。指定请求谓词的类型如GET, POST, HEAD, OPTIONS, PUT,PATCH, DELETE, TRACE等</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//映射访问路径,必须是POST请求</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/hello&quot;,method = &#123;RequestMethod.POST&#125;)</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">index2</span><span class="params">(Model model)</span></span>&#123;</span><br><span class="line">	model.addAttribute(<span class="string">&quot;msg&quot;</span>, <span class="string">&quot;hello!&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;test&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>小结：<br>Spring MVC 的 @RequestMapping 注解能够处理 HTTP 请求的方法, 比如 GET, PUT, POST, DELETE 以及 PATCH。<br>所有的地址栏请求默认都会是 HTTP GET 类型的。<br>方法级别的注解变体有如下几个： 组合注解</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span></span><br><span class="line"><span class="meta">@PostMapping</span></span><br><span class="line"><span class="meta">@PutMapping</span></span><br><span class="line"><span class="meta">@DeleteMapping</span></span><br><span class="line"><span class="meta">@PatchMapping</span></span><br></pre></td></tr></table></figure>
+
+<p>@GetMapping 是一个组合注解<br>它所扮演的是 @RequestMapping(method =RequestMethod.GET) 的一个快捷方式。<br>平时使用的会比较多！</p>
+<h3 id="TCP-UDP区别"><a href="#TCP-UDP区别" class="headerlink" title="TCP UDP区别"></a>TCP UDP区别</h3><p>两者都是传输层协议</p>
+<p>其次</p>
+<p>tcp提供可靠的传输协议，传输前需要建立连接，面向字节流，传输慢，效率低 适合一对一 无界的连续数据分成多块发送</p>
+<p>udp无法保证传输的可靠性，无需创建连接，以报文的方式传输，效率高 广播多播</p>
+<p>TCP应用场景：<br>效率要求相对低，但对准确性要求相对高的场景。因为传输中需要对数据确认、重发、排序等操作，相比之下效率没有UDP高。举几个例子：文件传输（准确高要求高、但是速度可以相对慢）、接受邮件、远程登录。</p>
+<p>UDP应用场景：<br>效率要求相对高，对准确性要求相对低的场景。举几个例子：QQ聊天、在线视频、网络语音电话（即时通讯，速度要求高，但是出现偶尔断续不是太大问题，并且此处完全不可以使用重发机制）、广播通信（广播、多播）。</p>
+<h4 id="TCP三次握手"><a href="#TCP三次握手" class="headerlink" title="TCP三次握手"></a><strong>TCP三次握手</strong></h4><p>第一次握手：建立连接时，客户端发送syn包（syn=1，seq=j）到服务器，并进入SYN_SENT状态，等待服务器确认；SYN：同步序列编号（Synchronize Sequence Numbers）。</p>
+<p>第二次握手：服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；</p>
+<p>第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK(ack=k+1），此包发送完毕，客户端和服务器进入ESTABLISHED（TCP连接成功）状态，完成三次握手</p>
+<p><strong>三次握手改成两次会出现什么情况</strong></p>
+<p>现在把三次握手改成仅需要两次握手，死锁是可能发生的。作为例子，考虑计算机S和C之间的通信，假定C给S发送一个连接请求分组，S收到了这个分组，并发 送了确认应答分组。按照两次握手的协定，S认为连接已经成功地建立了，可以开始发送数据分组。可是，C在S的应答分组在传输中被丢失的情况下，将不知道S 是否已准备好，不知道S建立什么样的序列号，C甚至怀疑S是否收到自己的连接请求分组。在这种情况下，C认为连接还未建立成功，将忽略S发来的任何数据分 组，只等待连接确认应答分组。而S在发出的分组超时后，重复发送同样的分组。这样就形成了死锁。</p>
+<p>有人会困惑为什么要进行三次握手呢（两次确认）？这主要是为了防止已失效的请求连接报文忽然又传送到了，从而产生错误。<br>假定A向B发送一个连接请求，由于一些原因，导致A发出的连接请求在一个网络节点逗留了比较多的时间。此时A会将此连接请求作为无效处理 又重新向B发起了一次新的连接请求，B正常收到此连接请求后建立了连接，数据传输完成后释放了连接。如果此时A发出的第一次请求又到达了B，B会以为A又发起了一次连接请求，<code>如果是两次握手：此时连接就建立了，B会一直等待A发送数据，从而白白浪费B的资源</code>。 <code>如果是三次握手：由于A没有发起连接请求，也就不会理会B的连接响应，B没有收到A的确认连接，就会关闭掉本次连接</code>。</p>
+<p>序列号的确认号的作用<br>TCP协议工作在OSI的传输层，是一种可靠的面向连接的数据流协议，TCP之所以可靠，是因为它保证了传送数据包的顺序。顺序是用一个序列号来保证的。响应包内也包括一个序列号，表示接收方准备好这个序列号的包。在TCP传送一个数据包时，它会把这个数据包放入重发队列中，同时启动计时器，如果收到了关于这个包的确认信息，便将此数据包从队列中删除，如果在计时器超时的时候仍然没有收到确认信息，则需要重新发送该数据包。另外，TCP通过数据分段中的序列号来保证所有传输的数据可以按照正常的顺序进行重组，从而保障数据传输的完整！</p>
+<p><strong>初始序列号</strong></p>
+<p>TCP连接的一方A，随机选择一个32位的序列号（Sequence Number）作为发送数据的初始序列号（Initial Sequence Number，ISN），比如为1000，以该序列号为原点，对要传送的数据进行编号：1001、1002…三次握手时，把这个初始序列号传送给另一方B，以便在传输数据时，B可以确认什么样的数据编号是合法的；同时在进行数据传输时，A还可以确认B收到的每一个字节，如果A收到了B的确认编号（acknowledge number）是2001，就说明编号为1001-2000的数据已经被B成功接受。</p>
+<p><strong>第2次握手传回了ACK，为什么还要传回SYN？</strong></p>
+<p>接收端传回发送端所发送的ACK是为了告诉客户端，我接收到的信息确实就是你所发送的信号了，这表明从客户端到服务端的通信是正常的。而回传SYN则是为了建立并确认从服务端到客户端的通信。”</p>
+<h4 id="tcp四次挥手"><a href="#tcp四次挥手" class="headerlink" title="tcp四次挥手"></a><strong>tcp四次挥手</strong></h4><p>1）客户端进程发出连接释放报文，并且停止发送数据。释放数据报文首部，FIN=1，其序列号为seq=u（等于前面已经传送过来的数据的最后一个字节的序号加1），此时，客户端进入FIN-WAIT-1（终止等待1）状态。 TCP规定，FIN报文段即使不携带数据，也要消耗一个序号。<br>2）服务器收到连接释放报文，发出确认报文，ACK=1，ack=u+1，并且带上自己的序列号seq=v，此时，服务端就进入了CLOSE-WAIT（关闭等待）状态。TCP服务器通知高层的应用进程，客户端向服务器的方向就释放了，这时候处于半关闭状态，即客户端已经没有数据要发送了，但是服务器若发送数据，客户端依然要接受。这个状态还要持续一段时间，也就是整个CLOSE-WAIT状态持续的时间。<br>3）客户端收到服务器的确认请求后，此时，客户端就进入FIN-WAIT-2（终止等待2）状态，等待服务器发送连接释放报文（在这之前还需要接受服务器发送的最后的数据）。<br>4）服务器将最后的数据发送完毕后，就向客户端发送连接释放报文，FIN=1，ack=u+1，由于在半关闭状态，服务器很可能又发送了一些数据，假定此时的序列号为seq=w，此时，服务器就进入了LAST-ACK（最后确认）状态，等待客户端的确认。<br>5）客户端收到服务器的连接释放报文后，必须发出确认，ACK=1，ack=w+1，而自己的序列号是seq=u+1，此时，客户端就进入了TIME-WAIT（时间等待）状态。注意此时TCP连接还没有释放，必须经过2∗∗MSL（最长报文段寿命）的时间后，当客户端撤销相应的TCB后，才进入CLOSED状态。<br>6）服务器只要收到了客户端发出的确认，立即进入CLOSED状态。同样，撤销TCB后，就结束了这次的TCP连接。可以看到，服务器结束TCP连接的时间要比客户端早一些</p>
+<h4 id="time-wait状态"><a href="#time-wait状态" class="headerlink" title="time_wait状态"></a>time_wait状态</h4><p>  为什么TIME_WAIT状态需要经过2MSL(最大报文段生存时间)才能返回到CLOSE状态？ </p>
+<p>  – 虽然按道理，四个报文都发送完毕，我们可以直接进入CLOSE状态了，但是我们必须假象网络是不可靠的，有可能最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文。在Client发送出最后的ACK回复，但该ACK可能丢失。Server如果没有收到ACK，将不断重复发送FIN片段。所以Client不能立即关闭，它必须确认Server接收到了该ACK。Client会在发送出ACK之后进入到TIME_WAIT状态。Client会设置一个计时器，等待2MSL的时间。如果在该时间内再次收到FIN，那么Client会重发ACK并再次等待2MSL。所谓的2MSL是两倍的MSL(Maximum Segment Lifetime)。MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复所需的最大时间。如果直到2MSL，Client都没有再次收到FIN，那么Client推断ACK已经被成功接收，则结束TCP连接。</p>
+<h4 id="半关闭状态"><a href="#半关闭状态" class="headerlink" title="半关闭状态"></a>半关闭状态</h4><p>TCP提供了连接的一端在结束它的发送后还能接收来自另一端数据的能力。这就是所谓的半关闭。</p>
+<p><strong>为什么需要半关闭</strong></p>
+<p>为了保证数据的完全交换，应该留出足够长的连接时间，但是应该留出多长的时间呢？</p>
+<p>比如客户端连接到服务器，服务器将一个文件传输给客户端，客户端收到后发送确认数据给服务器端</p>
+<p>这时服务器端只需要连续的传输文件数据，而客户端却无法知道需要接收数据到何时，客户端也不可能无休止的调用输入函数，因为这有可能导致程序阻塞(调用的函数未返回)</p>
+<p>服务器端应该在数据发送完毕后传递EOF表示文件结束，客户端接收到EOF即停止接收数据并向服务器端发送确认数据。close函数与shutdown都可以向客户端发送EOF数据，但使用close发送EOF后也无法接收对方传输的数据了，所以使用shutdown </p>
+<p>注意：即使使用了shutdown函数实现TCP套接字的半关闭，在最后依旧要使用close函数关闭套接字</p>
+<h4 id="TCP如何保证数据传输的可靠性"><a href="#TCP如何保证数据传输的可靠性" class="headerlink" title="TCP如何保证数据传输的可靠性"></a><strong>TCP如何保证数据传输的可靠性</strong></h4><ul>
+<li>应用数据被分割成TCP认为最适合发送的数据块</li>
+<li>TCP给发送的每一个包进行编号，接收方对数据包进行排序，把有序数据传输给应用层</li>
+<li>校验和：TCP将保持它首部的数据的校验和。这是一个端到端的校验和，目的是检测数据在传输过程中的任何变化，如果收到的校验和有差错，tcp将丢弃这个报文段和不确认收到此报文段</li>
+<li>tcp的接收端会丢弃重复的数据</li>
+<li>流量控制：tcp连接的每一方都有固定大小的缓冲空间，tcp的接收端只允许发送端发送连接接收端缓冲区能接纳的数据，当接收方来不及处理发送方的数据，能提示发送方降低发送的速率，防止包丢失。tcp使用的流量控制协议是可变大小的滑动窗口协议</li>
+<li>拥塞控制：当网络拥塞时，减少数据的发送</li>
+<li>停止等待协议ARQ：基本原理是每发完一个分组就停止发送，等待对方确认，在收到确认后再发下一个分组，超时重传：当tcp发出一个字段后，它启动一个定时器，等待目的端确认收到这个报文段，如果不能及时确认，将重发</li>
 </ul>
+<p><strong>滑动窗口</strong></p>
+<ul>
+<li>TCP 利用滑动窗口实现流量控制的机制。</li>
+<li>滑动窗口（Sliding window）是一种流量控制技术。早期的网络通信中，通信双方不会考虑网络的拥挤情况直接发送数据。由于大家不知道网络拥塞状况，同时发送数据，导致中间节点阻塞掉包，谁也发不了数据，所以就有了滑动窗口机制来解决此问题。</li>
+<li>TCP 中采用滑动窗口来进行传输控制，滑动窗口的大小意味着接收方还有多大的缓冲区可以用于接收数据。发送方可以通过滑动窗口的大小来确定应该发送多少字节的数据。当滑动窗口为 0 时，发送方一般不能再发送数据报，但有两种情况除外，一种情况是可以发送紧急数据，例如，允许用户终止在远端机上的运行进程。另一种情况是发送方可以发送一个 1 字节的数据报来通知接收方重新声明它希望接收的下一字节及发送方的滑动窗口大小</li>
+</ul>
+<p><strong>拥塞控制</strong></p>
+<p>在某段时间，若对网络中某一资源的需求超过了该资源所能提供的可用部分，网络的性能就要变坏。这种情况就叫拥塞。拥塞控制就是为了防止过多的数据注入到网络中，这样就可以使网络中的路由器或链路不致过载。拥塞控制所要做的都有一个前提，就是网络能够承受现有的网络负荷。</p>
+<p>TCP的拥塞控制四种算法  慢开始 拥塞避免 快重传 快恢复</p>
+<p><strong>慢开始</strong>：由小到大逐渐增大发送窗口 ，要注意，发送方每收到一个确认报文段，cwnd+1（不包括缺失重传的确认），也就是说，每经过一个传输伦次（RTT时间），cwnd加倍。</p>
+<p><strong>拥塞避免</strong>：设置一个窗口值，大于时采用拥塞避免，让拥塞窗口cwnd缓慢增大，每经过一个往返时间RTT就把发送的cwnd+1</p>
+<p><strong>快重传与快恢复</strong>：当接收方收到了一个失序的报文，马上报告给发送方，我没收到，赶紧重传（<strong>天下武功唯快不破</strong>），假如M2收到了，M3没有收到，之后的M4,M5,M6又发送了，此时接收方一共连续给发送方反馈了4个M2确认报文。那么快重传规定，发送方只要连续收到3个重复确认，立即重传对方发来的M3</p>
+<h3 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h3><p>　　这是为了实现以上的通信过程而建立成来的通信管道，其真实的代表是客户端和服务器端的一个通信进程，双方进程通过socket进行通信，而通信的规则采用指定的协议。</p>
+<p>　　socket只是一种连接模式，不是协议，socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口（API）。</p>
+<p>　　通过Socket，我们才能使用TCP/IP协议。tcp、udp，简单的说（虽然不准确）是两个最基本的协议。</p>
+<p>　　很多其它协议都是基于这两个协议。如http就是基于tcp的，用socket可以创建tcp连接，也可以创建udp连接。</p>
+<p>　　这意味着，用socket可以创建任何协议的连接，因为其它协议都是基于此的。</p>
+<p>　　一个Socket实例由一个IP地址和一个端口号唯一确定。<br>　　Socket是一种用于网络通信的低层开发接口，借助于通信两端的应用程序(实际上是Socket)可以利用输入输出流完成数据交换。</p>
+<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　3）适合于客户端和服务器端之间信息实时交互；<br>　　4）可以加密,数据安全性强。 </p>
+<p><strong>Socket 传输的缺点</strong><br>　　1）需对传输的数据进行解析，转化成应用级的数据；<br>　　2）对开发人员的开发水平要求高；<br>　　3）相对于Http协议传输，增加了开发量</p>
+<p>基于Socket传输的特点：Socket 传输方式适合于对传输速度，安全性，实时交互，费用等要求高的应用中，如网络游戏，手机应用，银行内部交互等‘’。</p>
 <h2 id="Mysql数据库知识点"><a href="#Mysql数据库知识点" class="headerlink" title="Mysql数据库知识点"></a>Mysql数据库知识点</h2><h3 id="数据库三大范式"><a href="#数据库三大范式" class="headerlink" title="数据库三大范式"></a>数据库三大范式</h3><ol>
 <li>第一范式：列不可分</li>
 <li>第二范式：要有主键</li>
@@ -1137,8 +1077,10 @@
 </ul>
 <h3 id="事务的并发问题"><a href="#事务的并发问题" class="headerlink" title="事务的并发问题"></a><strong>事务的并发问题</strong></h3><p>　　<strong>1、脏读：事务A读取了事务B更新的数据，然后B回滚操作，那么A读取到的数据是脏数据</strong></p>
 <p>　　<strong>2、不可重复读：事务 A 多次读取同一数据，事务 B 在事务A多次读取的过程中，对数据作了更新并提交，导致事务A多次读取同一数据时，结果 不一致。</strong></p>
-<p>　　<strong>3、幻读：系统管理员A将数据库中所有学生的成绩从具体分数改为ABCDE等级，但是系统管理员B就在这个时候插入了一条具体分数的记录，当系统管理员A改结束后发现还有一条记录没有改过来，就好像发生了幻觉一样，这就叫幻读。在同一事务内查询返回不同的结果集合。一般是由于其他事务插入并提交了一些记录造成的</strong></p>
+<p>　　<strong>3、幻读：在同一事务内查询返回不同的结果集合。一般是由于其他事务插入并提交了一些记录造成的在一个事务中使用相同的 SQL 两次读取，第二次读取到了其他事务新插入的行。幻读与不可重复读类似。它发生在一个事务（T1）读取了几行数据，接着另一个并发事务（T2）插入了一些数据时。在随后的查询中，第一个事务（T1）就会发现多了一些原本不存在的记录，就好像发生了幻觉一样，所以称为幻读。</strong></p>
 <p>　　<strong>小结：不可重复读的和幻读很容易混淆，不可重复读侧重于修改，幻读侧重于新增或删除。解决不可重复读的问题只需锁住满足条件的行，解决幻读需要锁表</strong></p>
+<p><strong>不可重复读和幻读区别：</strong></p>
+<p>不可重复读的重点是修改比如多次读取一条记录发现其中某些列的值被修改，幻读的重点在于新增或者删除比如多次读取一条记录发现记录增多或减少了。</p>
 <h3 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h3><p>InnoDB默认是可重复读</p>
 <table>
 <thead>
@@ -1178,14 +1120,14 @@
 <li><p>MySQL的可重复读底层是怎么实现的:MVCC</p>
 </li>
 <li><p><strong>读未提交</strong>，顾名思义，就是一个事务可以读取另一个未提交事务的数据。</p>
-<p>　　事例：老板要给程序员发工资，程序员的工资是3.6万/月。但是发工资时老板不小心按错了数字，按成3.9万/月，该钱已经打到程序员的户口，但是事务还没有提交，就在这时，程序员去查看自己这个月的工资，发现比往常多了3千元，以为涨工资了非常高兴。但是老板及时发现了不对，马上回滚差点就提交了的事务，将数字改成3.6万再提交。</p>
-<p>  　　分析：实际程序员这个月的工资还是3.6万，但是程序员看到的是3.9万。他看到的是老板还没提交事务时的数据。这就是脏读。因此，在这种隔离级别下，查询是不会加锁的，也由于查询的不加锁，所以这种隔离级别的一致性是最差的，可能会产生“脏读”、“不可重复读”、“幻读”。如无特殊情况，基本是不会使用这种隔离级别的。</p>
-<p>  　　那怎么解决脏读呢？Read committed！读提交，能解决脏读问题。</p>
+<p>事例：老板要给程序员发工资，程序员的工资是3.6万/月。但是发工资时老板不小心按错了数字，按成3.9万/月，该钱已经打到程序员的户口，但是事务还没有提交，就在这时，程序员去查看自己这个月的工资，发现比往常多了3千元，以为涨工资了非常高兴。但是老板及时发现了不对，马上回滚差点就提交了的事务，将数字改成3.6万再提交。</p>
+<p>　　分析：实际程序员这个月的工资还是3.6万，但是程序员看到的是3.9万。他看到的是老板还没提交事务时的数据。这就是脏读。因此，在这种隔离级别下，查询是不会加锁的，也由于查询的不加锁，所以这种隔离级别的一致性是最差的，可能会产生“脏读”、“不可重复读”、“幻读”。如无特殊情况，基本是不会使用这种隔离级别的。</p>
+<p>　　那怎么解决脏读呢？Read committed！读提交，能解决脏读问题。</p>
 </li>
 <li><p><strong>读提交，</strong>顾名思义，就是只能读到已经提交了的内容</p>
-<p>　　事例：程序员拿着信用卡去享受生活（卡里当然是只有3.6万），当他埋单时（程序员事务开启），收费系统事先检测到他的卡里有3.6万，就在这个时候！！程序员的妻子要把钱全部转出充当家用，并提交。当收费系统准备扣款时，再检测卡里的金额，发现已经没钱了（第二次检测金额当然要等待妻子转出金额事务提交完）。程序员就会很郁闷，明明卡里是有钱的…</p>
-<p>  　　分析：这就是读提交，若有事务对数据进行更新（UPDATE）操作时，读操作事务要等待这个更新操作事务提交后才能读取数据，可以解决脏读问题。但在这个事例中，出现了一个事务范围内两个相同的查询却返回了不同数据，这就是不可重复读。</p>
-<pre><code>　这是各种系统中最常用的一种隔离级别，也是SQL Server和Oracle的默认隔离级别。这种隔离级别能够有效的避免脏读，但除非在查询中显示的加锁，如：</code></pre>
+<p>事例：程序员拿着信用卡去享受生活（卡里当然是只有3.6万），当他埋单时（程序员事务开启），收费系统事先检测到他的卡里有3.6万，就在这个时候！！程序员的妻子要把钱全部转出充当家用，并提交。当收费系统准备扣款时，再检测卡里的金额，发现已经没钱了（第二次检测金额当然要等待妻子转出金额事务提交完）。程序员就会很郁闷，明明卡里是有钱的…</p>
+<p>　　分析：这就是读提交，若有事务对数据进行更新（UPDATE）操作时，读操作事务要等待这个更新操作事务提交后才能读取数据，可以解决脏读问题。但在这个事例中，出现了一个事务范围内两个相同的查询却返回了不同数据，这就是不可重复读。</p>
+<p>  　这是各种系统中最常用的一种隔离级别，也是SQL Server和Oracle的默认隔离级别。这种隔离级别能够有效的避免脏读，但除非在查询中显示的加锁，如：</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> T <span class="keyword">where</span> <span class="keyword">ID</span>=<span class="number">2</span> <span class="keyword">lock</span> <span class="keyword">in</span> <span class="keyword">share</span> <span class="keyword">mode</span>;</span><br><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> T <span class="keyword">where</span> <span class="keyword">ID</span>=<span class="number">2</span> <span class="keyword">for</span> <span class="keyword">update</span>;</span><br></pre></td></tr></table></figure>
 
 <p>　　不然，普通的查询是不会加锁的。</p>
@@ -1193,11 +1135,10 @@
 <p>　　这就要说道另一个机制“快照（snapshot）”，而这种既能保证一致性又不加锁的读也被称为“快照读（Snapshot Read）”</p>
 <p>　　假设没有“快照读”，那么当一个更新的事务没有提交时，另一个对更新数据进行查询的事务会因为无法查询而被阻塞（因为上了X锁，即写锁，所以不能得到S锁，即读锁），这种情况下，并发能力就相当的差。而“快照读”就可以完成高并发的查询，不过，“读提交”只能避免“脏读”，并不能避免“不可重复读”和“幻读”。</p>
 </li>
-<li><p><strong>可重复读</strong>，顾名思义，就是专门针对“不可重复读”这种情况而制定的隔离级别，自然，它就可以有效的避免“不可重复读”。而它也是MySql的默认隔离级别。</p>
-<p>　　事例：程序员拿着信用卡去享受生活（卡里当然是只有3.6万），当他埋单时（事务开启，不允许其他事务的UPDATE修改操作），收费系统事先检测到他的卡里有3.6万。这个时候他的妻子不能转出金额了。接下来收费系统就可以扣款了。</p>
-<p>  　　分析：重复读可以解决不可重复读问题。写到这里，应该明白的一点就是，不可重复读对应的是修改，即UPDATE操作。但是可能还会有幻读问题。因为幻读问题对应的是插入INSERT操作，而不是UPDATE操作。</p>
-<p>什么时候会出现幻读？</p>
-<p>　　事例：程序员某一天去消费，花了2千元，然后他的妻子去查看他今天的消费记录（全表扫描FTS，妻子事务开启），看到确实是花了2千元，就在这个时候，程序员花了1万买了一部电脑，即新增INSERT了一条消费记录，并提交。当妻子打印程序员的消费记录清单时（妻子事务提交），发现花了1.2万元，似乎出现了幻觉，这就是幻读。</p>
+<li><p><strong>可重复读</strong>，对同一字段的多次读取结果都是一致的，除非数据是被本身事务自己所修改，<strong>可以阻止脏读和不可重复读，但幻读仍有可能发生</strong>。</p>
+<p>顾名思义，就是专门针对“不可重复读”这种情况而制定的隔离级别，自然，它就可以有效的避免“不可重复读”。而它也是MySql的默认隔离级别。</p>
+<p>事例：程序员拿着信用卡去享受生活（卡里当然是只有3.6万），当他埋单时（事务开启，不允许其他事务的UPDATE修改操作），收费系统事先检测到他的卡里有3.6万。这个时候他的妻子不能转出金额了。接下来收费系统就可以扣款了。</p>
+<p>　　分析：重复读可以解决不可重复读问题。写到这里，应该明白的一点就是，不可重复读对应的是修改，即UPDATE操作。但是可能还会有幻读问题。因为幻读问题对应的是插入INSERT操作，而不是UPDATE操作。</p>
 <p>　　在这个级别下，普通的查询同样是使用的“快照读”，但是，和“读提交”不同的是，当事务启动时，就不允许进行“修改操作（Update）”了，而“不可重复读”恰恰是因为两次读取之间进行了数据的修改，因此，“可重复读”能够有效的避免“不可重复读”，但却避免不了“幻读”，因为幻读是由于“插入或者删除操作（Insert or Delete）”而产生的。</p>
 <p>　　那怎么解决幻读问题？Serializable！</p>
 </li>
@@ -1445,6 +1386,461 @@
 <p>redis用于存储使用较为频繁的数据到缓存中，读取速度快</p>
 <p>（3）需求上</p>
 <p>mysql和redis因为需求的不同，一般都是配合使用。</p>
+<h2 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h2><h3 id="分页和分段"><a href="#分页和分段" class="headerlink" title="分页和分段"></a>分页和分段</h3><ul>
+<li>页式存储：用户空间划分为大小相等的部分称为页（page），内存空间划分为同样大小的区域称为页框，分配时以页为单位，按进程需要的页数分配，逻辑上相邻的页物理上不一定相邻；</li>
+<li>段式存储：用户进程地址空间按照自身逻辑关系划分为若干个段（segment）（如代码段，数据段，堆栈段），内存空间被动态划分为长度不同的区域，分配时以段为单位，每段在内存中占据连续空间，各段可以不相邻；</li>
+<li>段页式存储：用户进程先按段划分，段内再按页划分，内存划分和分配按页。</li>
+</ul>
+<p>区别：</p>
+<ul>
+<li>目的不同：分页的目的是管理内存，用于虚拟内存以获得更大的地址空间；分段的目的是满足用户的需要，使程序和数据可以被划分为逻辑上独立的地址空间；</li>
+<li>大小不同：段的大小不固定，由其所完成的功能决定；页的大小固定，由系统决定；</li>
+<li>地址空间维度不同：分段是二维地址空间（段号+段内偏移），分页是一维地址空间（每个进程一个页表/多级页表，通过一个逻辑地址就能找到对应的物理地址）；</li>
+<li>分段便于信息的保护和共享；分页的共享收到限制；</li>
+<li>碎片：分段没有内碎片，但会产生外碎片；分页没有外碎片，但会产生内碎片（一个页填不满）</li>
+</ul>
+<h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><p>每个程序都拥有自己的地址空间，这个地址空间被分成大小相等的页，这些页被映射到物理内存；但不需要所有的页都在物理内存中，当程序引用到不在物理内存中的页时，由操作系统将缺失的部分装入物理内存。这样，对于程序来说，逻辑上似乎有很大的内存空间，只是实际上有一部分是存储在磁盘上，因此叫做虚拟内存。</p>
+<p>虚拟内存的优点是让程序可以获得更多的可用内存。</p>
+<h4 id="局部性原理"><a href="#局部性原理" class="headerlink" title="局部性原理"></a>局部性原理</h4><p>局部性原理表现在以下两个方面：</p>
+<ol>
+<li><strong>时间局部性</strong> ：如果程序中的某条指令一旦执行，不久以后该指令可能再次执行；如果某数据被访问过，不久以后该数据可能再次被访问。产生时间局部性的典型原因，是由于在程序中存在着大量的循环操作。</li>
+<li><strong>空间局部性</strong> ：一旦程序访问了某个存储单元，在不久之后，其附近的存储单元也将被访问，即程序在一段时间内所访问的地址，可能集中在一定的范围之内，这是因为指令通常是顺序存放、顺序执行的，数据也一般是以向量、数组、表等形式簇聚存储的。</li>
+</ol>
+<p>时间局部性是通过将近来使用的指令和数据保存到高速缓存存储器中，并使用高速缓存的层次结构实现。空间局部性通常是使用较大的高速缓存，并将预取机制集成到高速缓存控制逻辑中实现。虚拟内存技术实际上就是建立了 “内存一外存”的两级存储器的结构，利用局部性原理实现髙速缓存。</p>
+<h4 id="页面置换算法"><a href="#页面置换算法" class="headerlink" title="页面置换算法"></a>页面置换算法</h4><p>地址映射过程中，若在页面中发现所要访问的页面不在内存中，则发生缺页中断 。</p>
+<blockquote>
+<p><strong>缺页中断</strong> 就是要访问的<strong>页</strong>不在主存，需要操作系统将其调入主存后再进行访问。 在这个时候，被内存映射的文件实际上成了一个分页交换文件。</p>
+</blockquote>
+<p>当发生缺页中断时，如果当前内存中并没有空闲的页面，操作系统就必须在内存选择一个页面将其移出内存，以便为即将调入的页面让出空间。用来选择淘汰哪一页的规则叫做页面置换算法，我们可以把页面置换算法看成是淘汰页面的规则。</p>
+<ul>
+<li><strong>OPT 页面置换算法（最佳页面置换算法）</strong> ：最佳(Optimal, OPT)置换算法所选择的被淘汰页面将是以后永不使用的，或者是在最长时间内不再被访问的页面,这样可以保证获得最低的缺页率。但由于人们目前无法预知进程在内存下的若千页面中哪个是未来最长时间内不再被访问的，因而该算法无法实现。一般作为衡量其他置换算法的方法。</li>
+<li><strong>FIFO（First In First Out） 页面置换算法（先进先出页面置换算法）</strong> : 总是淘汰最先进入内存的页面，即选择在内存中驻留时间最久的页面进行淘汰。</li>
+<li><strong>LRU （Least Currently Used）页面置换算法（最近最久未使用页面置换算法）</strong> ：LRU算法赋予每个页面一个访问字段，用来记录一个页面自上次被访问以来所经历的时间 T，当须淘汰一个页面时，选择现有页面中其 T 值最大的，即最近最久未使用的页面予以淘汰。</li>
+<li><strong>LFU （Least Frequently Used）页面置换算法（最少使用页面置换算法）</strong> : 该置换算法选择在之前时期使用最少的页面作为淘汰页。</li>
+</ul>
+<h3 id="进程与线程"><a href="#进程与线程" class="headerlink" title="进程与线程"></a>进程与线程</h3><p>进程是计算机中运行的一个应用程序,运行时程序的封装，系统进行资源调度，分配的基本单位</p>
+<p>线程：执行该进程的逻辑单元。线程是用来执行进程的，进程的子任务，cpu调度分派的基本单位，保证程序的实时性</p>
+<p>进程在执行过程中拥有独立的内存单元，而多个线程共享进程的内存</p>
+<p>关于进程的定义有很多，一个经典的定义是一个执行中程序的实例，进程是程序的动态表现。 一个程序进行起来后，会使用很多资源，比如使用寄存器，内存，文件等。每当切换进程时，必须要考虑保存当前进程的状态。状态包括存放在内存中的程序的代码和数据，它<strong>的栈、通用目的寄存器的内容、程序计数器、环境变量以及打开的文件描述符的集合，这个状态叫做上下文（Context）。可见，想要切换进程，保存的状态还不少。</strong></p>
+<p>线程存在于进程中，一个进程可以有一个或多个线程。线程是运行在进程上下文中的逻辑流，简单说，线程可以理解为一个方法(Java)或函数（C），这个线程可以独立完成一项任务。同样线程有自己的上下文，包括<strong>唯一的整数线程ID， 栈、栈指针、程序计数器、通用目的寄存器和条件码。可以理解为线程上下文是进程上下文的子集。</strong></p>
+<p>由于保存线程的上下文明显比进程的上下文小，因此系统切换线程时，必然开销更小。</p>
+<p><strong>同一进程中的线程可以共享哪些数据</strong></p>
+<ul>
+<li>进程代码段</li>
+<li>进程的公有数据（全局变量、静态变量…）</li>
+<li>进程打开的文件描述符</li>
+<li>进程的当前目录</li>
+<li>信号处理器/信号处理函数：对收到的信号的处理方式</li>
+<li>进程ID与进程组ID</li>
+</ul>
+<p><strong>线程独占哪些资源</strong></p>
+<ul>
+<li>线程ID</li>
+<li>一组寄存器的值</li>
+<li>线程自身的栈（堆是共享的）</li>
+<li>错误返回码：线程可能会产生不同的错误返回码，一个线程的错误返回码不应该被其它线程修改；</li>
+<li>信号掩码/信号屏蔽字(Signal mask)：表示是否屏蔽/阻塞相应的信号（SIGKILL,SIGSTOP除外）</li>
+</ul>
+<h4 id="进程间的五种通信方式"><a href="#进程间的五种通信方式" class="headerlink" title="进程间的五种通信方式"></a>进程间的五种通信方式</h4><ul>
+<li><p>管道通信 </p>
+<p>管道是一种进程间通信的方式，在linux中分为有名管道和无名管道。有名管道就是把一个进程的输出写到一个文件中，再把此文件作为另一个进程的输入。<br>无名管道也是如此，只不过这个管道文件不直接可见而已，通常无名管道都作为一个进程组的形式完成，如ls | grep ‘a’，这就是一种进程间单向的通信方式。</p>
+<p>管道是半双工的，数据只能向一个方向流动；需要双方通信时，需要建立起两个管道；</p>
+<p>一个进程向管道中写的内容被管道另一端的进程读出。写入的内容每次都添加在管道缓冲区的末尾，并且每次都是从缓冲区的头部读出数据；</p>
+<p>只能用于父子进程或者兄弟进程之间(具有亲缘关系的进程)</p>
+</li>
+<li><p>消息队列</p>
+<p>消息队列，是消息的链接表，存放在内核中。一个消息队列由一个标识符（即队列ID）来标识。    </p>
+<p>消息队列是面向记录的，其中的消息具有特定的格式以及特定的优先级。</p>
+<p>消息队列独立于发送与接收进程。进程终止时，消息队列及其内容并不会被删除。</p>
+<p>消息队列可以实现消息的随机查询,消息不一定要以先进先出的次序读取,也可以按消息的类型读取。</p>
+</li>
+<li><p>共享内存</p>
+<p>共享内存（Shared Memory），指两个或多个进程共享一个给定的存储区。</p>
+<ol>
+<li>共享内存是最快的一种 IPC，因为进程是直接对内存进行存取。</li>
+<li>因为多个进程可以同时操作，所以需要进行同步。</li>
+<li>信号量+共享内存通常结合在一起使用，信号量用来同步对共享内存的访问。</li>
+</ol>
+</li>
+<li><p>信号量</p>
+<p>信号量（semaphore），它是一个计数器。信号量用于实现进程间的互斥与同步，而不是用于存储进程间通信数据。</p>
+<ol>
+<li>信号量用于进程间同步，若要在进程间传递数据需要结合共享内存。</li>
+<li>信号量基于操作系统的 PV 操作，程序对信号量的操作都是原子操作。</li>
+<li>每次对信号量的 PV 操作不仅限于对信号量值加 1 或减 1，而且可以加减任意正整数。</li>
+<li>支持信号量组。</li>
+</ol>
+</li>
+<li><p>套接字socket通信</p>
+<p>套解口也是一种进程间通信机制，与其他通信机制不同的是，它可用于不同及其间的进程通信</p>
+</li>
+</ul>
+<p>几种方式的比较：</p>
+<ul>
+<li>管道：速度慢，容量有限</li>
+<li>消息队列：容量受到系统限制，且要注意第一次读的时候，要考虑上一次没有读完数据的问题。</li>
+<li>信号量：不能传递复杂消息，只能用来同步</li>
+<li>共享内存区：能够很容易控制容量，速度快，但要保持同步，比如一个进程在写的时候，另一个进程要注意读写的问题，相当于线程中的线程安全，当然，共享内存区同样可以用作线程间通讯，不过没这个必要，线程间本来就已经共享了一块内存的。</li>
+</ul>
+<h4 id="进程调度"><a href="#进程调度" class="headerlink" title="进程调度"></a>进程调度</h4><p><strong>一、先来先去服务</strong>FCFS</p>
+<p>　　先来先去服务调度算法是一种最简单的调度算法，也称为先进先出或严格排队方案。当每个进程就绪后，它加入就绪队列。当前正运行的进程停止执行，选择在就绪队列中存在时间最长的进程运行。该算法既可以用于作业调度，也可以用于进程调度。先来先去服务比较适合于常作业（进程），而不利于段作业（进程）。</p>
+<p><strong>二、时间片轮转法</strong></p>
+<p>　　轮转法是基于适中的抢占策略的，以一个周期性间隔产生时钟中断，当中断发生后，当前正在运行的进程被置于就绪队列中，然后基于先来先去服务策略选择下一个就绪作业的运行。这种技术也称为时间片，因为每个进程再被抢占之前都给定一片时间。</p>
+<p><strong>三、最短进程优先</strong></p>
+<p>　　最短进程优先是一个非抢占策略，他的原则是下一次选择预计处理时间最短的进程，因此短进程将会越过长作业，跳至队列头。该算法即可用于作业调度，也可用于进程调度。但是他对长作业不利，不能保证紧迫性作业（进程）被及时处理，作业的长短只是被估算出来的。</p>
+<p><strong>四、最短剩余时间优先</strong></p>
+<p>　　最短剩余时间是针对最短进程优先增加了抢占机制的版本。在这种情况下，进程调度总是选择预期剩余时间最短的进程。当一个进程加入到就绪队列时，他可能比当前运行的进程具有更短的剩余时间，因此只要新进程就绪，调度程序就能可能抢占当前正在运行的进程。像最短进程优先一样，调度程序正在执行选择函数是必须有关于处理时间的估计，并且存在长进程饥饿的危险。</p>
+<p><strong>五、最高响应比优先</strong></p>
+<p>根据比率：R=(w+s)/s （R为响应比，w为等待处理的时间，s为预计的服务时间）</p>
+<p>　　如果该进程被立即调用，则R值等于归一化周转时间（周转时间和服务时间的比率）。R最小值为1.0，只有第一个进入系统的进程才能达到该值。调度规则为：当前进程完成或被阻塞时，选择R值最大的就绪进程，它说明了进程的年龄。当偏向短作业时，长进程由于得不到服务，等待时间不断增加，从而增加比值，最终在竞争中赢了短进程。</p>
+<p>　　和最短进程优先、最短剩余时间优先一样，使用最高响应比策略需要估计预计服务时间。</p>
+<p><strong>六、反馈法</strong></p>
+<p>　　如果没有关于进程相对长度的任何信息，则最短进程优先，最短剩余时间、最高响应优先比都不能使用。另一种导致偏向短作业的方法是处罚运行时间较长的作业，换句话说，如果不能获得剩余的执行时间，那就关注已执行了的时间。</p>
+<p>　　方法为：调度基于被抢占原则（按时间片）并使用动态优先级机制。当一个进程第一次进入系统中时，他被放置在一个优先级队列中，当第一次被抢占后并返回就绪状态时，它被放置在下一个低优先级队列中，在随后的时间里，每当被抢占时，他被降级到下一个低优先级队列中。一个短进程很快被执行完，不会在就绪队列中降很多级，一个长进程会逐渐降级。因此先到的进程和短进程优先于长进程和老进程。在每个队列中，除了优先级在最低的队列中之外，都是用简单的先来先去服务机制，一旦一个进程处于优先级最低的队列中，它就不可能在降级，但会重复的返回该队列，直到运行结束。因此，该队列课按照轮转方式调度。</p>
+<p> <strong>七、多级反馈队列调度算法</strong></p>
+<p>　　多级反馈队列算法，不必事先知道各种进程所需要执行的时间，他是当前被公认的一种较好的进程调度算法。其实施过程如下：</p>
+<p>　　1)设置多个就绪队列，并为各个队列赋予不同的优先级。在优先权越高的队列中，为每个进程所规定的执行时间片就越小。</p>
+<p>　　2)当一个新进程进入内存后，首先放入第一队列的末尾，按照先来先去原则排队等候调度。如果他能在一个时间片中完成，便可撤离；如果未完成，就转入第二队列的末尾，同样等待调度…..如此下去，当一个长作业（进程）从第一队列依次将到第n队列（最后队列）后，便按第n队列时间片轮转运行。</p>
+<p>　　3)仅当第一队列空闲的时候，调度程序才调度第二队列中的进程运行；仅当第1到（i-1）队列空时，才会调度第i队列中的进程运行，并执行相应的时间片轮转。</p>
+<p>　　4)如果处理机正在处理第i队列中某进程，又有新进程进入优先权较高的队列，则此新队列抢占正在运行的处理机，并把正在运行的进程放在第i队列的队尾。</p>
+<h4 id="进程的状态"><a href="#进程的状态" class="headerlink" title="进程的状态"></a>进程的状态</h4><p><strong>运行态</strong>：该进程正在执行。</p>
+<p><strong>就绪态</strong>：进程已经做好了准备，只要有机会就开始执行。</p>
+<p><strong>阻塞态</strong>（等待态）：进程在某些事情发生前不能执行，等待阻塞进程的事件完成。</p>
+<p>主要是上面三个</p>
+<p><strong>新建态</strong>：刚刚创建的进程，操作系统还没有把它加入到可执行进程组中，通常是进程控制块已经创建但是还没有加载到内存中的进程。</p>
+<p><strong>退出态</strong>：操作系统从可执行进程组中释放出的进程，或由于自身或某种原因停止运行。</p>
+<p><strong>空-&gt;新建</strong>：创建执行一个程序的新进程，可能的事件有：新的批处理作业、交互登录（终端用户登录到系统）、操作系统因为提供一项服务而创建、由现有的进程派生等。</p>
+<p>新建-&gt;就绪：操作系统准备好再接纳一个进程时，把一个进程从新建态转换为就绪态。</p>
+<p><strong>就绪-&gt;运行</strong>：需要选择一个新进程运行时，操作系统的调度器或分配器根据某种调度算法选择一个处于就绪态的进程。</p>
+<p><strong>运行-&gt;退出</strong>：导致进程终止的原因有：正常完成、超过时限、系统无法满足进程需要的内存空间、进程试图访问不允许访问的内存单元（越界）、算术错误（如除以0或存储大于硬件可以接纳的数字）、父进程终止（操作系统可能会自动终止该进程所有的后代进程）、父进程请求终止后代进程等。</p>
+<p><strong>运行-&gt;就绪</strong>：最常见的原因是，正在运行的进程到达了“允许不中断执行”的最大时间段，该把处理器的资源释放给其他在就绪态的进程使用了；还有一中原因可能是由于具有更改优先级的就绪态进程抢占了该进程的资源，使其被中断转换到就绪态。</p>
+<p><strong>运行-&gt;阻塞</strong>：如果进程请求它必须等待的某些事件，例如一个无法立即得到的资源（如I/O操作），只有在获得等待的资源后才能继续进程的执行，则进入等待态（阻塞态）。</p>
+<p><strong>阻塞-&gt;就绪</strong>：当等待的事件发生时，处于阻塞态的进程转换到就绪态。</p>
+<p><strong>就绪-&gt;退出</strong>：在上图中没有标出这种转换，在某些进程中，父进程可以在任何时刻终止一个子进程，如果一个父进程终止，所有相关的子进程都被终止。</p>
+<p><strong>阻塞-&gt;退出</strong>：跟上一项原因类似。</p>
+<h4 id="僵尸进程"><a href="#僵尸进程" class="headerlink" title="僵尸进程"></a>僵尸进程</h4><p>一个子进程结束后，它的父进程并没有等待它（调用wait或者waitpid），那么这个子进程将成为一个僵尸进程。僵尸进程是一个已经死亡的进程，但是并没有真正被销毁。它已经放弃了几乎所有内存空间，没有任何可执行代码，也不能被调度，仅仅在进程表中保留一个位置，记载该进程的进程ID、终止状态以及资源利用信息(CPU时间，内存使用量等等)供父进程收集，除此之外，僵尸进程不再占有任何内存空间。这个僵尸进程可能会一直留在系统中直到系统重启。</p>
+<p>危害：占用进程号，而系统所能使用的进程号是有限的；占用内存。</p>
+<h4 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h4><p>new runnable blocked waiting time-waiting terminated</p>
+<ol>
+<li>当进入到同步代码块或者同步方法时，且没有获取到锁，线程就进入到了blocked状态，直到被释放锁，重新进入到runnable状态</li>
+<li>当线程调用wait或者join时，线程都会进入到waiting状态，当调用notify或notifyAll时，或者join的线程执行结束后，会进入到runnable状态</li>
+<li>当线程调用sleep(time),或者wait(time)时，进入到timed waiting状态 当休眠结束时，或者调用otify或notifyAll时会重新进入到runnable状态</li>
+<li>程序结束后，线程进入到terminated状态</li>
+</ol>
+<h4 id="进程的同步方式"><a href="#进程的同步方式" class="headerlink" title="进程的同步方式"></a>进程的同步方式</h4><ol>
+<li>互斥量 采用互斥对象机制</li>
+<li>信号量 允许同一时刻多个线程访问同一资源</li>
+<li>事件</li>
+</ol>
+<h4 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h4><blockquote>
+<p>为什么需要线程同步：线程有时候会和其他线程共享一些资源，比如内存、数据库等。当多个线程同时读写同一份共享资源的时候，可能会发生冲突。因此需要线程的同步，多个线程按顺序访问资源。</p>
+</blockquote>
+<ul>
+<li><strong>互斥量</strong> Mutex：互斥量是内核对象，只有拥有互斥对象的线程才有访问互斥资源的权限。因为互斥对象只有一个，所以可以保证互斥资源不会被多个线程同时访问；当前拥有互斥对象的线程处理完任务后必须将互斥对象交出，以便其他线程访问该资源；</li>
+<li><strong>信号量</strong> Semaphore：信号量是内核对象，它允许同一时刻多个线程访问同一资源，但是需要控制同一时刻访问此资源的最大线程数量。信号量对象保存了<strong>最大资源计数</strong>和<strong>当前可用资源计数</strong>，每增加一个线程对共享资源的访问，当前可用资源计数就减1，只要当前可用资源计数大于0，就可以发出信号量信号，如果为0，则将线程放入一个队列中等待。线程处理完共享资源后，应在离开的同时通过<code>ReleaseSemaphore</code>函数将当前可用资源数加1。如果信号量的取值只能为0或1，那么信号量就成为了互斥量；</li>
+<li><strong>事件</strong> Event：允许一个线程在处理完一个任务后，主动唤醒另外一个线程执行任务。事件分为手动重置事件和自动重置事件。手动重置事件被设置为激发状态后，会唤醒所有等待的线程，而且一直保持为激发状态，直到程序重新把它设置为未激发状态。自动重置事件被设置为激发状态后，会唤醒<strong>一个</strong>等待中的线程，然后自动恢复为未激发状态。</li>
+<li><strong>临界区</strong> Critical Section：任意时刻只允许一个线程对临界资源进行访问。拥有临界区对象的线程可以访问该临界资源，其它试图访问该资源的线程将被挂起，直到临界区对象被释放。</li>
+</ul>
+<h4 id="多线程中的上下文切换"><a href="#多线程中的上下文切换" class="headerlink" title="多线程中的上下文切换"></a>多线程中的上下文切换</h4><p>即使是单核CPU也支持多线程执行代码，CPU通过给每个线程分配CPU时间片来实现这个机制。时间片是CPU分配给各个线程的时间，因为时间片非常短，所以CPU通过不停地切换线程执行，让我们感觉多个线程时同时执行的，时间片一般是几十毫秒（ms）。</p>
+<p>CPU通过时间片分配算法来循环执行任务，当前任务执行一个时间片后会切换到下一个任务。但是，在切换前会保存上一个任务的状态，以便下次切换回这个任务时，可以再次加载这个任务的状态，<strong>从任务保存到再加载的过程就是一次上下文切换</strong>。</p>
+<p>进程上下文和中断上下文是操作系统中很重要的两个概念，这两个概念在操作系统课程中不断被提及，是最经常接触、看上去很懂但又说不清楚到底怎么回事的两个概念。造成这种局面的原因，可能是原来接触到的操作系统课程的教学总停留在一种浅层次的理论层面上，没有深入去研究。<br>　　处理器总处于以下三种状态之一：<br>1、内核态，运行于进程上下文，内核代表进程运行于内核空间；<br>2、内核态，运行于中断上下文，内核代表硬件运行于内核空间；<br>3、用户态，运行于用户空间。<br>　　用户空间的应用程序，通过系统调用，进入内核空间。这个时候用户空间的进程要传递 很多变量、参数的值给内核，内核态运行的时候也要保存用户进程的一些寄存 器值、变量等。<strong>所谓的“进程上下文”，可以看作是用户进程传递给内核的这些参数以及内核要保存的那一整套的变量和寄存器值和当时的环境等。</strong><br>　　硬件通过触发信号，导致内核调用中断处理程序，进入内核空间。这个过程中，硬件的 一些变量和参数也要传递给内核，内核通过这些参数进行中断处理。<strong>所谓的“ 中断上下文”，其实也可以看作就是硬件传递过来的这些参数和内核需要保存的一些其他环境（主要是当前被打断执行的进程环境）。</strong><br>　　LINUX完全注释中的一段话：<br>　　<strong>当一个进程在执行时,CPU的所有寄存器中的值、进程的状态以及堆栈中的内容被称 为该进程的上下文</strong>。当内核需要切换到另一个进程时，它需要保存当前进程的 所有状态，即保存当前进程的上下文，以便在再次执行该进程时，能够必得到切换时的状态执行下去。在LINUX中，当前进程上下文均保存在进程的任务数据结 构中。在发生中断时,内核就在被中断进程的上下文中，在内核态下执行中断服务例程。但同时会保留所有需要用到的资源，以便中继服务结束时能恢复被中断进程 的执行。<br>　　上下文context： 上下文简单说来就是一个环境，相对于进程而言，就是进程执行时的环境。具体来说就是各个变量和数据，包括所有的寄存器变量、进程打开的文件、内存信息等。<br><strong>一个进程的上下文可以分为三个部分:用户级上下文、寄存器上下文以及系统级上下文。</strong><br>用户级上下文: 正文、数据、用户堆栈以及共享存储区；<br>寄存器上下文: 通用寄存器、程序寄存器(IP)、处理器状态寄存器(EFLAGS)、栈指针(ESP)；<br>系统级上下文: 进程控制块task_struct、内存管理信息(mm_struct、vm_area_struct、pgd、pte)、内核栈。<br>当发生进程调度时，进行进程切换就是上下文切换(context switch).操作系统必须对上面提到的全部信息进行切换，新调度的进程才能运行。而系统调用进行的模式切换(mode switch)。模式切换与进程切换比较起来，容易很多，而且节省时间，因为模式切换最主要的任务只是切换进程寄存器上下文的切换。</p>
+<h4 id="死锁"><a href="#死锁" class="headerlink" title="死锁"></a>死锁</h4><p>两个或多个并发的进程中，每个进程持有资源而等待其他进程释放资源</p>
+<p>条件：互斥 请求与等待 不可抢占 环路等待</p>
+<p><strong>死锁避免</strong></p>
+<p>死锁避免的基本思想：系统对进程发出的每一个系统能够满足的资源申请进行动态检查，并根据检查结果决定是否分配资源，如果分配后系统可能发生死锁，则不予分配，否则予以分配，这是一种保证系统不进入死锁状态的动态策略。<br>如果操作系统能保证所有进程在有限时间内得到需要的全部资源，则系统处于安全状态否则系统是不安全的。</p>
+<ol>
+<li><ol>
+<li>安全状态是指：如果系统存在 由所有的安全序列{P1，P2，…Pn},则系统处于安全状态。一个进程序列是安全的，如果对其中每一个进程Pi(i &gt;=1 &amp;&amp; i &lt;= n)他以后尚需要的资源不超过系统当前剩余资源量与所有进程Pj(j &lt; i)当前占有资源量之和，系统处于安全状态则不会发生死锁。</li>
+<li>不安全状态：如果不存在任何一个安全序列，则系统处于不安全状态</li>
+</ol>
+</li>
+</ol>
+<p><strong>死锁预防</strong></p>
+<p>我们可以通过破坏死锁产生的4个必要条件来 预防死锁，由于资源互斥是资源使用的固有特性是无法改变的。</p>
+<ol>
+<li>破坏“不可剥夺”条件：一个进程不能获得所需要的全部资源时便处于等待状态，等待期间他占有的资源将被隐式的释放重新加入到 系统的资源列表中，可以被其他的进程使用，而等待的进程只有重新获得自己原有的资源以及新申请的资源才可以重新启动，执行。</li>
+<li>破坏”请求与保持条件“：第一种方法静态分配即每个进程在开始执行时就申请他所需要的全部资源。第二种是动态分配即每个进程在申请所需要的资源时他本身不占用系统资源。</li>
+<li>破坏“循环等待”条件：采用资源有序分配其基本思想是将系统中的所有资源顺序编号，将紧缺的，稀少的采用较大的编号，在申请资源时必须按照编号的顺序进行，一个进程只有获得较小编号的进程才能申请较大编号的进程。</li>
+</ol>
+<h4 id="信号量"><a href="#信号量" class="headerlink" title="信号量"></a>信号量</h4><p>信号量(Semaphore)，有时被称为信号灯，是在多线程环境下使用的一种设施，是可以用来保证两个或多个关键代码段不被并发调用。在进入一个关键代码段之前，线程必须获取一个信号量；一旦该关键代码段完成了，那么该线程必须释放信号量。其它想进入该关键代码段的线程必须等待直到 第一个线程释放信号量。为了完成这个过程，需要创建一个信号量VI，然后将Acquire Semaphore VI以及Release Semaphore VI分别放置在每个关键代码段的首末端。确认这些信号量VI引用的是初始创建的信号量。</p>
+<h4 id="IO多路复用"><a href="#IO多路复用" class="headerlink" title="IO多路复用"></a>IO多路复用</h4><p>IO多路复用（IO Multiplexing）是指单个进程/线程就可以同时处理多个IO请求。</p>
+<p>实现原理：用户将想要监视的文件描述符（File Descriptor）添加到select/poll/epoll函数中，由内核监视，函数阻塞。一旦有文件描述符就绪（读就绪或写就绪），或者超时（设置timeout），函数就会返回，然后该进程可以进行相应的读/写操作。</p>
+<h3 id="用户态内核态"><a href="#用户态内核态" class="headerlink" title="用户态内核态"></a>用户态内核态</h3><h4 id="操作系统需要两种CPU状态"><a href="#操作系统需要两种CPU状态" class="headerlink" title="操作系统需要两种CPU状态"></a>操作系统需要两种CPU状态</h4><p>内核态（Kernel Mode）：运行操作系统程序，操作硬件</p>
+<p>用户态（User Mode）：运行用户程序</p>
+<h4 id="指令划分"><a href="#指令划分" class="headerlink" title="指令划分"></a>指令划分</h4><p>特权指令：只能由操作系统使用、用户程序不能使用的指令。 举例：启动I/O 内存清零 修改程序状态字 设置时钟 允许/禁止终端 停机</p>
+<p>非特权指令：用户程序可以使用的指令。 举例：控制转移 算数运算 取数指令 <strong>访管指令</strong>（使用户程序从用户态陷入内核态）</p>
+<h4 id="特权级别"><a href="#特权级别" class="headerlink" title="特权级别"></a>特权级别</h4><p><strong>特权环：R0、R1、R2和R3</strong></p>
+<p>R0相当于内核态，R3相当于用户态；</p>
+<p>不同级别能够运行不同的指令集合；</p>
+<h4 id="CPU状态之间的转换"><a href="#CPU状态之间的转换" class="headerlink" title="CPU状态之间的转换"></a>CPU状态之间的转换</h4><p><strong>用户态—&gt;内核态：</strong>唯一途径是通过中断、异常、陷入机制（访管指令）</p>
+<p><strong>内核态—&gt;用户态：</strong>设置程序状态字PSW</p>
+<h4 id="内核态与用户态的区别"><a href="#内核态与用户态的区别" class="headerlink" title="内核态与用户态的区别"></a>内核态与用户态的区别</h4><ul>
+<li><p>内核态与用户态是操作系统的两种运行级别，当程序运行在3级特权级上时，就可以称之为运行在用户态。<strong>因为这是最低特权级，是普通的用户进程运行的特权级，大部分用户直接面对的程序都是运行在用户态；</strong></p>
+</li>
+<li><p>当程序运行在0级特权级上时，就可以称之为运行在内核态。</p>
+</li>
+<li><p>运行在用户态下的程序不能直接访问操作系统内核数据结构和程序。当我们在系统中执行一个程序时，大部分时间是运行在用户态下的，在其需要操作系统帮助完成某些它没有权力和能力完成的工作时就会切换到内核态（比如操作硬件）。</p>
+</li>
+<li><p>这两种状态的主要差别是</p>
+<blockquote>
+<ul>
+<li>处于用户态执行时，进程所能访问的内存空间和对象受到限制，其所处于占有的处理器是可被抢占的</li>
+<li>处于内核态执行时，则能访问所有的内存空间和对象，且所占有的处理器是不允许被抢占的。</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+<p><strong>通常来说，以下三种情况会导致用户态到内核态的切换</strong></p>
+<ul>
+<li>系统调用</li>
+</ul>
+<p><strong>这是用户态进程主动要求切换到内核态的一种方式</strong>，<strong>用户态进程通过系统调用申请使用操作系统提供的服务程序完成工作。</strong>比如前例中fork()实际上就是执行了一个创建新进程的系统调用。</p>
+<p>而系统调用的机制其核心还是使用了操作系统为用户特别开放的一个中断来实现，例如Linux的int 80h中断。</p>
+<p>用户程序通常调用库函数，由库函数再调用系统调用，因此有的库函数会使用户程序进入内核态（只要库函数中某处调用了系统调用），有的则不会。</p>
+<p>read write 文件读写操作</p>
+<ul>
+<li>异常</li>
+</ul>
+<p>当CPU在执行运行在用户态下的程序时，发生了某些事先不可知的异常，这时会触发由当前运行进程切换到处理此异常的内核相关程序中，也就转到了内核态，比如缺页异常。</p>
+<ul>
+<li>外围设备的中断</li>
+</ul>
+<p><strong>当外围设备完成用户请求的操作后，会向CPU发出相应的中断信号</strong>，这时CPU会暂停执行下一条即将要执行的指令转而去执行与中断信号对应的处理程序，</p>
+<p>如果先前执行的指令是用户态下的程序，那么这个转换的过程自然也就发生了由用户态到内核态的切换。比如硬盘读写操作完成，系统会切换到硬盘读写的中断处理程序中执行后续操作等。</p>
+<p><strong>这3种方式是系统在运行时由用户态转到内核态的最主要方式，其中系统调用可以认为是用户进程主动发起的，异常和外围设备中断则是被动的。</strong></p>
+<h3 id="操作系统中断和异常"><a href="#操作系统中断和异常" class="headerlink" title="操作系统中断和异常"></a>操作系统中断和异常</h3><h4 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h4><p><strong>中断是为了实现多道程序并发执行而引入的一种技术</strong></p>
+<ol>
+<li>当中断发生时，CPU立即进入核心态</li>
+<li>当中断发生后，当前运行的进程暂停运行，并由操作系统内核对中断进行处理</li>
+<li>对于不同的中断信号，会进行不同的处理</li>
+</ol>
+<p>发生了中断，就意味着需要操作系统介入，开展管理工作。由于操作系统的管理工作（比如进程切换、分配I/0设备等）需要使用特权指令，因此CPU要从用户态转为核心态。<strong>中断可以使CPU从用户态切换为核心态，使操作系统获得计算机的控制权</strong>。有了中断，才能实现多道程序并发执行。</p>
+<p><strong>用户态 → 核心态：</strong> 通过中断实现的。并且中断是唯一途径。</p>
+<p><strong>核心态 → 用户态：</strong> 通过执行一个特权指令，将程序状态字（PSW）的标志位设置为“用户态”</p>
+<p><strong>中断分类</strong></p>
+<ul>
+<li>内中断：信号的来源在CPU内部，与当前执行的指令有关</li>
+<li>外中断：信号的来源在CPU外部，与当前执行的指令无关</li>
+</ul>
+<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a><strong>异常</strong></h4><p>​    当下述情况发生，CPU中断当前的执行流程，转到相应的错误处理程序或陷入处理程序：</p>
+<ul>
+<li>CPU执行指令时本身出现算术异常、零做除数、访存指令越界、虚存缺页等；</li>
+<li>正常异常，即执行了一条trap指令，用于实现系统调用</li>
+</ul>
+<h3 id="中断和异常的区分"><a href="#中断和异常的区分" class="headerlink" title="中断和异常的区分"></a>中断和异常的区分</h3><p>1、中断：通道（或设备）完成输入输出后，通道会“通知”CPU此次输入输出结束，这个“通知”就是中断。<br>可以看到，中断与CPU正在执行的指令并没有关系。</p>
+<p>2、异常：而异常则是正在执行的指令本身出现了错误（如算术溢出、地址越界）等。</p>
+<p>3、但中断和异常的结果都是使得“CPU暂停正在执行的程序”：</p>
+<p>  CPU接受“中断”后停止当前的任务，去继续上一个任务或继续当时在执行的任务（如何选择则是与调度有关）。</p>
+<p>  CPU接受“异常”后停止当前任务，去处理这些错误。 处理完成后CPU返回暂停点继续工作。</p>
+<p>4、中断：与正在执行的指令无关，可以屏蔽</p>
+<p>  异常：与正在执行的指令有关，不可屏蔽</p>
+<h2 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h2><h3 id="和-的区别是什么？"><a href="#和-的区别是什么？" class="headerlink" title="#{}和${}的区别是什么？"></a>#{}和${}的区别是什么？</h3><ul>
+<li><code>$&#123;&#125;</code>是 Properties 文件中的变量占位符，它可以用于标签属性值和 sql 内部，属于静态文本替换，比如${driver}会被静态替换为<code>com.mysql.jdbc.Driver</code>。</li>
+<li><code>#&#123;&#125;</code>是 sql 的参数占位符，Mybatis 会将 sql 中的<code>#&#123;&#125;</code>替换为?号，在 sql 执行前会使用 PreparedStatement 的参数设置方法，按序给 sql 的?号占位符设置参数值，比如 ps.setInt(0, parameterValue)，<code>#&#123;item.name&#125;</code> 的取值方式为使用反射从参数对象中获取 item 对象的 name 属性值，相当于 <code>param.getItem().getName()</code>。</li>
+</ul>
+<h3 id="有哪些分页方式"><a href="#有哪些分页方式" class="headerlink" title="有哪些分页方式"></a>有哪些分页方式</h3><p>正常人，一般使用物理分页</p>
+<p>分为物理分页和逻辑分页</p>
+<p>所谓逻辑分页，是指使用MyBatis自带的RowBound进行分页，它会一次性查出多条数据，然后再检索分页中的数据，具体一次性查询多少条数据，受封装jdbc配置的fetch-size决定</p>
+<p>而物理分页，是从数据库中查询指定条数的数据，而我们用的分页插件PageHelper实现的就是物理分页</p>
+<h2 id="Hash相关知识"><a href="#Hash相关知识" class="headerlink" title="Hash相关知识"></a>Hash相关知识</h2><h3 id="Hash冲突"><a href="#Hash冲突" class="headerlink" title="Hash冲突"></a>Hash冲突</h3><p>1.开放地址方法</p>
+<p>　　（1）线性探测</p>
+<p>　　　按顺序决定值时，如果某数据的值已经存在，则在原来值的基础上往后加一个单位，直至不发生哈希冲突。　</p>
+<p>　　（2）再平方探测</p>
+<p>　　　按顺序决定值时，如果某数据的值已经存在，则在原来值的基础上先加1的平方个单位，若仍然存在则减1的平方个单位。随之是2的平方，3的平方等等。直至不发生哈希冲突。</p>
+<p>　　（3）伪随机探测</p>
+<p>　　　按顺序决定值时，如果某数据已经存在，通过随机函数随机生成一个数，在原来值的基础上加上随机数，直至不发生哈希冲突。</p>
+<p>2.链式地址法（HashMap的哈希冲突解决方法）</p>
+<p>　　对于相同的值，使用链表进行连接。使用数组存储每一个链表。</p>
+<p>　　优点：</p>
+<p>　　（1）拉链法处理冲突简单，且无堆积现象，即非同义词决不会发生冲突，因此平均查找长度较短；</p>
+<p>　　（2）由于拉链法中各链表上的结点空间是动态申请的，故它更适合于造表前无法确定表长的情况；</p>
+<p>　　（3）开放定址法为减少冲突，要求装填因子α较小，故当结点规模较大时会浪费很多空间。而拉链法中可取α≥1，且结点较大时，拉链法中增加的指针域可忽略不计，因此节省空间；</p>
+<p>　　（4）在用拉链法构造的散列表中，删除结点的操作易于实现。只要简单地删去链表上相应的结点即可。<br>　　缺点：</p>
+<p>　　指针占用较大空间时，会造成空间浪费，若空间用于增大散列表规模进而提高开放地址法的效率。</p>
+<p>3.建立公共溢出区</p>
+<p>　　建立公共溢出区存储所有哈希冲突的数据。</p>
+<p>4.再哈希法</p>
+<p>　　对于冲突的哈希值再次进行哈希处理，直至没有哈希冲突。</p>
+<h3 id="一致性哈希"><a href="#一致性哈希" class="headerlink" title="一致性哈希"></a>一致性哈希</h3><p>上面通过数据库的例子介绍了哈希算法，然后也分析了它的劣势，当机器数量发生变动的时候，几乎所有的数据都会移动 (不移动的应该是运气比较好吧前后取模都是同一个值)，这个代价很大。此时的问题从水平如何拆分变成了，当增加或者删除节点时，对于大多数记录，保证原来分配到的某个节点，现在仍然应该分配到那个节点，将数据迁移量的降到最低，这就是一致性哈希要做的事情。在这里我们不指定是数据库还是什么，反正都是分布式存储节点。</p>
+<p>一致性 Hash 算法也是使用取模的思想，只是，刚才描述的取模法是对节点数量进行取模，而一致性 Hash 算法是对 <code>2^32</code> 取模，什么意思呢？简单来说，一致性 Hash 算法将整个哈希值空间组织成一个虚拟的圆环，如假设某哈希函数 H 的值空间为 0-2^32-1（即哈希值是一个 32 位无符号整形），整个哈希环如下，从 0 ~ 2^32-1 代表的分别是一个个的节点，这个环也叫哈希环。</p>
+<p>然后我们将我们的节点进行一次哈希，按照一定的规则，比如按照 ip 地址的哈希值，让节点落在哈希环上。</p>
+<p>然后就是需要通过数据 key 找到对应的服务器然后存储了，我们约定，通过数据 key 的哈希值落在哈希环上的节点，如果命中了机器节点就落在这个机器上，否则落在顺时针直到碰到第一个机器。</p>
+<h3 id="HashMap"><a href="#HashMap" class="headerlink" title="HashMap"></a>HashMap</h3><p>HashMap是基于hashing的原理，我们使用put(key,value)存储对象到HashMap中，使用get(key)从中获取键值对。</p>
+<p>当我们使用put方法来传递健和值的时候，我们先对健调用hashcode()方法，返回的hashCode用于找到bucket位置来储存Entry对象。需要注意的是，HashMap是在bucket中储存键对象和值对象，作为Map.entry</p>
+<p>HashMap是基于hashing的原理，我们使用put(key, value)存储对象到HashMap中，使用get(key)从HashMap中获取对象。当我们给put()方法传递键和值时，我们先对键调用hashCode()方法，返回的hashCode用于找到bucket位置来储存Entry对象。”这里关键点在于指出， HashMap是在bucket中储存键对象和值对象，作为Map.Entry</p>
+<p>当两个对象的hashcode相同的时候会发生什么呢？</p>
+<p>hashcode相同，而HashMap使用链表存储对象</p>
+<p>因为hashcode相同，所以它们的bucket位置相同，‘碰撞’会发生。因为HashMap使用链表存储对象，这个Entry(包含有键值对的Map.Entry对象)会存储在链表中。</p>
+<p>之前已经提过，在获取HashMap的元素时，基本分两步：</p>
+<ol>
+<li>首先根据hashCode()做hash，然后确定bucket的index；</li>
+<li>如果bucket的节点的key不是我们需要的，则通过keys.equals()在链中找。</li>
+</ol>
+<p>在Java 8之前的实现中是用链表解决冲突的，在产生碰撞的情况下，进行get时，两步的时间复杂度是O(1)+O(n)。因此，当碰撞很厉害的时候n很大，O(n)的速度显然是影响速度的。</p>
+<p>因此在Java 8中，利用红黑树替换链表，这样复杂度就变成了O(1)+O(logn)了，这样在n很大的时候，能够比较理想的解决这个问题，在<a href="http://www.importnew.com/14417.html">Java 8：HashMap的性能提升</a>一文中有性能测试的结果。</p>
+<p>HashMap<a href="https://www.nowcoder.com/jump/super-jump/word?word=%E9%93%BE%E8%A1%A8">链表</a>太长怎么办（突然java。我答的是把<a href="https://www.nowcoder.com/jump/super-jump/word?word=%E9%93%BE%E8%A1%A8">链表</a>变成树，如字符串可以变成字典树。更通用的办法也是HashMap真正用的是<a href="https://www.nowcoder.com/jump/super-jump/word?word=%E7%BA%A2%E9%BB%91%E6%A0%91">红黑树</a>）</p>
+<p><strong>rehashing</strong></p>
+<p>如果HashMap的大小超过了负载因子(load factor)定义的容量，怎么办？”除非你真正知道HashMap的工作原理，否则你将回答不出这道题。默认的负载因子大小为0.75，也就是说，当一个map填满了75%的bucket时候，和其它集合类(如ArrayList等)一样，将会创建原来HashMap大小的两倍的bucket数组，来重新调整map的大小，并将原来的对象放入新的bucket数组中。这个过程叫作rehashing，因为它调用hash方法找到新的bucket位置。</p>
+<p>1） 首先创建一个比现有哈希表更大的新哈希表（expand）<br>2） 然后将旧哈希表的所有元素都迁移到新哈希表去（rehash）</p>
+<p><strong>为什么String, Interger这样的wrapper类适合作为键？</strong> String, Interger这样的wrapper类作为HashMap的键是再适合不过了，而且String最为常用。因为String是不可变的，也是final的，而且已经重写了equals()和hashCode()方法了。其他的wrapper类也有这个特点。不可变性是必要的，因为为了要计算hashCode()，就要防止键值改变，如果键值在放入时和获取时返回不同的hashcode的话，那么就不能从HashMap中找到你想要的对象。不可变性还有其他的优点如线程安全。如果你可以仅仅通过将某个field声明成final就能保证hashCode是不变的，那么请这么做吧。因为获取对象的时候要用到equals()和hashCode()方法，那么键对象正确的重写这两个方法是非常重要的。如果两个不相等的对象返回不同的hashcode的话，那么碰撞的几率就会小些，这样就能提高HashMap的性能。</p>
+<p><strong>我们可以使用自定义的对象作为键吗？</strong> 这是前一个问题的延伸。当然你可能使用任何对象作为键，只要它遵守了equals()和hashCode()方法的定义规则，并且当对象插入到Map中之后将不会再改变了。如果这个自定义对象时不可变的，那么它已经满足了作为键的条件，因为当它创建之后就已经不能改变了。</p>
+<p><strong>我们可以使用CocurrentHashMap来代替Hashtable吗</strong>？这是另外一个很热门的面试题，因为ConcurrentHashMap越来越多人用了。我们知道Hashtable是synchronized的，但是ConcurrentHashMap同步性能更好，因为它仅仅根据同步级别对map的一部分进行上锁。ConcurrentHashMap当然可以代替HashTable，但是HashTable提供更强的线程安全性。看看<a href="http://javarevisited.blogspot.sg/2011/04/difference-between-concurrenthashmap.html">这篇博客</a>查看Hashtable和ConcurrentHashMap的区别。</p>
+<p>Hashtable HashMap  ConcurrentHashMap</p>
+<p>Hashtable 线程安全的对象，内部有上锁的控制，sychronized put的时候不能get 效率不高</p>
+<p>HashMap 线程不安全的对象，内部没有上锁 优点就是效率高，缺点是 如果多个线程同时操作可能会出现线程不安全甚至出现死锁的情况</p>
+<p>ConcurrentHashMap 分段锁，将锁的力度变小，兼顾安全与性能</p>
+<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>最底层用的是map来做这些事,其值作为hashmap的key</p>
+<p>其实原理就是HashMap</p>
+<h3 id="HashSet-HashMap区别"><a href="#HashSet-HashMap区别" class="headerlink" title="HashSet HashMap区别"></a>HashSet HashMap区别</h3><p>HashSet实现了Set接口，它不允许集合中有重复的值，当我们提到HashSet时，第一件事情就是在将对象存储在HashSet之前，要先确保对象重写equals()和hashCode()方法，这样才能比较对象的值是否相等，以确保set中没有储存相等的对象。如果我们没有重写这两个方法，将会使用这个方法的默认实现。</p>
+<p>public boolean add(Object o)方法用来在Set中添加元素，当元素值重复时则会立即返回false，如果成功添加的话会返回true。</p>
+<p>HashMap实现了Map接口，Map接口对键值对进行映射。Map中不允许重复的键。Map接口有两个基本的实现，HashMap和TreeMap。TreeMap保存了对象的排列次序，而HashMap则不能。HashMap允许键和值为null。HashMap是非synchronized的，但collection框架提供方法能保证HashMap synchronized，这样多个线程同时访问HashMap时，能保证只有一个线程更改Map。</p>
+<p>public Object put(Object Key,Object value)方法用来将元素添加到map中。</p>
+<table>
+<thead>
+<tr>
+<th><em>HashMap</em></th>
+<th><em>HashSet</em></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HashMap实现了Map接口</td>
+<td>HashSet实现了Set接口</td>
+</tr>
+<tr>
+<td>HashMap储存键值对</td>
+<td>HashSet仅仅存储对象</td>
+</tr>
+<tr>
+<td>使用put()方法将元素放入map中</td>
+<td>使用add()方法将元素放入set中</td>
+</tr>
+<tr>
+<td>HashMap中使用键对象来计算hashcode值</td>
+<td>HashSet使用成员对象来计算hashcode值，对于两个对象来说hashcode可能相同，所以equals()方法用来判断对象的相等性，如果两个对象不同的话，那么返回false</td>
+</tr>
+<tr>
+<td>HashMap比较快，因为是使用唯一的键来获取对象</td>
+<td>HashSet较HashMap来说比较慢</td>
+</tr>
+</tbody></table>
+<p><strong>为什么要采用hash算法，有什么优势，解决了什么问题？</strong></p>
+<p>保证数据的唯一性，存储数据底层采用的是数组</p>
+<p>当我们放数据的时候，如何判断唯一？</p>
+<p>采用hash算法，通过计算存储对象的hashcode,然后再跟数组长度-1进行位运算，得到我们想要存储的位置，如果此位置没有数据，直接存储不用计较。</p>
+<p>此处，我们只会用到hashcode</p>
+<p>但是随着元素不断添加，可能会发生hash冲突，不同的值计算出来的hash值是相同的，这个时候就要进行比较，才需要用到equals方法</p>
+<p>如果不相同，则形成链表</p>
+<p><strong>哈希表是一张什么表？</strong>本质是数组，而数组的元素是链表</p>
+<p>JDK1.8做了优化，随着元素的不断添加，链表可能会越来越长，会优化为红黑树</p>
+<h2 id="面向对象思想的理解"><a href="#面向对象思想的理解" class="headerlink" title="面向对象思想的理解"></a>面向对象思想的理解</h2><p>更多的是考虑如何去选择合适的工具</p>
+<p>封装 继承 多态</p>
+<p>多态：同一个行为具有多个不同表现形式称为多态 有继承 子类重写父类，父类引用子类</p>
+<h3 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h3><p> 封装是指将对象的实现细节隐藏起来，对外提供公共访问方法，将对象的功能暴露出来。</p>
+<p>封装可以被认为是一个保护屏障，防止该类的代码和数据被外部类定义的代码随机访问。</p>
+<p>适当的封装可以让程式码更容易理解与维护，也加强了程序代码的安全性。最终目的是实现模块设计的”高内聚低耦合“。</p>
+<p>从上图可以得出，实现一个类封装的步骤如下：</p>
+<p>♦ 修改属性的可见性（访问级别）来限制对属性的访问（一般限制为private），例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">这段代码中，将 name 和 age 属性设置为私有的，只能本类才能访问，其他类都访问不了，如此就对信息进行了隐藏。 </span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;<span class="comment">//姓名</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;<span class="comment">//年龄</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 　♦ 对每个值属性提供对外的公共方法访问，也就是创建一对赋值取值的方法，用于对私有属性的访问，例如：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Person</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span></span>&#123;</span><br><span class="line">      <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span></span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span></span>&#123;</span><br><span class="line">      <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>　　采用 this 关键字是为了解决实例变量（private String name）和局部变量（setName(String name)中的name变量）之间发生的同名的冲突，this指当前对象。</p>
+<p>因此，一个类定义时，一般用private修饰成员变量，public修饰成员方法。获取成员变量应该用对象.get变量名()而不是对象.成员变量名。</p>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p> 继承是指子类可以复用父类的属性和方法，Java的继承是单继承，每个子类只有一个直接父类。Java的继承通过extends关键字实现，实现继承的类称为子类，被继承的类称为父类（基类或超类）。Java继承语法格式如下：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">修饰符 <span class="class"><span class="keyword">class</span> <span class="title">SubClass</span> <span class="keyword">extends</span> <span class="title">SuperClass</span></span>&#123;</span><br><span class="line">  <span class="comment">//类定义部分      </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是 Java 不支持多继承，但支持多重继承。</p>
+<p>子类包含与父类同名方法的现象称为方法重写，也称为方法覆盖。</p>
+<p>　　方法的重写要遵循“两大两小一大”规则，“两同”即方法名相同、形参列表相同；“两小”指子类方法返回值类型应该比父类方法返回值类型要小或相等，子类方法声明抛出的异常应该比父类方法声明抛出的异常类要小或相等；“一大”指子类方法的访问权限应比父类方法的访问权限更大或相等。</p>
+<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><p>多态是指子类对象可以直接赋给父类变量（父类引用指向子类对象），但运行时依然表现出子类的行为特征，也就是说，同一类型的对象在执行同一个方法时，可能表现出多种行为特征。</p>
+<p>　<strong>多态存在的三个必要条件</strong></p>
+<ul>
+<li>继承</li>
+<li>重写</li>
+<li>父类引用指向子类对象</li>
+</ul>
+<p>　　比如：Parent p = new Child();</p>
+<p>　　当使用多态方式调用方法时，首先检查父类中是否有该方法，如果没有，则编译错误；如果有，再去调用子类的同名方法。</p>
+<p>　　多态的好处：可以使程序有良好的扩展，并可以对所有类的对象进行通用处理。</p>
+<p>　　下面举一个多态的例子：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">      show(<span class="keyword">new</span> Cat());  <span class="comment">// 以 Cat 对象调用 show 方法</span></span><br><span class="line">      show(<span class="keyword">new</span> Dog());  <span class="comment">// 以 Dog 对象调用 show 方法</span></span><br><span class="line">                </span><br><span class="line">      Animal a = <span class="keyword">new</span> Cat();  <span class="comment">// 向上转型  </span></span><br><span class="line">      a.eat();               <span class="comment">// 调用的是 Cat 的 eat</span></span><br><span class="line">      Cat c = (Cat)a;        <span class="comment">// 向下转型  </span></span><br><span class="line">      c.work();        <span class="comment">// 调用的是 Cat 的 work</span></span><br><span class="line">  &#125;  </span><br><span class="line">            </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">show</span><span class="params">(Animal a)</span>  </span>&#123;</span><br><span class="line">      a.eat();  </span><br><span class="line">        <span class="comment">// 类型判断</span></span><br><span class="line">        <span class="keyword">if</span> (a <span class="keyword">instanceof</span> Cat)  &#123;  <span class="comment">// 猫做的事情 </span></span><br><span class="line">            Cat c = (Cat)a;  </span><br><span class="line">            c.work();  </span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (a <span class="keyword">instanceof</span> Dog) &#123; <span class="comment">// 狗做的事情 </span></span><br><span class="line">            Dog c = (Dog)a;  </span><br><span class="line">            c.work();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Animal</span> </span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span></span>;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Cat</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;吃鱼&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;抓老鼠&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Dog</span> <span class="keyword">extends</span> <span class="title">Animal</span> </span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">eat</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;吃骨头&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">work</span><span class="params">()</span> </span>&#123;  </span><br><span class="line">        System.out.println(<span class="string">&quot;看家&quot;</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">执行以上程序，输出结果为：</span><br><span class="line"></span><br><span class="line">吃鱼</span><br><span class="line">抓老鼠</span><br><span class="line">吃骨头</span><br><span class="line">看家</span><br><span class="line">吃鱼</span><br><span class="line">抓老鼠</span><br></pre></td></tr></table></figure>
+
+<h2 id="Spring"><a href="#Spring" class="headerlink" title="Spring"></a>Spring</h2><h3 id="SpringIoc"><a href="#SpringIoc" class="headerlink" title="SpringIoc"></a>SpringIoc</h3><p>IoC（Inverse of Control:控制反转）是一种<strong>设计思想</strong>，就是 <strong>将原本在程序中手动创建对象的控制权，交由Spring框架来管理。</strong> IoC 在其他语言中也有应用，并非 Spring 特有。 <strong>IoC 容器是 Spring 用来实现 IoC 的载体， IoC 容器实际上就是个Map（key，value）,Map 中存放的是各种对象。</strong></p>
+<p>将对象之间的相互依赖关系交给 IoC 容器来管理，并由 IoC 容器完成对象的注入。这样可以很大程度上简化应用的开发，把应用从复杂的依赖关系中解放出来。 <strong>IoC 容器就像是一个工厂一样，当我们需要创建一个对象的时候，只需要配置好配置文件/注解即可，完全不用考虑对象是如何被创建出来的。</strong> 在实际项目中一个 Service 类可能有几百甚至上千个类作为它的底层，假如我们需要实例化这个 Service，你可能要每次都要搞清这个 Service 所有底层类的构造函数，这可能会把人逼疯。如果利用 IoC 的话，你只需要配置好，然后在需要的地方引用就行了，这大大增加了项目的可维护性且降低了开发难度。</p>
+<p>Spring 时代我们一般通过 XML 文件来配置 Bean，后来开发人员觉得 XML 文件来配置不太好，于是 SpringBoot 注解配置就慢慢开始流行起来。</p>
+<p>使用方式：</p>
+<ol>
+<li>配置文件 bean  解析XML，调用方法实现注入（反射）</li>
+<li>注解的方式 Autowrie 解析类，这个类是Spring管理的 赋值</li>
+</ol>
+<p>完成两个事情 解释和实现赋值</p>
+<h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h3><p>AOP(Aspect-Oriented Programming:面向切面编程)能够将那些与业务无关，<strong>却为业务模块所共同调用的逻辑或责任（例如事务处理、日志管理、权限控制等）封装起来</strong>，便于<strong>减少系统的重复代码</strong>，<strong>降低模块间的耦合度</strong>，并<strong>有利于未来的可拓展性和可维护性</strong>。</p>
+<p><strong>Spring AOP就是基于动态代理的</strong>，如果要代理的对象，实现了某个接口，那么Spring AOP会使用<strong>JDK Proxy</strong>，去创建代理对象，而对于没有实现接口的对象，就无法使用 JDK Proxy 去进行代理了，这时候Spring AOP会使用<strong>Cglib</strong> ，这时候Spring AOP会使用 <strong>Cglib</strong> 生成一个被代理对象的子类来作为代理，</p>
+<p>当然你也可以使用 AspectJ ,Spring AOP 已经集成了AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。</p>
+<p>使用 AOP 之后我们可以把一些通用功能抽象出来，在需要用到的地方直接使用即可，这样大大简化了代码量。我们需要增加新功能时也方便，这样也提高了系统扩展性。日志功能、事务管理等等场景都用到了 AOP 。</p>
+<h3 id="Spring事务传播机制"><a href="#Spring事务传播机制" class="headerlink" title="Spring事务传播机制"></a>Spring事务传播机制</h3><p>PROPAGATION_REQUIRED – 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。</p>
+<p>PROPAGATION_SUPPORTS – 支持当前事务，如果当前没有事务，就以非事务方式执行。</p>
+<p>PROPAGATION_MANDATORY – 支持当前事务，如果当前没有事务，就抛出异常。</p>
+<p>PROPAGATION_REQUIRES_NEW – 新建事务，如果当前存在事务，把当前事务挂起。</p>
+<p>PROPAGATION_NOT_SUPPORTED – 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。</p>
+<p>PROPAGATION_NEVER – 以非事务方式执行，如果当前存在事务，则抛出异常。</p>
+<p>PROPAGATION_NESTED – 如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则进行与PROPAGATION_REQUIRED类似的操作。</p>
+<h2 id="IO流的分类以及选择"><a href="#IO流的分类以及选择" class="headerlink" title="IO流的分类以及选择"></a>IO流的分类以及选择</h2><p>按方向分：输入流 输出流 输入流用于读文件 输出流用于写文件</p>
+<p>按读取的单位分：字节流( 二进制文件)字符流(文本文件)</p>
+<p>按处理的方式分：节点流 处理流</p>
+<p>IO流的4大基本类：InputStream OutPutStream Reader,Writer</p>
+<h2 id="序列化和反序列化的定义"><a href="#序列化和反序列化的定义" class="headerlink" title="序列化和反序列化的定义"></a>序列化和反序列化的定义</h2><p>  (1)Java序列化就是指把Java对象转换为字节序列的过程</p>
+<p>​    Java反序列化就是指把字节序列恢复为Java对象的过程。</p>
+<p>  (2)序列化最重要的作用：在传递和保存对象时.保证对象的完整性和可传递性。对象转换为有序字节流,以便在网络上传输或者保存在本地文件中。</p>
+<p>​    反序列化的最重要的作用：根据字节流中保存的对象状态及描述信息，通过反序列化重建对象。</p>
+<p>  总结：核心作用就是对象状态的保存和重建。（整个过程核心点就是字节流中所保存的对象状态及描述信息）</p>
+<h3 id="serialVersionUID"><a href="#serialVersionUID" class="headerlink" title="serialVersionUID"></a>serialVersionUID</h3><p>当执行序列化时，我们写对象到磁盘中，会根据当前这个类的结构生成一个版本号id</p>
+<p>当反序列化时，程序会比较磁盘中的序列化版本号ID跟当前的类结构生成的版本号ID是否一致，如果一致则成功，否则失败</p>
+<p>加上版本号，有助于当我们的类结构发生了变化，依然可以之前已经序列化的对象反序列化成功</p>
+<h2 id="Java的异常体系"><a href="#Java的异常体系" class="headerlink" title="Java的异常体系"></a>Java的异常体系</h2><p>异常体系保证程序的健壮性</p>
+<p><img src="/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/2.png"></p>
+<p>常见的5个运行时异常</p>
+<p>这类异常，编译时没有提示异常处理，因此通常此类异常的正确理解应该是逻辑错误</p>
+<ul>
+<li>算数异常</li>
+<li>空指针异常</li>
+<li>类型转化异常</li>
+<li>数组越界</li>
+<li>NumberFormateException 数字格式异常，转化失败，比如a12转化失败</li>
+</ul>
+<p>常见的5个非运行时异常</p>
+<ul>
+<li>IOException</li>
+<li>SQLException</li>
+<li>FileNotFoundException</li>
+<li>NoSuchFileException</li>
+<li>NoSuchMethodException</li>
+</ul>
+<h2 id="类加载机制"><a href="#类加载机制" class="headerlink" title="类加载机制"></a>类加载机制</h2><p> JVM 文件中</p>
+<p>Java 核心类由一个名为BootstrapClassLoader来加载 ——-jre/lib   getClassLoader得到的结果是null</p>
+<p>Java扩展类，是由ExtClassLoader——jre/lib/ext</p>
+<p>项目中编写的类 由AppClassLoader——-第三方的jar包和自己开发的类</p>
+<p>从上到下寻找类 </p>
+<p>这里面就要基于双亲委托机制？</p>
+<p>所谓双亲委托机制，就是加载一个类，会先获取到一个系统类加载器AppClassLoader的实例，然后往上层层请求，先由BootstarpClassLoader去加载，如果BootStrapClassLoader发现没有，再下发给ExtClassLoader去加载，还是没有，才由AppClassLoader去加载。如果还是没有，则报错</p>
+<h2 id="三层架构"><a href="#三层架构" class="headerlink" title="三层架构"></a>三层架构</h2><p>Web层：负责与用户交互并对外提供服务接口</p>
+<p>业务逻辑层：实现业务逻辑模块</p>
+<p>数据存取层：将业务逻辑层处理的结果持久化，方便后续查询</p>
+<h2 id="MVC"><a href="#MVC" class="headerlink" title="MVC"></a>MVC</h2><p>Model 模型代表一个存取数据的对象或JAVA POJO</p>
+<p>View 视图代表模型包含的数据的可视化 HTML JSP Thymeleaf</p>
+<p>Controller 控制器作用于模型和视图上，它控制数据流向模型对象，并在数据变化时更新视图，它将视图与模型分开，目前的代表技术是servlet</p>
+<h2 id="并发并行"><a href="#并发并行" class="headerlink" title="并发并行"></a>并发并行</h2><p>并发：同一个CPU执行多个任务，按细分的时间片交替执行</p>
+<p>并行：多个CPU上同时执行多个任务</p>
+<h2 id="堆和栈的区别"><a href="#堆和栈的区别" class="headerlink" title="堆和栈的区别"></a>堆和栈的区别</h2><ul>
+<li><strong>大小限制</strong>：<strong>栈底</strong>的地址和栈的<strong>最大容量</strong>是系统预先规定好的（2M/1M，总之是一个编译时就确定的常数），如果申请的空间超过栈的剩余空间, stack overflow。因此，能从栈获得的空间较小。<strong>堆</strong>是用<strong>链表</strong>来存储的<strong>不连续</strong>内存区域，大小受限于计算机系统中有效的虚拟内存。由此可见，堆获得的空间比较<strong>灵活</strong>，也比较<strong>大</strong>。</li>
+<li><strong>申请效率</strong>：栈由系统自动分配，速度较<strong>快</strong>。但程序员是<strong>无法控制</strong>的。堆是由new分配的内存，一般速度比较<strong>慢</strong>，而且容易产生内存<strong>碎片</strong>,不过用起来最<strong>方便</strong>.</li>
+<li><strong>存储内容</strong>：栈存储<strong>返回地址，参数，局部变量</strong>。<strong>堆</strong>在这块内存空间中的首地址处记录本次分配的大小，具体内容由程序员安排。</li>
+<li><strong>数据访问</strong>：存储在堆中的对象是<strong>全局可以被访问</strong>的，然而栈内存<strong>不能</strong>被其他线程所访问，且遵循<strong>LIFO</strong>原则。</li>
+<li><strong>生命周期</strong>：栈内存的生命周期很短，而堆内存的生命周期从程序的运行开始到运行结束。</li>
+</ul>
 <h2 id="排序算法"><a href="#排序算法" class="headerlink" title="排序算法"></a>排序算法</h2><p><img src="/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/3.png"></p>
 <p><strong>冒泡排序</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 冒泡排序</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> array</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] bubbleSort(<span class="keyword">int</span>[] array) &#123;</span><br><span class="line">        <span class="keyword">if</span> (array.length == <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> array;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++)</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; array.length - <span class="number">1</span> - i; j++)</span><br><span class="line">                <span class="keyword">if</span> (array[j + <span class="number">1</span>] &lt; array[j]) &#123;</span><br><span class="line">                    <span class="keyword">int</span> temp = array[j + <span class="number">1</span>];</span><br><span class="line">                    array[j + <span class="number">1</span>] = array[j];</span><br><span class="line">                    array[j] = temp;</span><br><span class="line">                &#125;</span><br><span class="line">        <span class="keyword">return</span> array;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
@@ -1507,307 +1903,6 @@
 <li><p>cpu详细信息：#cat /proc/cpuinfo</p>
 </li>
 </ul>
-<h2 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h2><h3 id="七层模型"><a href="#七层模型" class="headerlink" title="七层模型"></a>七层模型</h3><p>应用层 表示层 会话层  为<strong>操作系统</strong>或<strong>网络应用程序</strong>提供访问网络服务的接口</p>
-<p>传输层(TCP UDP) 实现两个<strong>应用程序</strong>之间的数据透明传送（<strong>不一定可靠(UDP)**）。将上层数据分段，提供</strong>端到端**的可靠的(TCP)和不可靠的(UDP)服务。</p>
-<p>网络层  实现两个<strong>主机</strong>之间的数据透明传送（<strong>不一定可靠(IP)**）。主要功能：路由选择Routing；存储转发Forwarding；（一部分的）拥塞控制 **ICMP</strong>  路由器</p>
-<p>数据链路层  将源自网络层来的数据<strong>可靠地</strong>传输到<strong>相邻节点</strong>的目标机网络层 **Ethernet以太网协议，用于实现链路层的数据传输和地址封装 **交换机</p>
-<p>物理层 确保原始的数据可在各种物理媒体上以比特流的形式<strong>可靠地</strong>传输</p>
-<p><strong>应用层协议如下：</strong></p>
-<p>(1)域名系统(Domain Name System，DNS)：用于实现网络设备名字到baiIP地址映射的网络服务。</p>
-<p>(2)文件传输协议(File Transfer Protocol，FTP)：用于实现交互式文件传输功能。</p>
-<p>(3)简单邮件传送协议(Simple Mail Transfer Protocol, SMTP)：用于实现电子邮箱传送功能。</p>
-<p>(4)超文本传输协议(HyperText Transfer Protocol，HTTP)：用于实现WWW服务。</p>
-<p>(5)简单网络管理协议(simple Network Management Protocol，SNMP)：用于管理与监视网络设备。</p>
-<p>(6)远程登录协议(Telnet)：用于实现远程登录功能。</p>
-<p><strong>ICMP</strong>是（Internet Control Message Protocol）baiInternet控制报文协议。它是TCP/IP协议簇的一个子协议，用于在IP主机、路由器之间传递控制消息。属于网络层协议</p>
-<p>控制消息是指网络通不通、主机是否可达、路由是否可用等网络本身的消息。这些控制消息虽然并不传输用户数据，但是对于用户数据的传递起着重要的作用。</p>
-<h3 id="端到端，点到点的区别"><a href="#端到端，点到点的区别" class="headerlink" title="端到端，点到点的区别"></a>端到端，点到点的区别</h3><ul>
-<li><strong>端到端是针对传输层</strong>说的。在数据传输之前，先为数据的传输开辟一条通道，然后在进行传输。</li>
-<li><strong>点到点通信是针对数据链路层或网络层</strong>来说的，是指一个设备发数据给<strong>直接连接</strong>的其他设备，通过一台一台直接相连的设备把数据传递到接收端。</li>
-<li>端到端的优点是，链路建立之后，发送端知道接收端<strong>一定能收到</strong>。而点到点发送端发出数据后，<strong>不知道</strong>接收端能否收到或何时能收到数据。</li>
-<li>端到端传输的缺点是直到接收端收到数据为止，<strong>发送端的设备一直要参与</strong>传输。点到点传输则在发送端设备送出数据后，它的<strong>任务已经完成</strong>。</li>
-<li>端到端经过中间交换设备时不需要进行存储转发（至少不可见），而点到点需要。但如果接收端设备关机或故障，点到点传输可以采用<strong>存储转发技术进行缓冲</strong>，端到端则传输失败。</li>
-</ul>
-<h3 id="GET和POST的区别"><a href="#GET和POST的区别" class="headerlink" title="GET和POST的区别"></a>GET和POST的区别</h3><ol>
-<li>GET是<strong>幂等</strong>的，即读取同一个资源总是得到相同的数据，POST不是幂等的；</li>
-<li>GET一般用于从服务器<strong>获取</strong>资源，而POST有可能<strong>改变</strong>服务器上的资源；</li>
-<li>GET请求（包括参数）<strong>可被保存</strong>到收藏夹，POST则不可以</li>
-<li>GET请求的数据明文附在<strong>URL之后</strong>；POST请求的数据在HTTP <strong>body中</strong>；</li>
-<li>GET只允许ASCII字符，POST对<strong>数据类型</strong>没有要求，也允许二进制数据；</li>
-<li>GET的长度有限制（操作系统或者浏览器），而POST<strong>数据大小</strong>无限制</li>
-</ol>
-<h3 id="HTTP常见状态码"><a href="#HTTP常见状态码" class="headerlink" title="HTTP常见状态码"></a>HTTP常见状态码</h3><ul>
-<li>1xx：信息服务器收到请求，需要请求者继续执行操作</li>
-<li>2xx：成功 </li>
-<li>3xx：重定向</li>
-<li>4xx:客户端错误</li>
-<li>5xx:服务器错误</li>
-</ul>
-<p>301（永久移动）请求的网页已永久移动到新位置。服务器返回此响应（对 GET 或 HEAD 请求的响应）时，会自动将请求者转到新位置。您应使用此代码告诉 Googlebot 某个网页或网站已永久移动到新位置。</p>
-<p>302（临时移动）服务器目前从不同位置的网页响应请求，但请求者应继续使用原有位置来响应以后的请求。此代码与响应 GET 和 HEAD 请求的 301 代码类似，会自动将请求者转到不同的位置，但您不应使用此代码来告诉 Googlebot 某个网页或网站已经移动，因为 Googlebot 会继续抓取原有位置并编制索引。</p>
-<p>400（错误请求）服务器不理解请求的语法。</p>
-<p>401（未授权）请求要求身份验证。对于登录后请求的网页，服务器可能返回此响应。</p>
-<p>403（禁止）服务器拒绝请求。如果您在 Googlebot 尝试抓取您网站上的有效网页时看到此状态码（您可以在 Google 网站管理员工具诊断下的网络抓取页面上看到此信息），可能是您的服务器或主机拒绝了 Googlebot 访问。</p>
-<p>404（未找到）服务器找不到请求的网页。例如，对于服务器上不存在的网页经常会返回此代码。</p>
-<p>如果您的网站上没有 robots.txt 文件，而您在 Google 网站管理员工具“诊断”标签的 robots.txt 页上看到此状态码，则这是正确的状态码。但是，如果您有 robots.txt 文件而又看到此状态码，则说明您的 robots.txt 文件可能命名错误或位于错误的位置（该文件应当位于顶级域，名为 robots.txt）。</p>
-<p>如果对于 Googlebot 抓取的网址看到此状态码（在”诊断”标签的 HTTP 错误页面上），则表示 Googlebot 跟随的可能是另一个页面的无效链接（是旧链接或输入有误的链接）。</p>
-<p>500（服务器内部错误）服务器遇到错误，无法完成请求。</p>
-<p>501（尚未实施）服务器不具备完成请求的功能。例如，服务器无法识别请求方法时可能会返回此代码。</p>
-<p>502（错误网关）服务器作为网关或代理，从上游服务器收到无效响应。</p>
-<p>503（服务不可用）服务器目前无法使用（由于超载或停机维护）。通常，这只是暂时状态。</p>
-<p><strong>HTTP：80端口 keep-alive：请求应答模式无连接协议，输入这个客户端到服务端连接持续有效</strong></p>
-<p><strong>https: 443端口 http+ssl</strong> </p>
-<ol>
-<li>端口不同：HTTP使用的是80端口，HTTPS使用443端口；</li>
-<li>HTTP（超文本传输协议）信息是明文传输，HTTPS运行在SSL(Secure Socket Layer)之上，添加了加密和认证机制，更加安全；</li>
-<li>HTTPS由于加密解密会带来更大的CPU和内存开销；</li>
-<li>HTTPS通信需要证书，一般需要向证书颁发机构（CA）购买</li>
-</ol>
-<h3 id="https建立连接过程"><a href="#https建立连接过程" class="headerlink" title="https建立连接过程"></a>https建立连接过程</h3><p>非对称加密+对称加密结合 而且得尽量减少非对称加密的次数。非对称加密、解密各只需用一次即可。<br>请看一下这个过程：</p>
-<ol>
-<li>某网站拥有用于非对称加密的公钥A、私钥A’。</li>
-<li>浏览器像网站服务器请求，服务器把公钥A明文给传输浏览器。</li>
-<li>浏览器随机生成一个用于对称加密的密钥X，用公钥A加密后传给服务器。</li>
-<li>服务器拿到后用私钥A’解密得到密钥X。</li>
-<li>这样双方就都拥有密钥X了，且别人无法知道它。之后双方所有数据都用密钥X加密解密。</li>
-</ol>
-<p>完美！HTTPS基本就是采用了这种方案。完美？还是有漏洞的。</p>
-<p>漏洞就是无法保证就是服务器发送的，可能会有中间人攻击</p>
-<p>此时就需要证书与签名</p>
-<h4 id="中间人攻击"><a href="#中间人攻击" class="headerlink" title="中间人攻击"></a><strong>中间人攻击</strong></h4><p>中间人的确无法得到浏览器生成的密钥B，这个密钥本身被公钥A加密了，只有服务器才有私钥A’解开拿到它呀！然而中间人却完全不需要拿到密钥A’就能干坏事了。请看：</p>
-<ol>
-<li>某网站拥有用于非对称加密的公钥A、私钥A’。</li>
-<li>浏览器向网站服务器请求，服务器把公钥A明文给传输浏览器。</li>
-<li><strong>中间人劫持到公钥A，保存下来，把数据包中的公钥A替换成自己伪造的公钥B（它当然也拥有公钥B对应的私钥B’）</strong>。</li>
-<li>浏览器随机生成一个用于对称加密的密钥X，用<strong>公钥B</strong>（浏览器不知道公钥被替换了）加密后传给服务器。</li>
-<li><strong>中间人劫持后用私钥B’解密得到密钥X，再用公钥A加密后传给服务器</strong>。</li>
-<li>服务器拿到后用私钥A’解密得到密钥X。</li>
-</ol>
-<p>这样在双方都不会发现异常的情况下，中间人得到了密钥B。<strong>根本原因是浏览器无法确认自己收到的公钥是不是网站自己的</strong>。那么下一步就是解决下面这个问题：</p>
-<h4 id="如何证明浏览器收到的公钥一定是该网站的公钥？"><a href="#如何证明浏览器收到的公钥一定是该网站的公钥？" class="headerlink" title="如何证明浏览器收到的公钥一定是该网站的公钥？"></a><strong>如何证明浏览器收到的公钥一定是该网站的公钥？</strong></h4><p>现实生活中，如果想证明某身份证号一定是小明的，怎么办？看身份证。这里政府机构起到了“公信”的作用，身份证是由它颁发的，它本身的权威可以对一个人的身份信息作出证明。互联网中能不能搞这么个公信机构呢？给网站颁发一个“身份证”？</p>
-<h4 id="数字证书"><a href="#数字证书" class="headerlink" title="数字证书"></a><strong>数字证书</strong></h4><p>网站在使用HTTPS前，需要向“<strong>CA机构</strong>”申请颁发一份<strong>数字证书</strong>，数字证书里有证书持有者、证书持有者的公钥等信息，服务器把证书传输给浏览器，浏览器从证书里取公钥就行了，证书就如身份证一样，可以证明“该公钥对应该网站”。然而这里又有一个显而易见的问题了，证书本身的传输过程中，如何防止被篡改？即如何证明证书本身的真实性？身份证有一些防伪技术，数字证书怎么防伪呢？解决这个问题我们就基本接近胜利了！</p>
-<h4 id="如何放防止数字证书被篡改？"><a href="#如何放防止数字证书被篡改？" class="headerlink" title="如何放防止数字证书被篡改？"></a><strong>如何放防止数字证书被篡改？</strong></h4><p>我们把证书内容生成一份“签名”，比对证书内容和签名是否一致就能察觉是否被篡改。这种技术就叫<code>数字签名</code>：</p>
-<h4 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a><strong>数字签名</strong></h4><p>这部分内容建议看下图并结合后面的文字理解，图中左侧是数字签名的制作过程，右侧是验证过程（原图出处找不到了，可以看出来这图已经被转载了无数次了。。。）</p>
-<p><img src="/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/4.jpg" alt="img"></p>
-<p><strong>数字签名的制作过程</strong>：</p>
-<ol>
-<li>CA拥有非对称加密的私钥和公钥。</li>
-<li>CA对证书明文信息进行hash。</li>
-<li>对hash后的值用私钥加密，得到数字签名。</li>
-</ol>
-<p>明文和数字签名共同组成了数字证书，这样一份数字证书就可以颁发给网站了。<br>那浏览器拿到服务器传来的数字证书后，如何验证它是不是真的？（有没有被篡改、掉包）</p>
-<p><strong>浏览器验证过程：</strong></p>
-<ol>
-<li>拿到证书，得到明文T，数字签名S。</li>
-<li>用CA机构的公钥对S解密（由于是浏览器信任的机构，所以浏览器保有它的公钥。详情见下文），得到S’。</li>
-<li>用证书里说明的hash算法对明文T进行hash得到T’。</li>
-<li>比较S’是否等于T’，等于则表明证书可信。</li>
-</ol>
-<p>为什么这样可以证明证书可信呢？我们来仔细想一下。</p>
-<h4 id="中间人有可能篡改该证书吗？"><a href="#中间人有可能篡改该证书吗？" class="headerlink" title="中间人有可能篡改该证书吗？"></a><strong>中间人有可能篡改该证书吗？</strong></h4><p>假设中间人篡改了证书的原文，由于他没有CA机构的私钥，所以无法得到此时加密后签名，无法相应地篡改签名。浏览器收到该证书后会发现原文和签名解密后的值不一致，则说明证书已被篡改，证书不可信，从而终止向服务器传输信息，防止信息泄露给中间人。<br>既然不可能篡改，那整个证书被掉包呢？</p>
-<h4 id="中间人有可能把证书掉包吗？"><a href="#中间人有可能把证书掉包吗？" class="headerlink" title="中间人有可能把证书掉包吗？"></a><strong>中间人有可能把证书掉包吗？</strong></h4><p>假设有另一个网站B也拿到了CA机构认证的证书，它想搞垮网站A，想劫持网站A的信息。于是它成为中间人拦截到了A传给浏览器的证书，然后替换成自己的证书，传给浏览器，之后浏览器就会错误地拿到B的证书里的公钥了，会导致上文提到的漏洞。<br>其实这并不会发生，因为证书里包含了网站A的信息，包括域名，浏览器把证书里的域名与自己请求的域名比对一下就知道有没有被掉包了。</p>
-<h4 id="为什么制作数字签名时需要hash一次？"><a href="#为什么制作数字签名时需要hash一次？" class="headerlink" title="为什么制作数字签名时需要hash一次？"></a><strong>为什么制作数字签名时需要hash一次？</strong></h4><p>我初学HTTPS的时候就有这个问题，似乎以上过程中hash有点多余，把hash过程去掉也能保证证书没有被篡改。<br>最显然的是性能问题，前面我们已经说了非对称加密效率较差，证书信息一般较长，比较耗时。而hash后得到的是固定长度的信息（比如用md5算法hash后可以得到固定的128位的值），这样加密解密就会快很多。<br>当然还有安全上的原因，这部分内容相对深一些，感兴趣的可以看这篇解答：<a href="https://link.zhihu.com/?target=https://link.juejin.im/?target=https://crypto.stackexchange.com/a/12780">crypto.stackexchange.com/a/12780</a></p>
-<h4 id="怎么证明CA机构的公钥是可信的？"><a href="#怎么证明CA机构的公钥是可信的？" class="headerlink" title="怎么证明CA机构的公钥是可信的？"></a><strong>怎么证明CA机构的公钥是可信的？</strong></h4><p>你们可能会发现上文中说到CA机构的公钥，我几乎一笔带过，“浏览器保有它的公钥”，这是个什么保有法？怎么证明这个公钥是否可信？<br>让我们回想一下数字证书到底是干啥的？没错，为了证明某公钥是可信的，即“该公钥是否对应该网站/机构等”，那这个CA机构的公钥是不是也可以用数字证书来证明？没错，操作系统、浏览器本身会预装一些它们信任的根证书，如果其中有该CA机构的根证书，那就可以拿到它对应的可信公钥了。<br>实际上证书之间的认证也可以不止一层，可以A信任B，B信任C，以此类推，我们把它叫做<code>信任链</code>或<code>数字证书链</code>，也就是一连串的数字证书，由根证书为起点，透过层层信任，使终端实体证书的持有者可以获得转授的信任，以证明身份。<br>另外，不知你们是否遇到过网站访问不了、提示要安装证书的情况？这里安装的就是跟证书。说明浏览器不认给这个网站颁发证书的机构，那么没有该机构的根证书，你就得手动下载安装（风险自己承担XD）。安装该机构的根证书后，你就有了它的公钥，就可以用它验证服务器发来的证书是否可信了。</p>
-<h4 id="HTTPS必须在每次请求中都要先在SSL-TLS层进行握手传输密钥吗？"><a href="#HTTPS必须在每次请求中都要先在SSL-TLS层进行握手传输密钥吗？" class="headerlink" title="HTTPS必须在每次请求中都要先在SSL/TLS层进行握手传输密钥吗？"></a><strong>HTTPS必须在每次请求中都要先在SSL/TLS层进行握手传输密钥吗？</strong></h4><p>这也是我当时的困惑之一，显然每次请求都经历一次密钥传输过程非常耗时，那怎么达到只传输一次呢？用session就行。<br>服务器会为每个浏览器（或客户端软件）维护一个session ID，在TSL握手阶段传给浏览器，浏览器生成好密钥传给服务器后，服务器会把该密钥存到相应的session ID下，之后浏览器每次请求都会携带session ID，服务器会根据session ID找到相应的密钥并进行解密加密操作，这样就不必要每次重新制作、传输密钥了！</p>
-<ol>
-<li>客户端向服务器发送请求，同时发送客户端支持的一套加密规则（包括对称加密、非对称加密、摘要算法）；</li>
-<li>服务器从中选出一组加密算法与HASH算法，并将自己的身份信息以证书的形式发回给浏览器。证书里面包含了网站地址，<strong>加密公钥</strong>（用于非对称加密），以及证书的颁发机构等信息（证书中的私钥只能用于服务器端进行解密）；</li>
-<li>客户端验证服务器的合法性，包括：证书是否过期，CA 是否可靠，发行者证书的公钥能否正确解开服务器证书的“发行者的数字签名”，服务器证书上的域名是否和服务器的实际域名相匹配；</li>
-<li>如果证书受信任，或者用户接收了不受信任的证书，浏览器会生成一个<strong>随机密钥</strong>（用于对称算法），并用服务器提供的公钥加密（采用非对称算法对密钥加密）；使用Hash算法对握手消息进行<strong>摘要</strong>计算，并对摘要使用之前产生的密钥加密（对称算法）；将加密后的随机密钥和摘要一起发送给服务器；</li>
-<li>服务器使用自己的私钥解密，得到对称加密的密钥，用这个密钥解密出Hash摘要值，并验证握手消息是否一致；如果一致，服务器使用对称加密的密钥加密握手消息发给浏览器；</li>
-<li>浏览器解密并验证摘要，若一致，则握手结束。之后的数据传送都使用对称加密的密钥进行加密</li>
-</ol>
-<p>总结：非对称加密算法用于在握手过程中加密生成的密码；对称加密算法用于对真正传输的数据进行加密；HASH算法用于验证数据的完整性。</p>
-<h3 id="输入url到页面加载"><a href="#输入url到页面加载" class="headerlink" title="输入url到页面加载"></a>输入url到页面加载</h3><p>1、输入地址</p>
-<p>2、浏览器查找域名的 IP 地址　　</p>
-<p>3、浏览器向 web 服务器发送一个 HTTP 请求</p>
-<p>4、服务器的永久重定向响应</p>
-<p>5、浏览器跟踪重定向地址</p>
-<p>6、服务器处理请求</p>
-<p>7、服务器返回一个 HTTP 响应　</p>
-<p>8、浏览器显示 HTML</p>
-<p>9、浏览器发送请求获取嵌入在 HTML 中的资源（如CSS、JS、图片、音频、视频等）</p>
-<p><strong>查找ip过程</strong></p>
-<p>请求一旦发起，浏览器首先要做的事情就是解析这个域名，一般来说，浏览器会首先查看本地硬盘的 hosts 文件，看看其中有没有和这个域名对应的规则，如果有的话就直接使用 hosts 文件里面的 ip 地址。</p>
-<p>如果在本地的 hosts 文件没有能够找到对应的 ip 地址，浏览器会发出一个 DNS请求到本地的DNS服务器 ，本地DNS服务器一般都是由你的网络接入服务器商提供，比如中国电信、中国移动。</p>
-<p>你输入的网址的DNS请求到达本地DNS服务器之后，本地DNS服务器会首先查询它的缓存记录，如果缓存中有此条记录，就直接返回结果，此过程是递归的方式进行查询。如果没有，本地DNS服务器还要向DNS根服务器进行查询。</p>
-<p>根DNS服务器没有记录具体的域名和IP地址的对应关系，而是告诉本地DNS服务器，你可以到域服务器上去继续查询，并给出域服务器的地址，这个过程是迭代的过程。</p>
-<p>本地DNS服务器继续向域服务器发出请求，在这个例子中，请求的对象是.com域服务器， .com域服务器收到请求之后，也不会直接返回域名和IP地址的对应关系，而是告诉本地DNS服务器请求的域名的解析服务器地址。</p>
-<p>最后，本地DNS服务器向域名的解析服务器发出请求，这时就能收到一个域名和IP地址对应关系，本地DNS服务器不仅要把IP地址返回给用户电脑，还会把这个对应关系保存在缓存中，以备下次别的用户查询时，可以直接返回结果，加快网络访问。</p>
-<h3 id="Cookie-Session区别"><a href="#Cookie-Session区别" class="headerlink" title="Cookie,Session区别"></a>Cookie,Session区别</h3><h4 id="存储位置"><a href="#存储位置" class="headerlink" title="存储位置"></a>存储位置</h4><ul>
-<li>Session: 服务端</li>
-<li>Cookie:客户端</li>
-</ul>
-<h4 id="存储的数据格式"><a href="#存储的数据格式" class="headerlink" title="存储的数据格式"></a>存储的数据格式</h4><ul>
-<li>Session:value为对象，Object为类型</li>
-<li>Cookie:value为字符串，如果我们存储一个对象，这个时候，就需要将对象转换为JSON</li>
-</ul>
-<h4 id="存储的数据大小"><a href="#存储的数据大小" class="headerlink" title="存储的数据大小"></a>存储的数据大小</h4><ul>
-<li>Session:受服务器内存控制</li>
-<li>Cookie：一般来说，最大为4k</li>
-</ul>
-<h4 id="声明周期"><a href="#声明周期" class="headerlink" title="声明周期"></a>声明周期</h4><ul>
-<li>Session:服务器段控制，默认是30分钟，注意当用户关闭了浏览器，session并不会消失</li>
-<li>Cookie:客户端控制，其实是客户端的一个文件，分两种情况<ol>
-<li>默认的事会话级的cookie,这种随着浏览器的关闭而消失，比如保存sessionid的cookie</li>
-<li>非会话级的cookie，通过设置有效期来控制，比如这种7天免登录这种功能，就需要设置有效期，setMaxAge</li>
-</ol>
-</li>
-<li>Cookie 可以设置任意时间有效，而 Session 一般失效时间短</li>
-</ul>
-<h4 id="二者联系"><a href="#二者联系" class="headerlink" title="二者联系"></a>二者联系</h4><p>http协议本身是一个无状态协议，服务器为了记住用户的状态，我们采用session的机制，而session机制背后的原理是，服务器会自动生成会话级的cookie来保存session的标识</p>
-<p>session.setAttribute()  get</p>
-<p><strong>浏览器关闭，session就销毁了嘛？</strong></p>
-<ul>
-<li>要看session是否过期，和浏览器是否关闭无关。</li>
-</ul>
-<p><strong>服务器关闭，session就销毁了嘛？</strong></p>
-<ul>
-<li>正常关闭不会。非正常关闭可能就…销毁了。</li>
-</ul>
-<p><strong>禁用cookie，如何使用Session ID</strong></p>
-<ul>
-<li>url重写</li>
-</ul>
-<p>Session存在哪里，怎么把session_id返回给客户端？</p>
-<ul>
-<li>服务器端（内存，数据库，文件）</li>
-<li>在<strong>返回头</strong>中有setCookie，把session_id存到cookie中</li>
-</ul>
-<h3 id="Token"><a href="#Token" class="headerlink" title="Token"></a>Token</h3><p>对于初学者来说，对Token和Session的使用难免会限于困境，开发过程中知道有这个东西，但却不知道为什么要用他？更不知道其原理，今天我就带大家一起分析分析这东西。</p>
-<p>  一、我们先解释一下他的含义：</p>
-<p>1、Token的引入：Token是在客户端频繁向服务端请求数据，服务端频繁的去数据库查询用户名和密码并进行对比，判断用户名和密码正确与否，并作出相应提示，在这样的背景下，Token便应运而生。</p>
-<p>2、Token的定义：Token是服务端生成的一串字符串，以作客户端进行请求的一个令牌，当第一次登录后，服务器生成一个Token便将此Token返回给客户端，以后客户端只需带上这个Token前来请求数据即可，无需再次带上用户名和密码。</p>
-<p>3、使用Token的目的：Token的目的是为了减轻服务器的压力，减少频繁的查询数据库，使服务器更加健壮。</p>
-<p>  了解了Token的意义后，我们就更明确的知道为什么要用他了。</p>
-<p>  二、如何使用Token？</p>
-<p>  这是本文的重点，在这里我就介绍常用的两种方式。</p>
-<p>1、用设备号/设备mac地址作为Token（推荐）</p>
-<p>  客户端：客户端在登录的时候获取设备的设备号/mac地址，并将其作为参数传递到服务端。</p>
-<p>  服务端：服务端接收到该参数后，便用一个变量来接收同时将其作为Token保存在数据库，并将该Token设置到session中，客户端每次请求的时候都要统一拦截，并将客户端传递的token和服务器端session中的token进行对比，如果相同则放行，不同则拒绝。</p>
-<p>分析：此刻客户端和服务器端就统一了一个唯一的标识Token，而且保证了每一个设备拥有了一个唯一的会话。该方法的缺点是客户端需要带设备号/mac地址作为参数传递，而且服务器端还需要保存；优点是客户端不需重新登录，只要登录一次以后一直可以使用，至于超时的问题是有服务器这边来处理，如何处理？若服务器的Token超时后，服务器只需将客户端传递的Token向数据库中查询，同时并赋值给变量Token，如此，Token的超时又重新计时。</p>
-<p>2、用session值作为Token</p>
-<p>  客户端：客户端只需携带用户名和密码登陆即可。</p>
-<p>  客户端：客户端接收到用户名和密码后并判断，如果正确了就将本地获取sessionID作为Token返回给客户端，客户端以后只需带上请求数据即可。</p>
-<p>分析：这种方式使用的好处是方便，不用存储数据，但是缺点就是当session过期后，客户端必须重新登录才能进行访问数据。</p>
-<h3 id="转发重定向区别"><a href="#转发重定向区别" class="headerlink" title="转发重定向区别"></a>转发重定向区别</h3><h4 id="转发"><a href="#转发" class="headerlink" title="转发"></a>转发</h4><p>发生在服务器内部的跳转，所以对于客户端来说，至始至终就是一个请求，所以这期间，保存在request对象中的数据可以进行传递</p>
-<h4 id="重定向"><a href="#重定向" class="headerlink" title="重定向"></a>重定向</h4><p>发生在客户端的跳转，所以是多次请求，这个时候，如果需要在多次请求之间传递数据，就需要用session对象</p>
-<p>在后台程序，想要跳转到百度应该使用重定向，因为转发的范围限制在服务器内部</p>
-<h3 id="Restful"><a href="#Restful" class="headerlink" title="Restful"></a>Restful</h3><h4 id="RestFul-风格"><a href="#RestFul-风格" class="headerlink" title="RestFul 风格"></a>RestFul 风格</h4><p>概念 Restful就是一个资源定位及资源操作的风格。不是标准也不是协议，只是一种风格。基于这个风格设计的软件可以更简洁，更有层次，更易于实现缓存等机制。<br>功能 资源：互联网所有的事物都可以被抽象为资源 资源操作：使用POST、DELETE、PUT、GET，使用不同方法对资源进行操作。 分别对应 添加、 删除、修改、查询。<br>传统方式操作资源 ：通过不同的参数来实现不同的效果！方法单一，post 和 get</p>
-<p><a href="http://127.0.0.1/item/queryItem.action?id=1">http://127.0.0.1/item/queryItem.action?id=1</a> 查询,GET</p>
-<p><a href="http://127.0.0.1/item/saveItem.action">http://127.0.0.1/item/saveItem.action</a> 新增,POST</p>
-<p><a href="http://127.0.0.1/item/updateItem.action">http://127.0.0.1/item/updateItem.action</a> 更新,POST</p>
-<p><a href="http://127.0.0.1/item/deleteItem.action?id=1">http://127.0.0.1/item/deleteItem.action?id=1</a> 删除,GET或POST<br>使用RESTful操作资源 ： 可以通过不同的请求方式来实现不同的效果！如下：请求地址一样，但是功能可以不同！<br><a href="http://127.0.0.1/item/1">http://127.0.0.1/item/1</a> 查询,GET</p>
-<p><a href="http://127.0.0.1/item">http://127.0.0.1/item</a> 新增,POST</p>
-<p><a href="http://127.0.0.1/item">http://127.0.0.1/item</a> 更新,PUT</p>
-<p><a href="http://127.0.0.1/item/1">http://127.0.0.1/item/1</a> 删除,DELETE</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RestFulController</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//原来的： http://localhost:8080/add?a=1&amp;b=2</span></span><br><span class="line">    <span class="comment">//RestFul: http://localhost:8080/add/a/b</span></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/add&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  String <span class="title">test1</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b, Model model)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = a+b;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;msg&quot;</span>,<span class="string">&quot;结果为&quot;</span>+res);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;test&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//@RequestMapping(value = &quot;/add/&#123;a&#125;/&#123;b&#125;&quot;,method = RequestMethod.GET)</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/add/&#123;a&#125;/&#123;b&#125;&quot;)</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span>  String <span class="title">test2</span><span class="params">(<span class="meta">@PathVariable</span> <span class="keyword">int</span> a,<span class="meta">@PathVariable</span> <span class="keyword">int</span> b, Model model)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = a+b;</span><br><span class="line">        model.addAttribute(<span class="string">&quot;msg&quot;</span>,<span class="string">&quot;结果为&quot;</span>+res);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;test&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>思考：使用路径变量的好处？<br>使路径变得更加简洁；<br>获得参数更加方便，框架会自动进行类型转换。<br>通过路径变量的类型可以约束访问参数，如果类型不一样，则访问不到对应的请求方法，如这<br>里访问是的路径是/commit/1/a，则路径与方法不匹配，而不会是参数转换失败。</p>
-<p>使用method属性指定请求类型<br>用于约束请求的类型，可以收窄请求范围。指定请求谓词的类型如GET, POST, HEAD, OPTIONS, PUT,PATCH, DELETE, TRACE等</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="comment">//映射访问路径,必须是POST请求</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/hello&quot;,method = &#123;RequestMethod.POST&#125;)</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> String <span class="title">index2</span><span class="params">(Model model)</span></span>&#123;</span><br><span class="line">	model.addAttribute(<span class="string">&quot;msg&quot;</span>, <span class="string">&quot;hello!&quot;</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;test&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>小结：<br>Spring MVC 的 @RequestMapping 注解能够处理 HTTP 请求的方法, 比如 GET, PUT, POST, DELETE 以及 PATCH。<br>所有的地址栏请求默认都会是 HTTP GET 类型的。<br>方法级别的注解变体有如下几个： 组合注解</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@GetMapping</span></span><br><span class="line"><span class="meta">@PostMapping</span></span><br><span class="line"><span class="meta">@PutMapping</span></span><br><span class="line"><span class="meta">@DeleteMapping</span></span><br><span class="line"><span class="meta">@PatchMapping</span></span><br></pre></td></tr></table></figure>
-
-<p>@GetMapping 是一个组合注解<br>它所扮演的是 @RequestMapping(method =RequestMethod.GET) 的一个快捷方式。<br>平时使用的会比较多！</p>
-<h3 id="TCP-UDP区别"><a href="#TCP-UDP区别" class="headerlink" title="TCP UDP区别"></a>TCP UDP区别</h3><p>两者都是传输层协议</p>
-<p>其次</p>
-<p>tcp提供可靠的传输协议，传输前需要建立连接，面向字节流，传输慢，效率低 适合一对一 无界的连续数据分成多块发送</p>
-<p>udp无法保证传输的可靠性，无需创建连接，以报文的方式传输，效率高 广播多播</p>
-<p>TCP应用场景：<br>效率要求相对低，但对准确性要求相对高的场景。因为传输中需要对数据确认、重发、排序等操作，相比之下效率没有UDP高。举几个例子：文件传输（准确高要求高、但是速度可以相对慢）、接受邮件、远程登录。</p>
-<p>UDP应用场景：<br>效率要求相对高，对准确性要求相对低的场景。举几个例子：QQ聊天、在线视频、网络语音电话（即时通讯，速度要求高，但是出现偶尔断续不是太大问题，并且此处完全不可以使用重发机制）、广播通信（广播、多播）。</p>
-<h4 id="TCP三次握手"><a href="#TCP三次握手" class="headerlink" title="TCP三次握手"></a><strong>TCP三次握手</strong></h4><p>第一次握手：建立连接时，客户端发送syn包（syn=1，seq=j）到服务器，并进入SYN_SENT状态，等待服务器确认；SYN：同步序列编号（Synchronize Sequence Numbers）。</p>
-<p>第二次握手：服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；</p>
-<p>第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK(ack=k+1），此包发送完毕，客户端和服务器进入ESTABLISHED（TCP连接成功）状态，完成三次握手</p>
-<p><strong>三次握手改成两次会出现什么情况</strong></p>
-<p>现在把三次握手改成仅需要两次握手，死锁是可能发生的。作为例子，考虑计算机S和C之间的通信，假定C给S发送一个连接请求分组，S收到了这个分组，并发 送了确认应答分组。按照两次握手的协定，S认为连接已经成功地建立了，可以开始发送数据分组。可是，C在S的应答分组在传输中被丢失的情况下，将不知道S 是否已准备好，不知道S建立什么样的序列号，C甚至怀疑S是否收到自己的连接请求分组。在这种情况下，C认为连接还未建立成功，将忽略S发来的任何数据分 组，只等待连接确认应答分组。而S在发出的分组超时后，重复发送同样的分组。这样就形成了死锁。</p>
-<p>有人会困惑为什么要进行三次握手呢（两次确认）？这主要是为了防止已失效的请求连接报文忽然又传送到了，从而产生错误。<br>假定A向B发送一个连接请求，由于一些原因，导致A发出的连接请求在一个网络节点逗留了比较多的时间。此时A会将此连接请求作为无效处理 又重新向B发起了一次新的连接请求，B正常收到此连接请求后建立了连接，数据传输完成后释放了连接。如果此时A发出的第一次请求又到达了B，B会以为A又发起了一次连接请求，<code>如果是两次握手：此时连接就建立了，B会一直等待A发送数据，从而白白浪费B的资源</code>。 <code>如果是三次握手：由于A没有发起连接请求，也就不会理会B的连接响应，B没有收到A的确认连接，就会关闭掉本次连接</code>。</p>
-<p>序列号的确认号的作用<br>TCP协议工作在OSI的传输层，是一种可靠的面向连接的数据流协议，TCP之所以可靠，是因为它保证了传送数据包的顺序。顺序是用一个序列号来保证的。响应包内也包括一个序列号，表示接收方准备好这个序列号的包。在TCP传送一个数据包时，它会把这个数据包放入重发队列中，同时启动计时器，如果收到了关于这个包的确认信息，便将此数据包从队列中删除，如果在计时器超时的时候仍然没有收到确认信息，则需要重新发送该数据包。另外，TCP通过数据分段中的序列号来保证所有传输的数据可以按照正常的顺序进行重组，从而保障数据传输的完整！</p>
-<p><strong>初始序列号</strong></p>
-<p>TCP连接的一方A，随机选择一个32位的序列号（Sequence Number）作为发送数据的初始序列号（Initial Sequence Number，ISN），比如为1000，以该序列号为原点，对要传送的数据进行编号：1001、1002…三次握手时，把这个初始序列号传送给另一方B，以便在传输数据时，B可以确认什么样的数据编号是合法的；同时在进行数据传输时，A还可以确认B收到的每一个字节，如果A收到了B的确认编号（acknowledge number）是2001，就说明编号为1001-2000的数据已经被B成功接受。</p>
-<h4 id="tcp四次挥手"><a href="#tcp四次挥手" class="headerlink" title="tcp四次挥手"></a><strong>tcp四次挥手</strong></h4><p>1）客户端进程发出连接释放报文，并且停止发送数据。释放数据报文首部，FIN=1，其序列号为seq=u（等于前面已经传送过来的数据的最后一个字节的序号加1），此时，客户端进入FIN-WAIT-1（终止等待1）状态。 TCP规定，FIN报文段即使不携带数据，也要消耗一个序号。<br>2）服务器收到连接释放报文，发出确认报文，ACK=1，ack=u+1，并且带上自己的序列号seq=v，此时，服务端就进入了CLOSE-WAIT（关闭等待）状态。TCP服务器通知高层的应用进程，客户端向服务器的方向就释放了，这时候处于半关闭状态，即客户端已经没有数据要发送了，但是服务器若发送数据，客户端依然要接受。这个状态还要持续一段时间，也就是整个CLOSE-WAIT状态持续的时间。<br>3）客户端收到服务器的确认请求后，此时，客户端就进入FIN-WAIT-2（终止等待2）状态，等待服务器发送连接释放报文（在这之前还需要接受服务器发送的最后的数据）。<br>4）服务器将最后的数据发送完毕后，就向客户端发送连接释放报文，FIN=1，ack=u+1，由于在半关闭状态，服务器很可能又发送了一些数据，假定此时的序列号为seq=w，此时，服务器就进入了LAST-ACK（最后确认）状态，等待客户端的确认。<br>5）客户端收到服务器的连接释放报文后，必须发出确认，ACK=1，ack=w+1，而自己的序列号是seq=u+1，此时，客户端就进入了TIME-WAIT（时间等待）状态。注意此时TCP连接还没有释放，必须经过2∗∗MSL（最长报文段寿命）的时间后，当客户端撤销相应的TCB后，才进入CLOSED状态。<br>6）服务器只要收到了客户端发出的确认，立即进入CLOSED状态。同样，撤销TCB后，就结束了这次的TCP连接。可以看到，服务器结束TCP连接的时间要比客户端早一些</p>
-<h4 id="time-wait状态"><a href="#time-wait状态" class="headerlink" title="time_wait状态"></a>time_wait状态</h4><p>  为什么TIME_WAIT状态需要经过2MSL(最大报文段生存时间)才能返回到CLOSE状态？ </p>
-<p>  – 虽然按道理，四个报文都发送完毕，我们可以直接进入CLOSE状态了，但是我们必须假象网络是不可靠的，有可能最后一个ACK丢失。所以TIME_WAIT状态就是用来重发可能丢失的ACK报文。在Client发送出最后的ACK回复，但该ACK可能丢失。Server如果没有收到ACK，将不断重复发送FIN片段。所以Client不能立即关闭，它必须确认Server接收到了该ACK。Client会在发送出ACK之后进入到TIME_WAIT状态。Client会设置一个计时器，等待2MSL的时间。如果在该时间内再次收到FIN，那么Client会重发ACK并再次等待2MSL。所谓的2MSL是两倍的MSL(Maximum Segment Lifetime)。MSL指一个片段在网络中最大的存活时间，2MSL就是一个发送和一个回复所需的最大时间。如果直到2MSL，Client都没有再次收到FIN，那么Client推断ACK已经被成功接收，则结束TCP连接。</p>
-<h4 id="半关闭状态"><a href="#半关闭状态" class="headerlink" title="半关闭状态"></a>半关闭状态</h4><p>TCP提供了连接的一端在结束它的发送后还能接收来自另一端数据的能力。这就是所谓的半关闭。</p>
-<p><strong>为什么需要半关闭</strong></p>
-<p>为了保证数据的完全交换，应该留出足够长的连接时间，但是应该留出多长的时间呢？</p>
-<p>比如客户端连接到服务器，服务器将一个文件传输给客户端，客户端收到后发送确认数据给服务器端</p>
-<p>这时服务器端只需要连续的传输文件数据，而客户端却无法知道需要接收数据到何时，客户端也不可能无休止的调用输入函数，因为这有可能导致程序阻塞(调用的函数未返回)</p>
-<p>服务器端应该在数据发送完毕后传递EOF表示文件结束，客户端接收到EOF即停止接收数据并向服务器端发送确认数据。close函数与shutdown都可以向客户端发送EOF数据，但使用close发送EOF后也无法接收对方传输的数据了，所以使用shutdown </p>
-<p>注意：即使使用了shutdown函数实现TCP套接字的半关闭，在最后依旧要使用close函数关闭套接字</p>
-<h4 id="TCP如何保证数据传输的可靠性"><a href="#TCP如何保证数据传输的可靠性" class="headerlink" title="TCP如何保证数据传输的可靠性"></a><strong>TCP如何保证数据传输的可靠性</strong></h4><ul>
-<li>应用数据被分割成TCP认为最适合发送的数据块</li>
-<li>TCP给发送的每一个包进行编号，接收方对数据包进行排序，把有序数据传输给应用层</li>
-<li>校验和：TCP将保持它首部的数据的校验和。这是一个端到端的校验和，目的是检测数据在传输过程中的任何变化，如果收到的校验和有差错，tcp将丢弃这个报文段和不确认收到此报文段</li>
-<li>tcp的接收端会丢弃重复的数据</li>
-<li>流量控制：tcp连接的每一方都有固定大小的缓冲空间，tcp的接收端只允许发送端发送连接接收端缓冲区能接纳的数据，当接收方来不及处理发送方的数据，能提示发送方降低发送的速率，防止包丢失。tcp使用的流量控制协议是可变大小的滑动窗口协议</li>
-<li>拥塞控制：当网络拥塞时，减少数据的发送</li>
-<li>停止等待协议：基本原理是每发完一个分组就停止发送，等待对方确认，在收到确认后再发下一个分组，超时重传：当tcp发出一个字段后，它启动一个定时器，等待目的端确认收到这个报文段，如果不能及时确认，将重发</li>
-</ul>
-<p><strong>滑动窗口</strong></p>
-<ul>
-<li>TCP 利用滑动窗口实现流量控制的机制。</li>
-<li>滑动窗口（Sliding window）是一种流量控制技术。早期的网络通信中，通信双方不会考虑网络的拥挤情况直接发送数据。由于大家不知道网络拥塞状况，同时发送数据，导致中间节点阻塞掉包，谁也发不了数据，所以就有了滑动窗口机制来解决此问题。</li>
-<li>TCP 中采用滑动窗口来进行传输控制，滑动窗口的大小意味着接收方还有多大的缓冲区可以用于接收数据。发送方可以通过滑动窗口的大小来确定应该发送多少字节的数据。当滑动窗口为 0 时，发送方一般不能再发送数据报，但有两种情况除外，一种情况是可以发送紧急数据，例如，允许用户终止在远端机上的运行进程。另一种情况是发送方可以发送一个 1 字节的数据报来通知接收方重新声明它希望接收的下一字节及发送方的滑动窗口大小</li>
-</ul>
-<p><strong>拥塞控制</strong></p>
-<p>在某段时间，若对网络中某一资源的需求超过了该资源所能提供的可用部分，网络的性能就要变坏。这种情况就叫拥塞。拥塞控制就是为了防止过多的数据注入到网络中，这样就可以使网络中的路由器或链路不致过载。拥塞控制所要做的都有一个前提，就是网络能够承受现有的网络负荷。</p>
-<p>TCP的拥塞控制四种算法  慢开始 拥塞避免 快重传 快恢复</p>
-<p><strong>慢开始</strong>：由小到大逐渐增大发送窗口 ，要注意，发送方每收到一个确认报文段，cwnd+1（不包括缺失重传的确认），也就是说，每经过一个传输伦次（RTT时间），cwnd加倍。</p>
-<p><strong>拥塞避免</strong>：设置一个窗口值，大于时采用拥塞避免，让拥塞窗口cwnd缓慢增大，每经过一个往返时间RTT就把发送的cwnd+1</p>
-<p><strong>快重传与快恢复</strong>：当接收方收到了一个失序的报文，马上报告给发送方，我没收到，赶紧重传（<strong>天下武功唯快不破</strong>），假如M2收到了，M3没有收到，之后的M4,M5,M6又发送了，此时接收方一共连续给发送方反馈了4个M2确认报文。那么快重传规定，发送方只要连续收到3个重复确认，立即重传对方发来的M3</p>
-<h3 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h3><p>　　这是为了实现以上的通信过程而建立成来的通信管道，其真实的代表是客户端和服务器端的一个通信进程，双方进程通过socket进行通信，而通信的规则采用指定的协议。</p>
-<p>　　socket只是一种连接模式，不是协议，socket是对TCP/IP协议的封装，Socket本身并不是协议，而是一个调用接口（API）。</p>
-<p>　　通过Socket，我们才能使用TCP/IP协议。tcp、udp，简单的说（虽然不准确）是两个最基本的协议。</p>
-<p>　　很多其它协议都是基于这两个协议。如http就是基于tcp的，用socket可以创建tcp连接，也可以创建udp连接。</p>
-<p>　　这意味着，用socket可以创建任何协议的连接，因为其它协议都是基于此的。</p>
-<p>　　一个Socket实例由一个IP地址和一个端口号唯一确定。<br>　　Socket是一种用于网络通信的低层开发接口，借助于通信两端的应用程序(实际上是Socket)可以利用输入输出流完成数据交换。</p>
-<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　3）适合于客户端和服务器端之间信息实时交互；<br>　　4）可以加密,数据安全性强。 </p>
-<p><strong>Socket 传输的缺点</strong><br>　　1）需对传输的数据进行解析，转化成应用级的数据；<br>　　2）对开发人员的开发水平要求高；<br>　　3）相对于Http协议传输，增加了开发量</p>
-<p>基于Socket传输的特点：Socket 传输方式适合于对传输速度，安全性，实时交互，费用等要求高的应用中，如网络游戏，手机应用，银行内部交互等‘’。</p>
-<h2 id="用户态内核态"><a href="#用户态内核态" class="headerlink" title="用户态内核态"></a>用户态内核态</h2><h3 id="操作系统需要两种CPU状态"><a href="#操作系统需要两种CPU状态" class="headerlink" title="操作系统需要两种CPU状态"></a>操作系统需要两种CPU状态</h3><p>内核态（Kernel Mode）：运行操作系统程序，操作硬件</p>
-<p>用户态（User Mode）：运行用户程序</p>
-<h3 id="指令划分"><a href="#指令划分" class="headerlink" title="指令划分"></a>指令划分</h3><p>特权指令：只能由操作系统使用、用户程序不能使用的指令。 举例：启动I/O 内存清零 修改程序状态字 设置时钟 允许/禁止终端 停机</p>
-<p>非特权指令：用户程序可以使用的指令。 举例：控制转移 算数运算 取数指令 <strong>访管指令</strong>（使用户程序从用户态陷入内核态）</p>
-<h3 id="特权级别"><a href="#特权级别" class="headerlink" title="特权级别"></a>特权级别</h3><p><strong>特权环：R0、R1、R2和R3</strong></p>
-<p>R0相当于内核态，R3相当于用户态；</p>
-<p>不同级别能够运行不同的指令集合；</p>
-<h3 id="CPU状态之间的转换"><a href="#CPU状态之间的转换" class="headerlink" title="CPU状态之间的转换"></a>CPU状态之间的转换</h3><p><strong>用户态—&gt;内核态：</strong>唯一途径是通过中断、异常、陷入机制（访管指令）</p>
-<p><strong>内核态—&gt;用户态：</strong>设置程序状态字PSW</p>
-<h3 id="内核态与用户态的区别"><a href="#内核态与用户态的区别" class="headerlink" title="内核态与用户态的区别"></a>内核态与用户态的区别</h3><ul>
-<li><p>内核态与用户态是操作系统的两种运行级别，当程序运行在3级特权级上时，就可以称之为运行在用户态。<strong>因为这是最低特权级，是普通的用户进程运行的特权级，大部分用户直接面对的程序都是运行在用户态；</strong></p>
-</li>
-<li><p>当程序运行在0级特权级上时，就可以称之为运行在内核态。</p>
-</li>
-<li><p>运行在用户态下的程序不能直接访问操作系统内核数据结构和程序。当我们在系统中执行一个程序时，大部分时间是运行在用户态下的，在其需要操作系统帮助完成某些它没有权力和能力完成的工作时就会切换到内核态（比如操作硬件）。</p>
-</li>
-<li><p>这两种状态的主要差别是</p>
-<blockquote>
-<ul>
-<li>处于用户态执行时，进程所能访问的内存空间和对象受到限制，其所处于占有的处理器是可被抢占的</li>
-<li>处于内核态执行时，则能访问所有的内存空间和对象，且所占有的处理器是不允许被抢占的。</li>
-</ul>
-</blockquote>
-</li>
-</ul>
-<h3 id="通常来说，以下三种情况会导致用户态到内核态的切换"><a href="#通常来说，以下三种情况会导致用户态到内核态的切换" class="headerlink" title="通常来说，以下三种情况会导致用户态到内核态的切换"></a>通常来说，以下三种情况会导致用户态到内核态的切换</h3><ul>
-<li>系统调用</li>
-</ul>
-<p><strong>这是用户态进程主动要求切换到内核态的一种方式</strong>，<strong>用户态进程通过系统调用申请使用操作系统提供的服务程序完成工作。</strong>比如前例中fork()实际上就是执行了一个创建新进程的系统调用。</p>
-<p>而系统调用的机制其核心还是使用了操作系统为用户特别开放的一个中断来实现，例如Linux的int 80h中断。</p>
-<p>用户程序通常调用库函数，由库函数再调用系统调用，因此有的库函数会使用户程序进入内核态（只要库函数中某处调用了系统调用），有的则不会。</p>
-<p>read write 文件读写操作</p>
-<ul>
-<li>异常</li>
-</ul>
-<p>当CPU在执行运行在用户态下的程序时，发生了某些事先不可知的异常，这时会触发由当前运行进程切换到处理此异常的内核相关程序中，也就转到了内核态，比如缺页异常。</p>
-<ul>
-<li>外围设备的中断</li>
-</ul>
-<p><strong>当外围设备完成用户请求的操作后，会向CPU发出相应的中断信号</strong>，这时CPU会暂停执行下一条即将要执行的指令转而去执行与中断信号对应的处理程序，</p>
-<p>如果先前执行的指令是用户态下的程序，那么这个转换的过程自然也就发生了由用户态到内核态的切换。比如硬盘读写操作完成，系统会切换到硬盘读写的中断处理程序中执行后续操作等。</p>
-<p><strong>这3种方式是系统在运行时由用户态转到内核态的最主要方式，其中系统调用可以认为是用户进程主动发起的，异常和外围设备中断则是被动的。</strong></p>
 <h2 id="select和epoll区别"><a href="#select和epoll区别" class="headerlink" title="select和epoll区别"></a>select和epoll区别</h2><ul>
 <li>select和epoll都是同步io多路复用机制。</li>
 <li>select使用超时轮询的方式对文件描述符集合进行监视。先将进程从工作队列加入到文件描述符的等待队列中，使进程阻塞，在超时时间内如果有文件描述符就绪，产生中断，唤醒进程，将进程从等待队列重新放回到工作队列中。但是进程只知道有文件描述符就绪，而不知道是哪一个或哪几个，所以要将文件描述符集合从用户态空间复制到内核态中，进行遍历。o(n)的复杂度，即无差别轮询。</li>
@@ -1837,32 +1932,6 @@
 <p>　　这里对进程进行分组，在组内使用FCFS和SJF算法，在组间实行优先级调度或者轮转法调度。但是不允许进程在组间切换。</p>
 <p>6、多级反馈队列调度</p>
 <p>　　允许进程在组间切换，主要思想是根据不同区间的特点区分进程，如果CPU进程占用过多CPU时间，那么它会被转移到更低优先级队列。这种形式老化阻止饥饿。</p>
-<h2 id="操作系统中断和异常"><a href="#操作系统中断和异常" class="headerlink" title="操作系统中断和异常"></a>操作系统中断和异常</h2><h3 id="中断"><a href="#中断" class="headerlink" title="中断"></a>中断</h3><p><strong>中断是为了实现多道程序并发执行而引入的一种技术</strong></p>
-<ol>
-<li>当中断发生时，CPU立即进入核心态</li>
-<li>当中断发生后，当前运行的进程暂停运行，并由操作系统内核对中断进行处理</li>
-<li>对于不同的中断信号，会进行不同的处理</li>
-</ol>
-<p>发生了中断，就意味着需要操作系统介入，开展管理工作。由于操作系统的管理工作（比如进程切换、分配I/0设备等）需要使用特权指令，因此CPU要从用户态转为核心态。<strong>中断可以使CPU从用户态切换为核心态，使操作系统获得计算机的控制权</strong>。有了中断，才能实现多道程序并发执行。</p>
-<p><strong>用户态 → 核心态：</strong> 通过中断实现的。并且中断是唯一途径。</p>
-<p><strong>核心态 → 用户态：</strong> 通过执行一个特权指令，将程序状态字（PSW）的标志位设置为“用户态”</p>
-<p><strong>中断分类</strong></p>
-<ul>
-<li>内中断：信号的来源在CPU内部，与当前执行的指令有关</li>
-<li>外中断：信号的来源在CPU外部，与当前执行的指令无关</li>
-</ul>
-<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a><strong>异常</strong></h3><p>​    当下述情况发生，CPU中断当前的执行流程，转到相应的错误处理程序或陷入处理程序：</p>
-<ul>
-<li>CPU执行指令时本身出现算术异常、零做除数、访存指令越界、虚存缺页等；</li>
-<li>正常异常，即执行了一条trap指令，用于实现系统调用</li>
-</ul>
-<h3 id="中断和异常的区分"><a href="#中断和异常的区分" class="headerlink" title="中断和异常的区分"></a>中断和异常的区分</h3><p>1、中断：通道（或设备）完成输入输出后，通道会“通知”CPU此次输入输出结束，这个“通知”就是中断。<br>可以看到，中断与CPU正在执行的指令并没有关系。</p>
-<p>2、异常：而异常则是正在执行的指令本身出现了错误（如算术溢出、地址越界）等。</p>
-<p>3、但中断和异常的结果都是使得“CPU暂停正在执行的程序”：</p>
-<p>  CPU接受“中断”后停止当前的任务，去继续上一个任务或继续当时在执行的任务（如何选择则是与调度有关）。</p>
-<p>  CPU接受“异常”后停止当前任务，去处理这些错误。 处理完成后CPU返回暂停点继续工作。</p>
-<p>4、中断：与正在执行的指令无关，可以屏蔽</p>
-<p>  异常：与正在执行的指令有关，不可屏蔽</p>
 ]]></content>
       <tags>
         <tag>other</tag>
@@ -4765,7 +4834,10 @@
 
 <h3 id="最小栈"><a href="#最小栈" class="headerlink" title="最小栈"></a>最小栈</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MinStack</span> </span>&#123;</span><br><span class="line">    Deque&lt;Integer&gt; xStack;</span><br><span class="line">    Deque&lt;Integer&gt; minStack;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MinStack</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        xStack = <span class="keyword">new</span> LinkedList&lt;Integer&gt;();</span><br><span class="line">        minStack = <span class="keyword">new</span> LinkedList&lt;Integer&gt;();</span><br><span class="line">        minStack.push(Integer.MAX_VALUE);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">push</span><span class="params">(<span class="keyword">int</span> x)</span> </span>&#123;</span><br><span class="line">        xStack.push(x);</span><br><span class="line">        minStack.push(Math.min(minStack.peek(), x));</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        xStack.pop();</span><br><span class="line">        minStack.pop();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">top</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> xStack.peek();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getMin</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> minStack.peek();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h2 id="有效的括号"><a href="#有效的括号" class="headerlink" title="有效的括号"></a>有效的括号</h2><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Hash table that takes care of the mappings.</span></span><br><span class="line">  <span class="keyword">private</span> HashMap&lt;Character, Character&gt; mappings;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Initialize hash map with mappings. This simply makes the code easier to read.</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Solution</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.mappings = <span class="keyword">new</span> HashMap&lt;Character, Character&gt;();</span><br><span class="line">    <span class="keyword">this</span>.mappings.put(<span class="string">&#x27;)&#x27;</span>, <span class="string">&#x27;(&#x27;</span>);</span><br><span class="line">    <span class="keyword">this</span>.mappings.put(<span class="string">&#x27;&#125;&#x27;</span>, <span class="string">&#x27;&#123;&#x27;</span>);</span><br><span class="line">    <span class="keyword">this</span>.mappings.put(<span class="string">&#x27;]&#x27;</span>, <span class="string">&#x27;[&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Initialize a stack to be used in the algorithm.</span></span><br><span class="line">    Stack&lt;Character&gt; stack = <span class="keyword">new</span> Stack&lt;Character&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">      <span class="keyword">char</span> c = s.charAt(i);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// If the current character is a closing bracket.</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.mappings.containsKey(c)) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Get the top element of the stack. If the stack is empty, set a dummy value of &#x27;#&#x27;</span></span><br><span class="line">        <span class="keyword">char</span> topElement = stack.empty() ? <span class="string">&#x27;#&#x27;</span> : stack.pop();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// If the mapping for this bracket doesn&#x27;t match the stack&#x27;s top element, return false.</span></span><br><span class="line">        <span class="keyword">if</span> (topElement != <span class="keyword">this</span>.mappings.get(c)) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// If it was an opening bracket, push to the stack.</span></span><br><span class="line">        stack.push(c);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If the stack still contains elements, then it is an invalid expression.</span></span><br><span class="line">    <span class="keyword">return</span> stack.isEmpty();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="括号匹配问题"><a href="#括号匹配问题" class="headerlink" title="括号匹配问题"></a>括号匹配问题</h2><h3 id="有效的括号"><a href="#有效的括号" class="headerlink" title="有效的括号"></a>有效的括号</h3><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Hash table that takes care of the mappings.</span></span><br><span class="line">  <span class="keyword">private</span> HashMap&lt;Character, Character&gt; mappings;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Initialize hash map with mappings. This simply makes the code easier to read.</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Solution</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.mappings = <span class="keyword">new</span> HashMap&lt;Character, Character&gt;();</span><br><span class="line">    <span class="keyword">this</span>.mappings.put(<span class="string">&#x27;)&#x27;</span>, <span class="string">&#x27;(&#x27;</span>);</span><br><span class="line">    <span class="keyword">this</span>.mappings.put(<span class="string">&#x27;&#125;&#x27;</span>, <span class="string">&#x27;&#123;&#x27;</span>);</span><br><span class="line">    <span class="keyword">this</span>.mappings.put(<span class="string">&#x27;]&#x27;</span>, <span class="string">&#x27;[&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isValid</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Initialize a stack to be used in the algorithm.</span></span><br><span class="line">    Stack&lt;Character&gt; stack = <span class="keyword">new</span> Stack&lt;Character&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; s.length(); i++) &#123;</span><br><span class="line">      <span class="keyword">char</span> c = s.charAt(i);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// If the current character is a closing bracket.</span></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">this</span>.mappings.containsKey(c)) &#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Get the top element of the stack. If the stack is empty, set a dummy value of &#x27;#&#x27;</span></span><br><span class="line">        <span class="keyword">char</span> topElement = stack.empty() ? <span class="string">&#x27;#&#x27;</span> : stack.pop();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// If the mapping for this bracket doesn&#x27;t match the stack&#x27;s top element, return false.</span></span><br><span class="line">        <span class="keyword">if</span> (topElement != <span class="keyword">this</span>.mappings.get(c)) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// If it was an opening bracket, push to the stack.</span></span><br><span class="line">        stack.push(c);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// If the stack still contains elements, then it is an invalid expression.</span></span><br><span class="line">    <span class="keyword">return</span> stack.isEmpty();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="括号生成"><a href="#括号生成" class="headerlink" title="括号生成"></a>括号生成</h3><p>给一个n，输出有多少中括号生成的方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">generateParenthesis</span><span class="params">(<span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        List&lt;String&gt; ans=<span class="keyword">new</span> ArrayList();</span><br><span class="line">        backtrack(ans,<span class="string">&quot;&quot;</span>,<span class="number">0</span>,<span class="number">0</span>,n);</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">backtrack</span><span class="params">(List&lt;String&gt; ans, String cur, <span class="keyword">int</span> open, <span class="keyword">int</span> close, <span class="keyword">int</span> max)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(cur.length()==max*<span class="number">2</span>)&#123;</span><br><span class="line">            ans.add(cur);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(open&lt;max) </span><br><span class="line">            backtrack(ans,cur+<span class="string">&quot;(&quot;</span>,open+<span class="number">1</span>,close,max);</span><br><span class="line">        <span class="keyword">if</span>(close&lt;open)</span><br><span class="line">            backtrack(ans,cur+<span class="string">&quot;)&quot;</span>,open,close+<span class="number">1</span>,max);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 
 
@@ -6158,7 +6230,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#x69;&#116;&#64;&#103;&#105;&#116;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#109;">&#103;&#x69;&#116;&#64;&#103;&#105;&#116;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#105;&#116;&#64;&#103;&#x69;&#x74;&#104;&#x75;&#x62;&#x2e;&#x63;&#x6f;&#x6d;">&#x67;&#105;&#116;&#64;&#103;&#x69;&#x74;&#104;&#x75;&#x62;&#x2e;&#x63;&#x6f;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
