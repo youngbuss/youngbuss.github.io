@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.4.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.icon">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/small_favicon.ico">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"manual","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="记录一些Mysql的操作 这是最基本的应该要掌握的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql_Code">
+<meta property="og:url" content="http://example.com/2020/12/19/Mysql-Code/index.html">
+<meta property="og:site_name" content="不斯">
+<meta property="og:description" content="记录一些Mysql的操作 这是最基本的应该要掌握的">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-19T14:52:38.000Z">
+<meta property="article:modified_time" content="2020-12-19T15:52:18.000Z">
+<meta property="article:author" content="Yang">
+<meta property="article:tag" content="Mysql">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/12/19/Mysql-Code/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Mysql_Code | 不斯</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">不斯</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-resources">
+
+    <a href="/resources/" rel="section"><i class="download fa-fw"></i>资源</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/19/Mysql-Code/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Yang">
+      <meta itemprop="description" content="醉后不知天在水，满船星梦压星河">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="不斯">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Mysql_Code
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-12-19 22:52:38 / 修改时间：23:52:18" itemprop="dateCreated datePublished" datetime="2020-12-19T22:52:38+08:00">2020-12-19</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Mysql/" itemprop="url" rel="index"><span itemprop="name">Mysql</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>记录一些Mysql的操作 这是最基本的应该要掌握的</p>
+<span id="more"></span>
+
+<h2 id="第二高的薪水"><a href="#第二高的薪水" class="headerlink" title="第二高的薪水"></a>第二高的薪水</h2><p>编写一个 SQL 查询，获取 Employee 表中第二高的薪水（Salary） 。</p>
+<p>+—-+——–+<br>| Id | Salary |<br>+—-+——–+<br>| 1  | 100    |<br>| 2  | 200    |<br>| 3  | 300    |<br>+—-+——–+<br>例如上述 Employee 表，SQL查询应该返回 200 作为第二高的薪水。如果不存在第二高的薪水，那么查询应返回 null。</p>
+<p>+———————+<br>| SecondHighestSalary |<br>+———————+<br>| 200                 |<br>+———————+</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">select ifNull(</span><br><span class="line">(select distinct salary</span><br><span class="line">from Employee </span><br><span class="line">order by Salary Desc</span><br><span class="line">limit 1,1),null</span><br><span class="line">) as SecondHighestSalary;</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果查询第N高的薪水呢</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT</span><br><span class="line">BEGIN</span><br><span class="line">    SET N := N-1;</span><br><span class="line">  RETURN (</span><br><span class="line">      # Write your MySQL query statement below.</span><br><span class="line">      SELECT </span><br><span class="line">            salary</span><br><span class="line">      FROM </span><br><span class="line">            employee</span><br><span class="line">      GROUP BY </span><br><span class="line">            salary</span><br><span class="line">      ORDER BY </span><br><span class="line">            salary DESC</span><br><span class="line">      LIMIT N, 1</span><br><span class="line">  );</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="分数排名"><a href="#分数排名" class="headerlink" title="分数排名"></a>分数排名</h2><p>编写一个 SQL 查询来实现分数排名。</p>
+<p>如果两个分数相同，则两个分数排名（Rank）相同。请注意，平分后的下一个名次应该是下一个连续的整数值。换句话说，名次之间不应该有“间隔”。</p>
+<p>+—-+——-+<br>| Id | Score |<br>+—-+——-+<br>| 1  | 3.50  |<br>| 2  | 3.65  |<br>| 3  | 4.00  |<br>| 4  | 3.85  |<br>| 5  | 4.00  |<br>| 6  | 3.65  |<br>+—-+——-+<br>例如，根据上述给定的 Scores 表，你的查询应该返回（按分数从高到低排列）：</p>
+<p>+——-+——+<br>| Score | Rank |<br>+——-+——+<br>| 4.00  | 1    |<br>| 4.00  | 1    |<br>| 3.85  | 2    |<br>| 3.65  | 3    |<br>| 3.65  | 3    |<br>| 3.50  | 4    |<br>+——-+——+<br>重要提示：对于 MySQL 解决方案，如果要转义用作列名的保留字，可以在关键字之前和之后使用撇号。例如 <code>Rank</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">#最后的结果包含两个部分，第一部分是降序排列的分数，第二部分是每个分数对应的排名。</span><br><span class="line"></span><br><span class="line">#第一部分不难写：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">select a.Score as Score</span><br><span class="line">from Scores a</span><br><span class="line">order by a.Score DESC</span><br><span class="line">#比较难的是第二部分。假设现在给你一个分数X，如何算出它的排名Rank呢？</span><br><span class="line">#我们可以先提取出大于等于X的所有分数集合H，将H去重后的元素个数就是X的排名。比如你考了99分，但最高的就只有99分，那么去重之后集合H里就只有99一个元素，个数为1，因此你的Rank为1。</span><br><span class="line">#先提取集合H：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">select b.Score from Scores b where b.Score &gt;= X;</span><br><span class="line">#我们要的是集合H去重之后的元素个数，因此升级为：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">select count(distinct b.Score) from Scores b where b.Score &gt;= X as Rank;</span><br><span class="line">#而从结果的角度来看，第二部分的Rank是对应第一部分的分数来的，所以这里的X就是上面的a.Score，把两部分结合在一起为：</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">select a.Score as Score,</span><br><span class="line">(select count(distinct b.Score) from Scores b where b.Score &gt;= a.Score) as Rank</span><br><span class="line">from Scores a</span><br><span class="line">order by a.Score DESC</span><br></pre></td></tr></table></figure>
+
+<h2 id="比经理钱多的员工"><a href="#比经理钱多的员工" class="headerlink" title="比经理钱多的员工"></a>比经理钱多的员工</h2><p>Employee 表包含所有员工，他们的经理也属于员工。每个员工都有一个 Id，此外还有一列对应员工的经理的 Id。</p>
+<p>+—-+——-+——–+———–+<br>| Id | Name  | Salary | ManagerId |<br>+—-+——-+——–+———–+<br>| 1  | Joe   | 70000  | 3         |<br>| 2  | Henry | 80000  | 4         |<br>| 3  | Sam   | 60000  | NULL      |<br>| 4  | Max   | 90000  | NULL      |<br>+—-+——-+——–+———–+<br>给定 Employee 表，编写一个 SQL 查询，该查询可以获取收入超过他们经理的员工的姓名。在上面的表格中，Joe 是唯一一个收入超过他的经理的员工。</p>
+<p>+———-+<br>| Employee |<br>+———-+<br>| Joe      |<br>+———-+</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">    a.Name AS &#x27;Employee&#x27;</span><br><span class="line">FROM</span><br><span class="line">    Employee AS a,</span><br><span class="line">    Employee AS b</span><br><span class="line">WHERE</span><br><span class="line">    a.ManagerId = b.Id</span><br><span class="line">        AND a.Salary &gt; b.Salary</span><br><span class="line">;</span><br><span class="line"></span><br><span class="line">SELECT</span><br><span class="line">     a.NAME AS Employee</span><br><span class="line">FROM Employee AS a JOIN Employee AS b</span><br><span class="line">     ON a.ManagerId = b.Id</span><br><span class="line">     AND a.Salary &gt; b.Salary</span><br><span class="line">;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="部门工资最高的员工"><a href="#部门工资最高的员工" class="headerlink" title="部门工资最高的员工"></a>部门工资最高的员工</h2><p>Employee 表包含所有员工信息，每个员工有其对应的 Id, salary 和 department Id。</p>
+<p>+—-+——-+——–+————–+<br>| Id | Name  | Salary | DepartmentId |<br>+—-+——-+——–+————–+<br>| 1  | Joe   | 70000  | 1            |<br>| 2  | Jim   | 90000  | 1            |<br>| 3  | Henry | 80000  | 2            |<br>| 4  | Sam   | 60000  | 2            |<br>| 5  | Max   | 90000  | 1            |<br>+—-+——-+——–+————–+<br>Department 表包含公司所有部门的信息。</p>
+<p>+—-+———-+<br>| Id | Name     |<br>+—-+———-+<br>| 1  | IT       |<br>| 2  | Sales    |<br>+—-+———-+<br>编写一个 SQL 查询，找出每个部门工资最高的员工。对于上述表，您的 SQL 查询应返回以下行（行的顺序无关紧要）。</p>
+<p>+————+———-+——–+<br>| Department | Employee | Salary |<br>+————+———-+——–+<br>| IT         | Max      | 90000  |<br>| IT         | Jim      | 90000  |<br>| Sales      | Henry    | 80000  |<br>+————+———-+——–+</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">    Department.name AS &#x27;Department&#x27;,</span><br><span class="line">    Employee.name AS &#x27;Employee&#x27;,</span><br><span class="line">    Salary</span><br><span class="line">FROM</span><br><span class="line">    Employee</span><br><span class="line">        JOIN</span><br><span class="line">    Department ON Employee.DepartmentId = Department.Id</span><br><span class="line">WHERE</span><br><span class="line">    (Employee.DepartmentId , Salary) IN</span><br><span class="line">    (   SELECT</span><br><span class="line">            DepartmentId, MAX(Salary)</span><br><span class="line">        FROM</span><br><span class="line">            Employee</span><br><span class="line">        GROUP BY DepartmentId</span><br><span class="line">	)</span><br><span class="line">;</span><br></pre></td></tr></table></figure>
+
+<p><strong>如果改成求每个部门工资前三高的员工呢？</strong></p>
+<p>回忆一下 count 函数</p>
+<p>count(字段名)  # 返回表中该字段总共有多少条记录<br>回忆一下 DISTINCT 关键字</p>
+<p>DISTINCT 字段名   # 过滤字段中的重复记录<br>我们先找出公司里前 3 高的薪水，意思是不超过三个值比这些值大</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">SELECT e1.Salary </span><br><span class="line">FROM Employee AS e1</span><br><span class="line">WHERE 3 &gt; </span><br><span class="line">		(SELECT  count(DISTINCT e2.Salary) </span><br><span class="line">		 FROM	Employee AS e2 </span><br><span class="line">	 	 WHERE	e1.Salary &lt; e2.Salary 	AND e1.DepartmentId = e2.DepartmentId) ;举个栗子：</span><br><span class="line">当 e1 = e2 = [4,5,6,7,8]</span><br></pre></td></tr></table></figure>
+
+<p>e1.Salary = 4，e2.Salary 可以取值 [5,6,7,8]，count(DISTINCT e2.Salary) = 4</p>
+<p>e1.Salary = 5，e2.Salary 可以取值 [6,7,8]，count(DISTINCT e2.Salary) = 3</p>
+<p>e1.Salary = 6，e2.Salary 可以取值 [7,8]，count(DISTINCT e2.Salary) = 2</p>
+<p>e1.Salary = 7，e2.Salary 可以取值 [8]，count(DISTINCT e2.Salary) = 1</p>
+<p>e1.Salary = 8，e2.Salary 可以取值 []，count(DISTINCT e2.Salary) = 0</p>
+<p>最后 3 &gt; count(DISTINCT e2.Salary)，所以 e1.Salary 可取值为 [6,7,8]，即集合前 3 高的薪水</p>
+<p>再把表 Department 和表 Employee 连接，获得各个部门工资前三高的员工。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">SELECT</span><br><span class="line">	Department.NAME AS Department,</span><br><span class="line">	e1.NAME AS Employee,</span><br><span class="line">	e1.Salary AS Salary </span><br><span class="line">FROM</span><br><span class="line">	Employee AS e1,Department </span><br><span class="line">WHERE</span><br><span class="line">	e1.DepartmentId = Department.Id </span><br><span class="line">	AND 3 &gt; (SELECT  count( DISTINCT e2.Salary ) </span><br><span class="line">			 FROM	Employee AS e2 </span><br><span class="line">			 WHERE	e1.Salary &lt; e2.Salary 	AND e1.DepartmentId = e2.DepartmentId 	) </span><br><span class="line">ORDER BY Department.NAME,Salary DESC;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="删除重复的邮件"><a href="#删除重复的邮件" class="headerlink" title="删除重复的邮件"></a>删除重复的邮件</h2><p>官方sql是下面这样的👇</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DELETE p1 FROM Person p1,</span><br><span class="line">    Person p2</span><br><span class="line">WHERE</span><br><span class="line">    p1.Email = p2.Email AND p1.Id &gt; p2.Id</span><br></pre></td></tr></table></figure>
+
+<p>当然这个sql是很ok的，简洁清晰，且用了自连接的方式。<br>有慢查询优化经验的同学会清楚，在实际生产中，面对千万上亿级别的数据，连接的效率往往最高，因为用到索引的概率较高。</p>
+<p>因此，建议学习使用官方的题解，但是有两点，可能需要再解释下：</p>
+<p>1、DELETE p1</p>
+<p>在DELETE官方文档中，给出了这一用法，比如下面这个DELETE语句👇</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE t1 FROM t1 LEFT JOIN t2 ON t1.id=t2.id WHERE t2.id IS NULL;</span><br></pre></td></tr></table></figure>
+
+<p>这种DELETE方式很陌生，竟然和SELETE的写法类似。它涉及到t1和t2两张表，DELETE t1表示要删除t1的一些记录，具体删哪些，就看WHERE条件，满足就删；</p>
+<p>这里删的是t1表中，跟t2匹配不上的那些记录。</p>
+<p>所以，官方sql中，DELETE p1就表示从p1表中删除满足WHERE条件的记录。</p>
+<p>2、p1.Id &gt; p2.Id</p>
+<p>继续之前，先简单看一下表的连接过程，这个搞懂了，理解WHERE条件就简单了👇</p>
+<p>a. 从驱动表（左表）取出N条记录；<br>b. 拿着这N条记录，依次到被驱动表（右表）查找满足WHERE条件的记录；</p>
+<p>所以，官方sql的过程就是👇</p>
+<p>先把Person表搬过来</p>
+<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#x6f;&#x68;&#x6e;&#64;&#x65;&#120;&#x61;&#109;&#112;&#x6c;&#101;&#x2e;&#99;&#111;&#x6d;">&#106;&#x6f;&#x68;&#x6e;&#64;&#x65;&#120;&#x61;&#109;&#112;&#x6c;&#101;&#x2e;&#99;&#111;&#x6d;</a> |<br>| 2  | <a href="mailto:&#x62;&#x6f;&#x62;&#64;&#x65;&#120;&#x61;&#109;&#x70;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;">&#x62;&#x6f;&#x62;&#64;&#x65;&#120;&#x61;&#109;&#x70;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#106;&#x6f;&#104;&#110;&#64;&#101;&#120;&#97;&#x6d;&#112;&#108;&#x65;&#46;&#x63;&#111;&#x6d;">&#106;&#x6f;&#104;&#110;&#64;&#101;&#120;&#97;&#x6d;&#112;&#108;&#x65;&#46;&#x63;&#111;&#x6d;</a> |<br>+—-+——————+</p>
+<p>a. 从表p1取出3条记录；<br>b. 拿着第1条记录去表p2查找满足WHERE的记录，代入该条件p1.Email = p2.Email AND p1.Id &gt; p2.Id后，发现没有满足的，所以不用删掉记录1；<br>c. 记录2同理；<br>d. 拿着第3条记录去表p2查找满足WHERE的记录，发现有一条记录满足，所以要从p1删掉记录3；<br>e. 3条记录遍历完，删掉了1条记录，这个DELETE也就结束了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Mysql/" rel="tag"># Mysql</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/24/Java%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="prev" title="Java多线程">
+      <i class="fa fa-chevron-left"></i> Java多线程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/20/Java%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/" rel="next" title="Java设计模式">
+      Java设计模式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%AB%98%E7%9A%84%E8%96%AA%E6%B0%B4"><span class="nav-number">1.</span> <span class="nav-text">第二高的薪水</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%86%E6%95%B0%E6%8E%92%E5%90%8D"><span class="nav-number">2.</span> <span class="nav-text">分数排名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%94%E7%BB%8F%E7%90%86%E9%92%B1%E5%A4%9A%E7%9A%84%E5%91%98%E5%B7%A5"><span class="nav-number">3.</span> <span class="nav-text">比经理钱多的员工</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%83%A8%E9%97%A8%E5%B7%A5%E8%B5%84%E6%9C%80%E9%AB%98%E7%9A%84%E5%91%98%E5%B7%A5"><span class="nav-number">4.</span> <span class="nav-text">部门工资最高的员工</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A0%E9%99%A4%E9%87%8D%E5%A4%8D%E7%9A%84%E9%82%AE%E4%BB%B6"><span class="nav-number">5.</span> <span class="nav-text">删除重复的邮件</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Yang"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">Yang</p>
+  <div class="site-description" itemprop="description">醉后不知天在水，满船星梦压星河</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">16</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/youngbuss" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;youngbuss" rel="noopener" target="_blank"><i class="github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yanghy@bupt.edu.cn" title="E-Mail → mailto:yanghy@bupt.edu.cn" rel="noopener" target="_blank"><i class="envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://baidu.com/" title="https:&#x2F;&#x2F;baidu.com" rel="noopener" target="_blank">百度</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020-9 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yang</span>
+</div>
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  <style>
+    .copy-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      color: #333;
+      white-space: nowrap;
+      vertical-align: middle;
+      cursor: pointer;
+      background-color: #eee;
+      background-image: linear-gradient(#fcfcfc, #eee);
+      border: 1px solid #d5d5d5;
+      border-radius: 3px;
+      user-select: none;
+      outline: 0;
+    }
+
+    .highlight-wrap .copy-btn {
+      transition: opacity .3s ease-in-out;
+      opacity: 0;
+      padding: 2px 6px;
+      position: absolute;
+      right: 4px;
+      top: 8px;
+    }
+
+    .highlight-wrap:hover .copy-btn,
+    .highlight-wrap .copy-btn:focus {
+      opacity: 1
+    }
+
+    .highlight-wrap {
+      position: relative;
+    }
+  </style>
+  
+  <script>
+    $('.highlight').each(function (i, e) {
+      var $wrap = $('<div>').addClass('highlight-wrap')
+      $(e).after($wrap)
+      $wrap.append($('<button>').addClass('copy-btn').append('复制').on('click', function (e) {
+        var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
+          return $(e).text()
+        }).toArray().join('\n')
+        var ta = document.createElement('textarea')
+        document.body.appendChild(ta)
+        ta.style.position = 'absolute'
+        ta.style.top = '0px'
+        ta.style.left = '0px'
+        ta.value = code
+        ta.select()
+        ta.focus()
+        var result = document.execCommand('copy')
+        document.body.removeChild(ta)
+        
+          if(result)$(this).text('复制成功')
+          else $(this).text('复制失败')
+        
+        $(this).blur()
+      })).on('mouseleave', function (e) {
+        var $b = $(this).find('.copy-btn')
+        setTimeout(function () {
+          $b.text('复制')
+        }, 300)
+      }).append(e)
+    })
+  </script>
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618,"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"superSample":2,"width":150,"height":300,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":true,"scale":0.5},"react":{"opacityDefault":0.7,"opacityOnHover":0.2},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
