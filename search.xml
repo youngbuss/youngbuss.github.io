@@ -345,7 +345,7 @@
 <p>a. 从驱动表（左表）取出N条记录；<br>b. 拿着这N条记录，依次到被驱动表（右表）查找满足WHERE条件的记录；</p>
 <p>所以，官方sql的过程就是👇</p>
 <p>先把Person表搬过来</p>
-<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#x6f;&#x68;&#110;&#x40;&#101;&#120;&#97;&#109;&#112;&#x6c;&#x65;&#46;&#99;&#x6f;&#109;">&#106;&#x6f;&#x68;&#110;&#x40;&#101;&#120;&#97;&#109;&#112;&#x6c;&#x65;&#46;&#99;&#x6f;&#109;</a> |<br>| 2  | <a href="mailto:&#x62;&#111;&#x62;&#x40;&#x65;&#x78;&#97;&#109;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#109;">&#x62;&#111;&#x62;&#x40;&#x65;&#x78;&#97;&#109;&#112;&#x6c;&#x65;&#x2e;&#99;&#111;&#109;</a>  |<br>| 3  | <a href="mailto:&#106;&#x6f;&#x68;&#x6e;&#x40;&#101;&#120;&#x61;&#x6d;&#x70;&#108;&#101;&#x2e;&#x63;&#111;&#x6d;">&#106;&#x6f;&#x68;&#x6e;&#x40;&#101;&#120;&#x61;&#x6d;&#x70;&#108;&#101;&#x2e;&#x63;&#111;&#x6d;</a> |<br>+—-+——————+</p>
+<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#x6f;&#104;&#110;&#64;&#x65;&#120;&#97;&#109;&#112;&#x6c;&#101;&#46;&#99;&#111;&#x6d;">&#106;&#x6f;&#104;&#110;&#64;&#x65;&#120;&#97;&#109;&#112;&#x6c;&#101;&#46;&#99;&#111;&#x6d;</a> |<br>| 2  | <a href="mailto:&#98;&#111;&#98;&#64;&#x65;&#x78;&#97;&#109;&#x70;&#108;&#101;&#x2e;&#x63;&#111;&#x6d;">&#98;&#111;&#98;&#64;&#x65;&#x78;&#97;&#109;&#x70;&#108;&#101;&#x2e;&#x63;&#111;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#106;&#111;&#x68;&#110;&#64;&#x65;&#120;&#x61;&#109;&#112;&#x6c;&#x65;&#46;&#99;&#111;&#x6d;">&#106;&#111;&#x68;&#110;&#64;&#x65;&#120;&#x61;&#109;&#112;&#x6c;&#x65;&#46;&#99;&#111;&#x6d;</a> |<br>+—-+——————+</p>
 <p>a. 从表p1取出3条记录；<br>b. 拿着第1条记录去表p2查找满足WHERE的记录，代入该条件p1.Email = p2.Email AND p1.Id &gt; p2.Id后，发现没有满足的，所以不用删掉记录1；<br>c. 记录2同理；<br>d. 拿着第3条记录去表p2查找满足WHERE的记录，发现有一条记录满足，所以要从p1删掉记录3；<br>e. 3条记录遍历完，删掉了1条记录，这个DELETE也就结束了。</p>
 ]]></content>
       <categories>
@@ -1038,6 +1038,30 @@
 <p>　　2.禁止指令重排序优化。有volatile修饰的变量，赋值后多执行了一个“load addl $0x0, (%esp)”操作，这个操作相当于一个<strong>内存屏障</strong>（指令重排序时不能把后面的指令重排序到内存屏障之前的位置），只有一个CPU访问内存时，并不需要内存屏障；（什么是指令重排序：是指CPU采用了允许将多条指令不按程序规定的顺序分开发送给各相应电路单元处理）。</p>
 <p><strong>volatile 性能：</strong></p>
 <p>　　volatile 的读性能消耗与普通变量几乎相同，但是写操作稍慢，因为它需要在本地代码中插入许多内存屏障指令来保证处理器不发生乱序执行。</p>
+<h3 id="Synchronized-关键字"><a href="#Synchronized-关键字" class="headerlink" title="Synchronized 关键字"></a>Synchronized 关键字</h3><p>该关键字解决的问题是多个线程之间访问资源的同步性，synchronized关键字可以保证被它修饰的方法或者代码块在任意时刻只能有一个线程执行。</p>
+<p><strong>最主要的三种使用方式</strong></p>
+<ol>
+<li><strong>修饰实例方法</strong>  作用于当前对象实例加锁，进入同步代码块之前要获得当前对象实例的锁</li>
+<li>修饰静态方法，也就是给当前类加锁，会作用于当前类的所有对象实例，进入同步代码块前要获得当前class的锁，记住访问静态synchronized方法占用的锁是当前类的锁，而访问非静态synchronized方法占用的锁是当前实例对象锁。</li>
+<li>修饰代码块，指定加锁对象，对给定对象/类加锁， synchronized(this|object) 表示进入同步代码库前要获得给定对象的锁，synchronized(类.class) 表示进入同步代码块前要获得当前class的锁</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span>  <span class="title">method</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="keyword">static</span> <span class="title">method</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>总结</strong></p>
+<ul>
+<li>synchronized关键字加到static静态方法和synchronized(class)代码块上都是给class类上锁。</li>
+<li>synchronized关键字加到实例方法是给对象实例上锁。</li>
+<li>尽量不使用synchronized(String a)因为JVM中，字符串常量池具有缓存功能</li>
+</ul>
+<p><strong>Synchronized关键字的底层原理</strong></p>
+<p>Synchronized 同步语句块的实现使用的是monitorenter 和 monitorexit 指令，其中前者指令指向同步代码块的开始位置，后者指令指向同步代码块的结束位置。</p>
+<p>Synchronized修饰的方法并没有monitorenter 和 monitorexit 指令，取而代之的是ACC_SYNCHRONIZED标识，该标识指明了该方法是一个同步方法。</p>
+<h3 id="Synchronized-Volatile-关键字"><a href="#Synchronized-Volatile-关键字" class="headerlink" title="Synchronized Volatile 关键字"></a>Synchronized Volatile 关键字</h3><p>二者是互补的存在，不是对立的存在</p>
+<ul>
+<li>volatile关键字是线程同步的轻量级实现，所以volatile性能肯定比synchronized关键字要好，但是volatile关键字只能作用于变量而synchronized关键字可以修饰方法以及代码块</li>
+<li>volatile关键字能够保证数据的可见性，但不能保证数据的原子性，而synchronized关键字两者都能保证</li>
+<li>volatile关键字主要用于解决变量在多个线程之间的可见性，而synchronized关键字解决的是多个线程之间访问资源的同步性</li>
+</ul>
 <h3 id="Synchronized-lock"><a href="#Synchronized-lock" class="headerlink" title="Synchronized lock"></a>Synchronized lock</h3><p>在Java中，synchronized关键字是用来控制线程同步的，就是在多线程的环境下，控制synchronized代码段不被多个线程同时执行。</p>
 <p>synchronized既可以加在一段代码上，也可以加在方法上。</p>
 <p><strong>作用的位置不同</strong> </p>
@@ -1083,21 +1107,75 @@
 <p>ReentrantLock的用法如下：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SynDemo</span></span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] arg)</span></span>&#123;</span><br><span class="line">		Runnable t1=<span class="keyword">new</span> MyThread();</span><br><span class="line">		<span class="keyword">new</span> Thread(t1,<span class="string">&quot;t1&quot;</span>).start();</span><br><span class="line">		<span class="keyword">new</span> Thread(t1,<span class="string">&quot;t2&quot;</span>).start();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> Lock lock=<span class="keyword">new</span> ReentrantLock();</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			lock.lock();</span><br><span class="line">			<span class="keyword">try</span>&#123;</span><br><span class="line">				<span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;<span class="number">5</span>;i++)</span><br><span class="line">					System.out.println(Thread.currentThread().getName()+<span class="string">&quot;:&quot;</span>+i);</span><br><span class="line">			&#125;<span class="keyword">finally</span>&#123;</span><br><span class="line">				lock.unlock();</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
 
+
+
+<h3 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h3><p>通常情况下，我们创建的变量是可以被任何一个线程访问并修改的。<strong>如果想实现每一个线程都有自己的专属本地变量该如何解决呢？</strong> JDK 中提供的<code>ThreadLocal</code>类正是为了解决这样的问题。 <strong><code>ThreadLocal</code>类主要解决的就是让每个线程绑定自己的值，可以将<code>ThreadLocal</code>类形象的比喻成存放数据的盒子，盒子中可以存储每个线程的私有数据。</strong></p>
+<p><strong>如果你创建了一个<code>ThreadLocal</code>变量，那么访问这个变量的每个线程都会有这个变量的本地副本，这也是<code>ThreadLocal</code>变量名的由来。他们可以使用 <code>get（）</code> 和 <code>set（）</code> 方法来获取默认值或将其值更改为当前线程所存的副本的值，从而避免了线程安全问题。</strong></p>
+<p><strong>原理</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">    <span class="comment">//与此线程有关的ThreadLocal值。由ThreadLocal类维护</span></span><br><span class="line">    ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//与此线程有关的InheritableThreadLocal值。由InheritableThreadLocal类维护</span></span><br><span class="line">    ThreadLocal.ThreadLocalMap inheritableThreadLocals = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>从上面<code>Thread</code>类 源代码可以看出<code>Thread</code> 类中有一个 <code>threadLocals</code> 和 一个 <code>inheritableThreadLocals</code> 变量，它们都是 <code>ThreadLocalMap</code> 类型的变量,我们可以把 <code>ThreadLocalMap</code> 理解为<code>ThreadLocal</code> 类实现的定制化的 <code>HashMap</code>。默认情况下这两个变量都是 null，只有当前线程调用 <code>ThreadLocal</code> 类的 <code>set</code>或<code>get</code>方法时才创建它们，实际上调用这两个方法的时候，我们调用的是<code>ThreadLocalMap</code>类对应的 <code>get()</code>、<code>set()</code>方法。</p>
+<p>结论：<strong>最终的变量是放在了当前线程的 <code>ThreadLocalMap</code> 中，并不是存在 <code>ThreadLocal</code> 上，<code>ThreadLocal</code> 可以理解为只是<code>ThreadLocalMap</code>的封装，传递了变量值。</strong> <code>ThrealLocal</code> 类中可以通过<code>Thread.currentThread()</code>获取到当前线程对象后，直接通过<code>getMap(Thread t)</code>可以访问到该线程的<code>ThreadLocalMap</code>对象。</p>
+<p><strong>每个<code>Thread</code>中都具备一个<code>ThreadLocalMap</code>，而<code>ThreadLocalMap</code>可以存储以<code>ThreadLocal</code>为 key ，Object 对象为 value 的键值对。</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">ThreadLocalMap(ThreadLocal&lt;?&gt; firstKey, Object firstValue) &#123;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比如我们在同一个线程中声明了两个 <code>ThreadLocal</code> 对象的话，会使用 <code>Thread</code>内部都是使用仅有那个<code>ThreadLocalMap</code> 存放数据的，<code>ThreadLocalMap</code>的 key 就是 <code>ThreadLocal</code>对象，value 就是 <code>ThreadLocal</code> 对象调用<code>set</code>方法设置的值。</p>
+<p><strong>ThreadLocal 内存泄露问题</strong></p>
+<p><code>ThreadLocalMap</code> 中使用的 key 为 <code>ThreadLocal</code> 的弱引用,而 value 是强引用。所以，如果 <code>ThreadLocal</code> 没有被外部强引用的情况下，在垃圾回收的时候，key 会被清理掉，而 value 不会被清理掉。这样一来，<code>ThreadLocalMap</code> 中就会出现 key 为 null 的 Entry。假如我们不做任何措施的话，value 永远无法被 GC 回收，这个时候就可能会产生内存泄露。ThreadLocalMap 实现中已经考虑了这种情况，在调用 <code>set()</code>、<code>get()</code>、<code>remove()</code> 方法的时候，会清理掉 key 为 null 的记录。使用完 <code>ThreadLocal</code>方法后 最好手动调用<code>remove()</code>方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Entry</span> <span class="keyword">extends</span> <span class="title">WeakReference</span>&lt;<span class="title">ThreadLocal</span>&lt;?&gt;&gt; </span>&#123;</span><br><span class="line">    <span class="comment">/** The value associated with this ThreadLocal. */</span></span><br><span class="line">    Object value;</span><br><span class="line"></span><br><span class="line">    Entry(ThreadLocal&lt;?&gt; k, Object v) &#123;</span><br><span class="line">        <span class="keyword">super</span>(k);</span><br><span class="line">        value = v;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>弱引用介绍：</strong></p>
+<blockquote>
+<p>如果一个对象只具有弱引用，那就类似于<strong>可有可无的生活用品</strong>。弱引用与软引用的区别在于：只具有弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它 所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存。不过，由于垃圾回收器是一个优先级很低的线程， 因此不一定会很快发现那些只具有弱引用的对象。</p>
+<p>弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java 虚拟机就会把这个弱引用加入到与之关联的引用队列中。</p>
+</blockquote>
 <h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><p>线程池就是提前创建若干个线程，如果有任务需要处理，线程池里的线程就会处理任务，处理完之后线程并不会被销毁，而是等待下一个任务。由于创建和销毁线程都是消耗系统资源的，所以当你想要频繁的创建和销毁线程的时候就可以考虑使用线程池来提升系统的性能。</p>
-<p>java 提供了一个 java.util.concurrent.Executor接口的实现用于创建线程池。</p>
+<p>线程池的好处：</p>
+<ul>
+<li><p>降低资源消耗。通过重复利用已创建的线程降低线程创建和销毁造成的消耗</p>
+</li>
+<li><p>提高响应速度。当任务到达的时候，任务可以不需要等到线程创建能立即执行</p>
+</li>
+<li><p>可有效的控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。</p>
+</li>
+<li><p>提供定时执行、定期执行、单线程、并发数控制等功能。</p>
+</li>
+<li><p>提高线程的可管理性。线程是稀缺资源，如果无限制的创建，不仅会消耗系统资源，还会降低系统的稳定性，使用线程池可以进行统一的分配，调优和监控</p>
+</li>
+</ul>
+<h4 id="Runnable-Calllable接口"><a href="#Runnable-Calllable接口" class="headerlink" title="Runnable Calllable接口"></a>Runnable Calllable接口</h4><p><code>Runnable</code>自 Java 1.0 以来一直存在，但<code>Callable</code>仅在 Java 1.5 中引入,目的就是为了来处理<code>Runnable</code>不支持的用例。**<code>Runnable</code> 接口** 不会返回结果或抛出检查异常，但是 <strong><code>Callable</code> 接口</strong> 可以。所以，如果任务不需要返回结果或抛出异常推荐使用 <strong><code>Runnable</code> 接口</strong> ，这样代码看起来会更加简洁。</p>
+<p>工具类 <code>Executors</code> 可以实现将 <code>Runnable</code> 对象转换成 <code>Callable</code> 对象。（<code>Executors.callable(Runnable task)</code> 或 <code>Executors.callable(Runnable task, Object result)</code>）。</p>
+<h4 id="Execute-submit"><a href="#Execute-submit" class="headerlink" title="Execute() submit()"></a>Execute() submit()</h4><p><strong><code>execute()</code>方法用于提交不需要返回值的任务，所以无法判断任务是否被线程池执行成功与否；</strong></p>
+<p><strong><code>submit()</code>方法用于提交需要返回值的任务。线程池会返回一个 <code>Future</code> 类型的对象，通过这个 <code>Future</code> 对象可以判断任务是否执行成功</strong>，并且可以通过 <code>Future</code> 的 <code>get()</code>方法来获取返回值，<code>get()</code>方法会阻塞当前线程直到任务完成，而使用 <code>get(long timeout，TimeUnit unit)</code>方法则会阻塞当前线程一段时间后立即返回，这时候有可能任务没有执行完。</p>
+<h4 id="线程池的创建"><a href="#线程池的创建" class="headerlink" title="线程池的创建"></a>线程池的创建</h4><p>java 提供了一个 java.util.concurrent.Executor接口的实现用于创建线程池。</p>
 <p><strong>四种线程池的创建：</strong></p>
 <p>1）newCachedThreadPool创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程</p>
 <p>2）newFixedThreadPool 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。</p>
 <p>3）newScheduledThreadPool 创建一个定长线程池，支持定时及周期性任务执行，创建一个可定期或者延时执行任务的定长线程池，支持定时及周期性任务执行。 </p>
 <p>4）newSingleThreadExecutor 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。</p>
-<p><strong>线程池的优点？</strong></p>
-<p>1）重用存在的线程，减少对象创建销毁的开销，降低资源的消耗</p>
-<p>2）可有效的控制最大并发线程数，提高系统资源的使用率，同时避免过多资源竞争，避免堵塞。</p>
-<p>3）提供定时执行、定期执行、单线程、并发数控制等功能。</p>
-<p>4）提高响应速度，当任务到达的时候，任务可以不需要等待线程创建就可以立即执行</p>
-<p>5）提高线程的可管理性，线程是稀缺的资源，如果无限制创建，不仅会消耗系统资源，还会降低系统稳定性，使用线程池可以进行统一的分配调优和监控。</p>
-<p><strong>线程池七大参数</strong></p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="params"><span class="function">                        <span class="keyword">int</span> maximumPoolSize,</span></span></span><br><span class="line"><span class="params"><span class="function">                        <span class="keyword">long</span> keepAliveTime,</span></span></span><br><span class="line"><span class="params"><span class="function">                        TimeUnit unit,</span></span></span><br><span class="line"><span class="params"><span class="function">                        BlockingQueue&lt;Runnable&gt; workQueue,</span></span></span><br><span class="line"><span class="params"><span class="function">                        ThreadFactory threadFactory,</span></span></span><br><span class="line"><span class="params"><span class="function">                        RejectedExecutionHandler handler)</span> </span></span><br></pre></td></tr></table></figure>
+<p><strong>阿里巴巴 Java 开发手册》中强制线程池不允许使用 Executors 去创建，而是通过 ThreadPoolExecutor 的方式，这样的处理方式让写的同学更加明确线程池的运行规则，规避资源耗尽的风险</strong></p>
+<blockquote>
+<p>Executors 返回线程池对象的弊端如下：</p>
+<ul>
+<li><strong>FixedThreadPool 和 SingleThreadExecutor</strong> ： 允许请求的队列长度为 Integer.MAX_VALUE ，可能堆积大量的请求，从而导致 OOM。</li>
+<li><strong>CachedThreadPool 和 ScheduledThreadPool</strong> ： 允许创建的线程数量为 Integer.MAX_VALUE ，可能会创建大量线程，从而导致 OOM。</li>
+</ul>
+</blockquote>
+<p>因此创建的方法为：</p>
+<p>方法1：通过构造方法实现</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gyb8ncg399j31a408ktaq.jpg" alt="image-20220112220421654"></p>
+<p><strong>方式二：通过 Executor 框架的工具类 Executors 来实现</strong></p>
+<p>我们可以创建三种类型的 ThreadPoolExecutor：</p>
+<ul>
+<li><strong>FixedThreadPool</strong> ： 该方法返回一个固定线程数量的线程池。该线程池中的线程数量始终不变。当有一个新的任务提交时，线程池中若有空闲线程，则立即执行。若没有，则新的任务会被暂存在一个任务队列中，待有线程空闲时，便处理在任务队列中的任务。</li>
+<li><strong>SingleThreadExecutor：</strong> 方法返回一个只有一个线程的线程池。若多余一个任务被提交到该线程池，任务会被保存在一个任务队列中，待线程空闲，按先入先出的顺序执行队列中的任务。</li>
+<li><strong>CachedThreadPool：</strong> 该方法返回一个可根据实际情况调整线程数量的线程池。线程池的线程数量不确定，但若有空闲线程可以复用，则会优先使用可复用的线程。若所有线程均在工作，又有新的任务提交，则会创建新的线程处理任务。所有线程在当前任务执行完毕后，将返回线程池进行复用。</li>
+</ul>
+<p>对应 Executors 工具类中的方法如图所示：</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gyb8nkmxyxj30hx066q3i.jpg" alt="Executor框架的工具类"></p>
+<h4 id="线程池七大参数（ThreadPoolExecutor）"><a href="#线程池七大参数（ThreadPoolExecutor）" class="headerlink" title="线程池七大参数（ThreadPoolExecutor）"></a><strong>线程池七大参数（ThreadPoolExecutor）</strong></h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,</span></span></span><br><span class="line"><span class="params"><span class="function">                        <span class="keyword">int</span> maximumPoolSize,</span></span></span><br><span class="line"><span class="params"><span class="function">                        <span class="keyword">long</span> keepAliveTime,</span></span></span><br><span class="line"><span class="params"><span class="function">                        TimeUnit unit,</span></span></span><br><span class="line"><span class="params"><span class="function">                        BlockingQueue&lt;Runnable&gt; workQueue,</span></span></span><br><span class="line"><span class="params"><span class="function">                        ThreadFactory threadFactory,</span></span></span><br><span class="line"><span class="params"><span class="function">                        RejectedExecutionHandler handler)</span> </span></span><br></pre></td></tr></table></figure>
 <ul>
 <li><strong>corePoolSize 线程池核心线程大小</strong></li>
 </ul>
@@ -1107,11 +1185,11 @@
 </ul>
 <p>一个任务被提交到线程池以后，首先会找有没有空闲存活线程，如果有则直接执行，如果没有则会缓存到工作队列（后面会介绍）中，如果工作队列满了，才会创建一个新线程，然后从工作队列的头部取出一个任务交由新线程来处理，而将刚提交的任务放入工作队列尾部。线程池不会无限制的去创建新线程，它会有一个最大线程数量的限制，这个数量即由maximunPoolSize指定。 <strong>当队列中存放的任务达到队列容量的时候，当前可以同时运行的线程数量变为最大线程数</strong></p>
 <ul>
-<li>keepAliveTime 空闲线程存活时间</li>
+<li><strong>keepAliveTime 空闲线程存活时间</strong></li>
 </ul>
 <p>一个线程如果处于空闲状态，并且当前的线程数量大于corePoolSize，那么在指定时间后，这个空闲线程会被销毁，这里的指定时间由keepAliveTime来设定</p>
 <ul>
-<li>unit 空闲线程存活时间单位</li>
+<li><strong>unit 空闲线程存活时间单位</strong></li>
 </ul>
 <p>keepAliveTime的计量单位</p>
 <ul>
@@ -1134,10 +1212,15 @@
 <ul>
 <li>handler 拒绝策略</li>
 </ul>
-<p><strong>线程池策略</strong></p>
-<p><strong>corePoolSize：核心线程数；maximunPoolSize：最大线程数</strong><br>每当有新的任务到线程池时，<br><strong>第一步：</strong> 先判断线程池中当前线程数量是否达到了<strong>corePoolSize</strong>，若未达到，则新建线程运行此任务，且任务结束后将该线程保留在线程池中，不做销毁处理，若当前线程数量已达到<strong>corePoolSize</strong>，则进入下一步；<br><strong>第二步：</strong> 判断工作队列(workQueue)是否已满，未满则将新的任务提交到工作队列中，满了则进入下一步；<br><strong>第三步：</strong> 判断线程池中的线程数量是否达到了<strong>maxumunPoolSize</strong>，如果未达到，则新建一个工作线程来执行这个任务，如果达到了则使用<strong>拒绝策略</strong>来处理这个任务。<strong>注意：</strong> 在线程池中的线程数量超过<strong>corePoolSize</strong>时，每当有线程的空闲时间超过了keepAliveTime，这个线程就会被终止。直到线程池中线程的数量不大于<strong>corePoolSize</strong>为止。<br>（由第三步可知，在一般情况下，Java线程池中会长期保持<strong>corePoolSize</strong>个线程。）</p>
+<h4 id="线程池策略"><a href="#线程池策略" class="headerlink" title="线程池策略"></a><strong>线程池策略</strong></h4><p><strong>corePoolSize：核心线程数；maximunPoolSize：最大线程数</strong><br>每当有新的任务到线程池时，<br><strong>第一步：</strong> 先判断线程池中当前线程数量是否达到了<strong>corePoolSize</strong>，若未达到，则新建线程运行此任务，且任务结束后将该线程保留在线程池中，不做销毁处理，若当前线程数量已达到<strong>corePoolSize</strong>，则进入下一步；<br><strong>第二步：</strong> 判断工作队列(workQueue)是否已满，未满则将新的任务提交到工作队列中，满了则进入下一步；<br><strong>第三步：</strong> 判断线程池中的线程数量是否达到了<strong>maxumunPoolSize</strong>，如果未达到，则新建一个工作线程来执行这个任务，如果达到了则使用<strong>拒绝策略</strong>来处理这个任务。<strong>注意：</strong> 在线程池中的线程数量超过<strong>corePoolSize</strong>时，每当有线程的空闲时间超过了keepAliveTime，这个线程就会被终止。直到线程池中线程的数量不大于<strong>corePoolSize</strong>为止。<br>（由第三步可知，在一般情况下，Java线程池中会长期保持<strong>corePoolSize</strong>个线程。）</p>
 <p><strong>拒绝策略</strong></p>
 <p><strong>当工作队列满且线程个数达到maximunPoolSize后所采取的策略</strong>：<br>1.AbortPolicy：<strong>默认策略；</strong>新任务提交时直接抛出未检查的异常RejectedExecutionException，该异常可由调用者捕获。<br>2.CallerRunsPolicy：既不抛弃任务也不抛出异常，使用调用者所在线程运行新的任务。<br>3.DiscardPolicy：丢弃新的任务，且不抛出异常。<br>4.DiscardOldestPolicy：调用poll方法丢弃工作队列队头的任务，然后尝试提交新任务<br>5.自定义策略：根据用户需要定制。</p>
+<h4 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">mport java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 这是一个简单的Runnable类，需要大约5秒钟来执行其任务。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> shuang.kou</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String command;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyRunnable</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.command = s;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot; Start. Time = &quot;</span> + <span class="keyword">new</span> Date());</span><br><span class="line">        processCommand();</span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot; End. Time = &quot;</span> + <span class="keyword">new</span> Date());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processCommand</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">5000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.command;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//编写测试程序，我们这里以阿里巴巴推荐的使用 ThreadPoolExecutor 构造函数自定义参数的方式来创建线程池。</span></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ArrayBlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ThreadPoolExecutor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolExecutorDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CORE_POOL_SIZE = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_POOL_SIZE = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> QUEUE_CAPACITY = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Long KEEP_ALIVE_TIME = <span class="number">1L</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//使用阿里巴巴推荐的创建线程池的方式</span></span><br><span class="line">        <span class="comment">//通过ThreadPoolExecutor构造函数自定义参数创建</span></span><br><span class="line">        ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">                CORE_POOL_SIZE,</span><br><span class="line">                MAX_POOL_SIZE,</span><br><span class="line">                KEEP_ALIVE_TIME,</span><br><span class="line">                TimeUnit.SECONDS,</span><br><span class="line">                <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;(QUEUE_CAPACITY),</span><br><span class="line">                <span class="keyword">new</span> ThreadPoolExecutor.CallerRunsPolicy());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            <span class="comment">//创建WorkerThread对象（WorkerThread类实现了Runnable 接口）</span></span><br><span class="line">            Runnable worker = <span class="keyword">new</span> MyRunnable(<span class="string">&quot;&quot;</span> + i);</span><br><span class="line">            <span class="comment">//执行Runnable</span></span><br><span class="line">            executor.execute(worker);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//终止线程池</span></span><br><span class="line">        executor.shutdown();</span><br><span class="line">        <span class="keyword">while</span> (!executor.isTerminated()) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;Finished all threads&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
 <h3 id="Executor框架"><a href="#Executor框架" class="headerlink" title="Executor框架"></a>Executor框架</h3><p>框架不仅包括了线程池的管理，还提供了线程工厂，队列以及拒绝策略等</p>
 <p><strong>框架结构</strong></p>
 <p>1）任务(runnable/callable) 执行任务需要的实现的runnable接口或者callable接口，二者实现类都可以被ThreadPoolExecutor或ScheduledThreadPoolExecutor执行</p>
@@ -1150,6 +1233,39 @@
 <li><strong>如果执行 <code>ExecutorService.submit（…）</code>，<code>ExecutorService</code> 将返回一个实现<code>Future</code>接口的对象</strong>（我们刚刚也提到过了执行 <code>execute()</code>方法和 <code>submit()</code>方法的区别，<code>submit()</code>会返回一个 <code>FutureTask 对象）。由于 FutureTask</code> 实现了 <code>Runnable</code>，我们也可以创建 <code>FutureTask</code>，然后直接交给 <code>ExecutorService</code> 执行。</li>
 <li><strong>最后，主线程可以执行 <code>FutureTask.get()</code>方法来等待任务执行完成。主线程也可以执行 <code>FutureTask.cancel（boolean mayInterruptIfRunning）</code>来取消此任务的执行</strong></li>
 </ol>
+<h3 id="Atomic-原子类"><a href="#Atomic-原子类" class="headerlink" title="Atomic 原子类"></a>Atomic 原子类</h3><p><code>Atomic</code> 翻译成中文是原子的意思。在化学上，我们知道原子是构成一般物质的最小单位，在化学反应中是不可分割的。在我们这里 Atomic 是指一个操作是不可中断的。即使是在多个线程一起执行的时候，一个操作一旦开始，就不会被其他线程干扰。</p>
+<p>所以，所谓原子类说简单点就是具有原子/原子操作特征的类。</p>
+<h4 id="JUC包中的原子类"><a href="#JUC包中的原子类" class="headerlink" title="JUC包中的原子类"></a>JUC包中的原子类</h4><p><strong>基本类型</strong></p>
+<p>使用原子的方式更新基本类型</p>
+<ul>
+<li><code>AtomicInteger</code>：整形原子类</li>
+<li><code>AtomicLong</code>：长整型原子类</li>
+<li><code>AtomicBoolean</code>：布尔型原子类</li>
+</ul>
+<p><strong>数组类型</strong></p>
+<p>使用原子的方式更新数组里的某个元素</p>
+<ul>
+<li><code>AtomicIntegerArray</code>：整形数组原子类</li>
+<li><code>AtomicLongArray</code>：长整形数组原子类</li>
+<li><code>AtomicReferenceArray</code>：引用类型数组原子类</li>
+</ul>
+<p><strong>引用类型</strong></p>
+<ul>
+<li><code>AtomicReference</code>：引用类型原子类</li>
+<li><code>AtomicStampedReference</code>：原子更新带有版本号的引用类型。该类将整数值与引用关联起来，可用于解决原子的更新数据和数据的版本号，可以解决使用 CAS 进行原子更新时可能出现的 ABA 问题。</li>
+<li><code>AtomicMarkableReference</code> ：原子更新带有标记位的引用类型</li>
+</ul>
+<p><strong>对象的属性修改类型</strong></p>
+<ul>
+<li><code>AtomicIntegerFieldUpdater</code>：原子更新整形字段的更新器</li>
+<li><code>AtomicLongFieldUpdater</code>：原子更新长整形字段的更新器</li>
+<li><code>AtomicReferenceFieldUpdater</code>：原子更新引用类型字段的更新器</li>
+</ul>
+<h4 id="AtomicInteger"><a href="#AtomicInteger" class="headerlink" title="AtomicInteger"></a>AtomicInteger</h4><p>常用方法</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">()</span> <span class="comment">//获取当前的值</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndSet</span><span class="params">(<span class="keyword">int</span> newValue)</span><span class="comment">//获取当前的值，并设置新的值</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndIncrement</span><span class="params">()</span><span class="comment">//获取当前的值，并自增</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndDecrement</span><span class="params">()</span> <span class="comment">//获取当前的值，并自减</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndAdd</span><span class="params">(<span class="keyword">int</span> delta)</span> <span class="comment">//获取当前的值，并加上预期的值</span></span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">compareAndSet</span><span class="params">(<span class="keyword">int</span> expect, <span class="keyword">int</span> update)</span> <span class="comment">//如果输入的数值等于预期值，则以原子方式将该值设置为输入值（update）</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">lazySet</span><span class="params">(<span class="keyword">int</span> newValue)</span><span class="comment">//最终设置为newValue,使用 lazySet 设置之后可能导致其他线程在之后的一小段时间内还是可以读到旧的值。</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">  <span class="comment">// 使用 AtomicInteger 之后，不用对 increment() 方法加锁也可以保证线程安全。</span></span></span><br><span class="line"><span class="function">  class AtomicIntegerTest </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> AtomicInteger count = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line">    <span class="comment">//使用AtomicInteger之后，不需要对该方法加锁，也可以实现线程安全。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      count.incrementAndGet();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> count.get();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>AtomicInteger 类主要利用 CAS (compare and swap) + volatile 和 native 方法来保证原子操作，从而避免 synchronized 的高开销，执行效率大为提升。</p>
+<p>CAS 的原理是拿期望的值和原本的一个值作比较，如果相同则更新成新的值。UnSafe 类的 objectFieldOffset() 方法是一个本地方法，这个方法是用来拿到“原来的值”的内存地址，返回值是 valueOffset。另外 value 是一个 volatile 变量，在内存中可见，因此 JVM 可以保证任何时刻任何线程总能拿到该变量的最新值。</p>
 <h2 id="计算机网络"><a href="#计算机网络" class="headerlink" title="计算机网络"></a>计算机网络</h2><h3 id="七层模型"><a href="#七层模型" class="headerlink" title="七层模型"></a>七层模型</h3><p>应用层 表示层 会话层  为<strong>操作系统</strong>或<strong>网络应用程序</strong>提供访问网络服务的接口</p>
 <p>传输层(TCP UDP) 实现两个<strong>应用程序</strong>之间的数据透明传送（<strong>不一定可靠(UDP)**）。将上层数据分段，提供</strong>端到端**的可靠的(TCP)和不可靠的(UDP)服务。</p>
 <p>网络层  实现两个<strong>主机</strong>之间的数据透明传送（<strong>不一定可靠(IP)**）。主要功能：路由选择Routing；存储转发Forwarding；（一部分的）拥塞控制 **ICMP</strong>  路由器</p>
@@ -6751,7 +6867,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#105;&#x74;&#64;&#x67;&#105;&#116;&#104;&#117;&#98;&#46;&#x63;&#111;&#x6d;">&#103;&#105;&#x74;&#64;&#x67;&#105;&#116;&#104;&#117;&#98;&#46;&#x63;&#111;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#x75;&#98;&#46;&#99;&#111;&#109;">&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#x75;&#98;&#46;&#99;&#111;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
