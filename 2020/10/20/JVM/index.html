@@ -38,8 +38,9 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gybtc1al0sj313m0990tr.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gyceq151dmj31b40digml.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gycexry6klj30qq0s0mzh.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gyoslu3o7aj30na0b4wia.jpg">
 <meta property="article:published_time" content="2020-10-20T14:57:29.000Z">
-<meta property="article:modified_time" content="2022-01-23T09:20:26.329Z">
+<meta property="article:modified_time" content="2022-01-24T07:30:54.813Z">
 <meta property="article:author" content="Yang">
 <meta property="article:tag" content="JVM">
 <meta name="twitter:card" content="summary">
@@ -241,7 +242,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-23 17:20:26" itemprop="dateModified" datetime="2022-01-23T17:20:26+08:00">2022-01-23</time>
+                <time title="修改时间：2022-01-24 15:30:54" itemprop="dateModified" datetime="2022-01-24T15:30:54+08:00">2022-01-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -410,6 +411,73 @@
 <p>不想用双亲委派模型肯定不是覆盖findClass方法呀，覆盖这个方法就等于默认使用双亲委派模型。</p>
 <p>不想使用双亲委派模型，我们可以自定义自己的类加载器，需要继承 java.lang.ClassLoader，但是如果是要自定类加载器，也是需要继承ClassLoader，但是覆盖的是findClass方法，这点需要做下补充说明，这点看源码就可以确认，可以参考博客：</p>
 <p>双亲委派模型-&gt;重写loadClass（）方法，自定义类加载器-&gt;重写findClass（）方法应该需要被强调一下。</p>
+<h2 id="JVM重要参数"><a href="#JVM重要参数" class="headerlink" title="JVM重要参数"></a>JVM重要参数</h2><h3 id="堆内存相关"><a href="#堆内存相关" class="headerlink" title="堆内存相关"></a>堆内存相关</h3><h4 id="显示指定堆内存"><a href="#显示指定堆内存" class="headerlink" title="显示指定堆内存"></a>显示指定堆内存</h4><p>与性能有关的最常见实践之一是根据应用程序要求初始化堆内存。</p>
+<p>相关指令,指定最小堆与最大堆</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-Xms&lt;heap size&gt;[unit] </span><br><span class="line">-Xmx&lt;heap size&gt;[unit]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>heap size</strong> 表示要初始化内存的具体大小。</li>
+<li><strong>unit</strong> 表示要初始化内存的单位。单位为*<strong>“ g”*** (GB) 、*</strong>“ m”*<strong>（MB）、**<em>“ k”</em></strong>（KB）。</li>
+</ul>
+<p>举个栗子🌰，如果我们要为JVM分配最小2 GB和最大5 GB的堆内存大小，我们的参数应该这样来写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Xms2G -Xmx5G</span><br></pre></td></tr></table></figure>
+
+<h4 id="显示新生代内存（Young-Generation）"><a href="#显示新生代内存（Young-Generation）" class="headerlink" title="显示新生代内存（Young Generation）"></a>显示新生代内存（Young Generation）</h4><p>根据Oracle官方文档，在堆的总可用内存配置完成之后，第二大影响因素为Young Generation 在堆内存中所占用的比例，默认情况下，最大大小为1310MB，无最小限制。</p>
+<p>一共有两种指定的方法</p>
+<p><strong>通过<code>-XX:NewSize</code>和<code>-XX:MaxNewSize</code>指定</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-XX:NewSize=&lt;young size&gt;[unit] </span><br><span class="line">-XX:MaxNewSize=&lt;young size&gt;[unit]</span><br></pre></td></tr></table></figure>
+
+<p>举个栗子🌰，如果我们要为 新生代分配 最小256m 的内存，最大 1024m的内存我们的参数应该这样来写：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-XX:NewSize=256m</span><br><span class="line">-XX:MaxNewSize=1024m</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.通过<code>-Xmn&lt;young size&gt;[unit]</code>指定</strong></p>
+<p>举个栗子🌰，如果我们要为 新生代分配256m的内存（NewSize与MaxNewSize设为一致），我们的参数应该这样来写：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Xmn256m </span><br></pre></td></tr></table></figure>
+
+<p>GC调优策略中很重要的一条经验是这么说的</p>
+<p>将新对象预留在新生代，由于Full GC的成本远高于Minor GC,因此尽可能将对象分配在新生代是明智的，实际项目中根据GC日志分析新生代空间大小分配是否合理。</p>
+<p>另外，你还可以通过**<code>-XX:NewRatio=&lt;int&gt;</code>**来设置新生代和老年代内存的比值。</p>
+<p>比如下面的参数就是设置新生代（包括Eden和两个Survivor区）与老年代的比值为1。也就是说：新生代与老年代所占比值为1：1，新生代占整个堆栈的 1/2。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-XX:NewRatio=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="显示指定永久代-元空间的大小"><a href="#显示指定永久代-元空间的大小" class="headerlink" title="显示指定永久代/元空间的大小"></a>显示指定永久代/元空间的大小</h4><p><strong>从Java 8开始，如果我们没有指定 Metaspace 的大小，随着更多类的创建，虚拟机会耗尽所有可用的系统内存（永久代并不会出现这种情况）。</strong></p>
+<p>JDK 1.8 之前永久代还没被彻底移除的时候通常通过下面这些参数来调节方法区大小</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-XX:PermSize=N <span class="comment">//方法区 (永久代) 初始大小</span></span><br><span class="line">-XX:MaxPermSize=N <span class="comment">//方法区 (永久代) 最大大小,超过这个值将会抛出 OutOfMemoryError 异常:java.lang.OutOfMemoryError: PermGen</span></span><br></pre></td></tr></table></figure>
+
+<p>相对而言，垃圾收集行为在这个区域是比较少出现的，但并非数据进入方法区后就“永久存在”了。</p>
+<p><strong>JDK 1.8 的时候，方法区（HotSpot 的永久代）被彻底移除了（JDK1.7 就已经开始了），取而代之是元空间，元空间使用的是本地内存。</strong></p>
+<p>下面是一些常用参数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-XX:MetaspaceSize=N <span class="comment">//设置 Metaspace 的初始（和最小大小）</span></span><br><span class="line">-XX:MaxMetaspaceSize=N <span class="comment">//设置 Metaspace 的最大大小，如果不指定大小的话，随着更多类的创建，虚拟机会耗尽所有可用的系统内存。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="垃圾收集相关"><a href="#垃圾收集相关" class="headerlink" title="垃圾收集相关"></a>垃圾收集相关</h3><h4 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h4><p>JVM有四种类型的GC实现</p>
+<ul>
+<li>串行垃圾收集器</li>
+<li>并行垃圾收集器</li>
+<li>CMS垃圾收集器</li>
+<li>G1垃圾收集器</li>
+</ul>
+<p>可以用以下参数声明这些实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-XX:+UseSerialGC</span><br><span class="line">-XX:+UseParallelGC</span><br><span class="line">-XX:+UseParNewGC</span><br><span class="line">-XX:+UseG1GC</span><br></pre></td></tr></table></figure>
+
+<h4 id="GC记录"><a href="#GC记录" class="headerlink" title="GC记录"></a>GC记录</h4><p>为了严格控制应用程序的运行状况，我们应该始终检查JVM的垃圾回收性能，最简单的方法是以人类可读的格式记录GC活动</p>
+<p>使用以下参数，我们可以记录GC活动</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">-XX:+UseGCLogFileRotation </span><br><span class="line">-XX:NumberOfGCLogFiles=&lt; number of log files &gt; </span><br><span class="line">-XX:GCLogFileSize=&lt; file size &gt;[ unit ]</span><br><span class="line">-Xloggc:/path/to/gc.log</span><br></pre></td></tr></table></figure>
+
+<h2 id="JVM内存管理查看指令"><a href="#JVM内存管理查看指令" class="headerlink" title="JVM内存管理查看指令"></a>JVM内存管理查看指令</h2><h3 id="Jstat-gcutil-pid"><a href="#Jstat-gcutil-pid" class="headerlink" title="Jstat -gcutil pid"></a>Jstat -gcutil pid</h3><p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gyoslu3o7aj30na0b4wia.jpg" alt="img"></p>
+<p>最后的参数1000是让1秒刷新一次，我们看内存回收只看一条数据其实是看不出来什么的，往往需要观察一段时间的垃圾回收才能有所了然，下面对各个字段做一个简单的说明：</p>
+<p>S0:Survivor 0区的空间使用率</p>
+<p>S1:Survivor 1区的空间使用率</p>
+<p>E:Eden区的空间使用率</p>
+<p>O:老年代的空间使用率</p>
+<p>M:元数据区的空间使用率</p>
+<p>CCS:类指针压缩空间使用率</p>
+<p>YGC:新生代GC次数</p>
+<p>YGCT:新生代GC总时长</p>
+<p>FGC:FullGC总次数</p>
+<p>FGCT:FullGC总时长</p>
+<p>GCT:总共的GC时长<br>————————————————</p>
+<h3 id="查看jvm-参数设置及内存使用"><a href="#查看jvm-参数设置及内存使用" class="headerlink" title="查看jvm 参数设置及内存使用"></a>查看jvm 参数设置及内存使用</h3><p>Jmap -heap pid</p>
+<p>这个命令给出的信息还是比较全的，从结构上分为几个部分：HeapConfiguration、Heap Usage，其中Heap Useage又分为PS Young Generation和PS Old Generation，PS Young Generation又分为Eden Space\From Space\To space，所以可以看出这个命令也主要是围绕GC操纵空间堆来的，包括堆的基本配置以及堆的使用情况，这个命令其实很实用，上面就是配置下面就是实用情况，当堆内存不足的时候可以很直观的看出哪个参数设置得不合理，如果看堆设置没看出有什么问题，那么再结合jstat -gcutil pid看看垃圾回收情况，差不多就能看出大概是什么原因导致堆内存溢出了。<br>————————————————</p>
 
     </div>
 
@@ -493,7 +561,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E6%8E%A2%E7%A9%B6"><span class="nav-number">1.</span> <span class="nav-text">JVM探究</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">JVM的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">JVM的体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="nav-number">3.1.</span> <span class="nav-text">类加载器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">3.1.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">3.1.2.</span> <span class="nav-text">分类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6"><span class="nav-number">3.2.</span> <span class="nav-text">双亲委派机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%EF%BC%88%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">Java内存区域（运行时数据区）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-number">5.</span> <span class="nav-text">对象的创建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%A3%80%E6%9F%A5"><span class="nav-number">5.1.</span> <span class="nav-text">类加载检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98"><span class="nav-number">5.2.</span> <span class="nav-text">分配内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E9%9B%B6%E5%80%BC"><span class="nav-number">5.3.</span> <span class="nav-text">初始化零值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%AF%B9%E8%B1%A1%E5%A4%B4"><span class="nav-number">5.4.</span> <span class="nav-text">设置对象头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Init"><span class="nav-number">5.5.</span> <span class="nav-text">Init</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-number">6.</span> <span class="nav-text">类加载过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">类加载器总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B"><span class="nav-number">7.1.</span> <span class="nav-text">双亲委派模型</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E6%8E%A2%E7%A9%B6"><span class="nav-number">1.</span> <span class="nav-text">JVM探究</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">2.</span> <span class="nav-text">JVM的位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E7%9A%84%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="nav-number">3.</span> <span class="nav-text">JVM的体系结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="nav-number">3.1.</span> <span class="nav-text">类加载器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A6%82%E5%BF%B5"><span class="nav-number">3.1.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%B1%BB"><span class="nav-number">3.1.2.</span> <span class="nav-text">分类</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%9C%BA%E5%88%B6"><span class="nav-number">3.2.</span> <span class="nav-text">双亲委派机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Java%E5%86%85%E5%AD%98%E5%8C%BA%E5%9F%9F%EF%BC%88%E8%BF%90%E8%A1%8C%E6%97%B6%E6%95%B0%E6%8D%AE%E5%8C%BA%EF%BC%89"><span class="nav-number">4.</span> <span class="nav-text">Java内存区域（运行时数据区）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="nav-number">5.</span> <span class="nav-text">对象的创建</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%A3%80%E6%9F%A5"><span class="nav-number">5.1.</span> <span class="nav-text">类加载检查</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%86%E9%85%8D%E5%86%85%E5%AD%98"><span class="nav-number">5.2.</span> <span class="nav-text">分配内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E9%9B%B6%E5%80%BC"><span class="nav-number">5.3.</span> <span class="nav-text">初始化零值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E5%AF%B9%E8%B1%A1%E5%A4%B4"><span class="nav-number">5.4.</span> <span class="nav-text">设置对象头</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Init"><span class="nav-number">5.5.</span> <span class="nav-text">Init</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E8%BF%87%E7%A8%8B"><span class="nav-number">6.</span> <span class="nav-text">类加载过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E6%80%BB%E7%BB%93"><span class="nav-number">7.</span> <span class="nav-text">类加载器总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B"><span class="nav-number">7.1.</span> <span class="nav-text">双亲委派模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E9%87%8D%E8%A6%81%E5%8F%82%E6%95%B0"><span class="nav-number">8.</span> <span class="nav-text">JVM重要参数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A0%86%E5%86%85%E5%AD%98%E7%9B%B8%E5%85%B3"><span class="nav-number">8.1.</span> <span class="nav-text">堆内存相关</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E6%8C%87%E5%AE%9A%E5%A0%86%E5%86%85%E5%AD%98"><span class="nav-number">8.1.1.</span> <span class="nav-text">显示指定堆内存</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E6%96%B0%E7%94%9F%E4%BB%A3%E5%86%85%E5%AD%98%EF%BC%88Young-Generation%EF%BC%89"><span class="nav-number">8.1.2.</span> <span class="nav-text">显示新生代内存（Young Generation）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%98%BE%E7%A4%BA%E6%8C%87%E5%AE%9A%E6%B0%B8%E4%B9%85%E4%BB%A3-%E5%85%83%E7%A9%BA%E9%97%B4%E7%9A%84%E5%A4%A7%E5%B0%8F"><span class="nav-number">8.1.3.</span> <span class="nav-text">显示指定永久代&#x2F;元空间的大小</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E7%9B%B8%E5%85%B3"><span class="nav-number">8.2.</span> <span class="nav-text">垃圾收集相关</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E5%99%A8"><span class="nav-number">8.2.1.</span> <span class="nav-text">垃圾回收器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GC%E8%AE%B0%E5%BD%95"><span class="nav-number">8.2.2.</span> <span class="nav-text">GC记录</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JVM%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%9F%A5%E7%9C%8B%E6%8C%87%E4%BB%A4"><span class="nav-number">9.</span> <span class="nav-text">JVM内存管理查看指令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Jstat-gcutil-pid"><span class="nav-number">9.1.</span> <span class="nav-text">Jstat -gcutil pid</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bjvm-%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE%E5%8F%8A%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8"><span class="nav-number">9.2.</span> <span class="nav-text">查看jvm 参数设置及内存使用</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 

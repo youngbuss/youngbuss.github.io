@@ -119,6 +119,19 @@
 <p><strong>常用的设计模式分类：</strong><br><strong>创建型</strong>（创建一个对象）：<strong>单例模式、工厂模式、抽象工厂模式</strong><br><strong>结构型</strong>（将几个对象组织成一个结构）：桥接模式、外观模式、代理模式<br><strong>行为型</strong>（多个对象间的通信）：观察者模式、策略模式<br>其中，<strong>工厂模式、桥接模式、策略模式</strong>有点像，放在一起理解（<strong>几个对象具有共同特征，因此继承共同的接口，然后通过工厂、桥去访问</strong>）。另外，<strong>工厂模式和外观模式</strong>（几个对象间有先后关系，是串行的，而非工厂模式中的并行，因此<strong>几个对象组合成一个外观类，通过这个外观类来访问</strong>）区别很明显，也因此放在一起理解。</p>
 <span id="more"></span>
 
+<h2 id="设计模式六大基本原则"><a href="#设计模式六大基本原则" class="headerlink" title="设计模式六大基本原则"></a>设计模式六大基本原则</h2><ul>
+<li>开闭原则：对扩展开放，对修改关闭。在程序需要进行扩展的时候，不能去修改原有的代码，实现一个热插拔的效果。一句话概括就是为了使程序的扩展性好，易于维护和升级，想要达到这样的效果，我们需要使用接口和抽象类。</li>
+<li>里氏代换原则：任何基类可以出现的地方，子类一定可以出现</li>
+<li>依赖倒转原则：依赖于抽象而不依赖于具体，针对接口编程</li>
+<li>接口隔离原则：使用多个隔离的接口，比使用单个接口好</li>
+<li>迪米特法则：又称最少知道原则，一个实体应该尽量少地与其他实体之间发生相互作用，使得系统功能模块相对独立。</li>
+<li>合成复用原则：尽量使用合成/聚合的方式，而不是使用继承</li>
+</ul>
+<h2 id="适配器模式"><a href="#适配器模式" class="headerlink" title="适配器模式"></a>适配器模式</h2><p>适配器模式是作为两个不兼容的接口之间的桥梁，这种类型的设计模式属于结构型模式，结合了两个独立接口的功能。适配器模式提供对接口的转换。如果你的客户端使用某些接口，但是你有另外一些接口，你就可以写一个适配器去来连接这些接口。</p>
+<p><strong>与装饰者模式区别</strong></p>
+<p>虽然适配器模式和装饰器模式的结构类似，但是每种模式的出现意图不同。适配器模式被用于桥接两个接口，而装饰模式的目的是在不修改类的情况下给类增加新的功能。</p>
+<p>装饰者模式：动态地将责任附加到对象上，若要扩展功能，装饰者模提供了比继承更有弹性的替代方案。<br>通俗的解释：装饰模式就是给一个对象增加一些新的功能，而且是动态的，要求装饰对象和被装饰对象实现同一个接口，装饰对象持有被装饰对象的实例。</p>
+<p>适配器模式：将一个类的接口，转换成客户期望的另一个接口。适配器让原本接口不兼容的类可以合作无间。<br>适配器模式有三种：类的适配器模式、对象的适配器模式、接口的适配器模式。<br>通俗的说法：适配器模式将某个类的接口转换成客户端期望的另一个接口表示，目的是消除由于接口不匹配所造成的类的兼容性问题。</p>
 <h2 id="单例模式"><a href="#单例模式" class="headerlink" title="单例模式"></a>单例模式</h2><p>单例模式（Singleton Pattern）是 Java 中最简单的设计模式之一。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。</p>
 <p>这种模式涉及到一个单一的类，该类负责创建自己的对象，同时确保只有单个对象被创建。这个类提供了一种访问其唯一的对象的方式，可以直接访问，不需要实例化该类的对象。</p>
 <p><strong>注意：</strong></p>
@@ -198,6 +211,7 @@
 <p><strong>经验之谈：</strong>一般情况下，不建议使用第 1 种和第 2 种懒汉方式，建议使用第 3 种饿汉方式。</p>
 <h2 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h2><p>工厂模式（Factory Pattern）是 Java 中最常用的设计模式之一。这种类型的设计模式属于创建型模式，它提供了一种创建对象的最佳方式。</p>
 <p>在工厂模式中，我们在创建对象时不会对客户端暴露创建逻辑，并且是通过使用一个共同的接口来指向新创建的对象。</p>
+<p>工厂模式：定义一个用于创建对象的借口，让子类决定实例化哪一个类。</p>
 <h3 id="介绍-1"><a href="#介绍-1" class="headerlink" title="介绍"></a>介绍</h3><p><strong>意图：</strong>定义一个创建对象的接口，让其子类自己决定实例化哪一个工厂类，工厂模式使其创建过程延迟到子类进行。</p>
 <p><strong>主要解决：</strong>主要解决接口选择的问题。</p>
 <p><strong>何时使用：</strong>我们明确地计划不同条件下创建不同实例时。</p>
@@ -269,6 +283,22 @@
 
 <h2 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h2><p><strong>定义与使用场合：</strong>一个系统需要动态地在几种类似的算法中选择一种。<br><strong>与工厂模式异同：</strong>实例化一个对象的位置不同。对工厂模式而言，实例化对象是放在了工厂类里面。而策略模式实例化对象的操作在调用的地方。本质都是继承与多态。<br><strong>例子：</strong> 现有 加/减/乘 几种算法，输入参数返回值都一样（可以理解成类似的算法）。现在需要在调用时动态配置算法策略，实现对不同算法的调用。</p>
 <h2 id="观察者模式"><a href="#观察者模式" class="headerlink" title="观察者模式"></a>观察者模式</h2><p><strong>定义与使用场景：</strong>一个对象(subject)<strong>被其他多个对象(observer)所依赖</strong>。则当一个对象变化时，<strong>发出通知</strong>，其它依赖该对象的对象<strong>都会收到通知</strong>，并且随着变化。<br>比如 声音报警器和闪光灯报警器分别订阅热水器温度，热水器温度过高时，发出通知，两个报警器分别发声、闪光以实现报警。<br>又比如很多人订阅微信公众号，该公众号有更新文章时，自动通知每个订阅的用户。<br><strong>实现：</strong>1,多个观察者要订阅这个对象 2，这个对象要发出通知</p>
+<p>在对象之间定义了一对多的依赖，这样一来，当一个对象改变状态，依赖它的对象会收到通知并自动更新。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gyq1n6927pj30e90blmz3.jpg" alt="img"></p>
+<p>该模式包含四个角色：</p>
+<ul>
+<li><strong>抽象被观察者角色</strong>：也就是一个抽象主题，它把所有对观察者对象的引用保存在一个集合中，每个主题都可以有任意数量的观察者。抽象主题提供一个接口，可以增加和删除观察者角色。一般用一个抽象类和接口来实现。</li>
+<li><strong>抽象观察者角色</strong>：为所有的具体观察者定义一个接口，在得到主题通知时更新自己。</li>
+<li><strong>具体被观察者角色</strong>：也就是一个具体的主题，在集体主题的内部状态改变时，所有登记过的观察者发出通知。</li>
+<li><strong>具体观察者角色</strong>：实现抽象观察者角色所需要的更新接口，一边使本身的状态与制图的状态相协调。</li>
+</ul>
+<p>使用场景</p>
+<ul>
+<li>一个抽象模型有两个方面，其中一个方面依赖于另一个方面。将这些方面封装在独立的对象中使它们可以各自独立地改变和复用。</li>
+<li>一个对象的改变将导致其他一个或多个对象也发生改变，而不知道具体有多少对象将发生改变，可以降低对象之间的耦合度。</li>
+<li>一个对象必须通知其他对象，而并不知道这些对象是谁。</li>
+<li>需要在系统中创建一个触发链，A对象的行为将影响B对象，B对象的行为将影响C对象……，可以使用观察者模式创建一种链式触发机制。</li>
+</ul>
 <h2 id="代理模式"><a href="#代理模式" class="headerlink" title="代理模式"></a>代理模式</h2><p><strong>定义与使用场景：</strong>一个代理类代表一个真实类的功能，通过访问代理类来实现对真实类的访问。<br>比如买火车票这件小事：黄牛相当于是火车站的代理，我们可以通过黄牛买票，但只能去火车站进行改签和退票。<br>又比如需要对原有的方法进行修改，就是采用一个代理类调用原有的方法，以避免修改原有代码。</p>
 ]]></content>
       <categories>
@@ -345,7 +375,7 @@
 <p>a. 从驱动表（左表）取出N条记录；<br>b. 拿着这N条记录，依次到被驱动表（右表）查找满足WHERE条件的记录；</p>
 <p>所以，官方sql的过程就是👇</p>
 <p>先把Person表搬过来</p>
-<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#x6f;&#x68;&#x6e;&#64;&#x65;&#120;&#x61;&#x6d;&#112;&#108;&#101;&#x2e;&#99;&#111;&#109;">&#106;&#x6f;&#x68;&#x6e;&#64;&#x65;&#120;&#x61;&#x6d;&#112;&#108;&#101;&#x2e;&#99;&#111;&#109;</a> |<br>| 2  | <a href="mailto:&#x62;&#111;&#x62;&#x40;&#x65;&#120;&#97;&#109;&#112;&#108;&#101;&#x2e;&#99;&#111;&#109;">&#x62;&#111;&#x62;&#x40;&#x65;&#120;&#97;&#109;&#112;&#108;&#101;&#x2e;&#99;&#111;&#109;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#x6f;&#104;&#110;&#x40;&#101;&#x78;&#x61;&#109;&#x70;&#108;&#101;&#x2e;&#99;&#111;&#x6d;">&#x6a;&#x6f;&#104;&#110;&#x40;&#101;&#x78;&#x61;&#109;&#x70;&#108;&#101;&#x2e;&#99;&#111;&#x6d;</a> |<br>+—-+——————+</p>
+<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#x6a;&#111;&#104;&#110;&#64;&#101;&#x78;&#97;&#109;&#112;&#108;&#x65;&#46;&#99;&#111;&#x6d;">&#x6a;&#111;&#104;&#110;&#64;&#101;&#x78;&#97;&#109;&#112;&#108;&#x65;&#46;&#99;&#111;&#x6d;</a> |<br>| 2  | <a href="mailto:&#98;&#111;&#x62;&#64;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#111;&#x6d;">&#98;&#111;&#x62;&#64;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#111;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#106;&#x6f;&#104;&#x6e;&#x40;&#x65;&#120;&#97;&#109;&#112;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#109;">&#106;&#x6f;&#104;&#x6e;&#x40;&#x65;&#120;&#97;&#109;&#112;&#x6c;&#x65;&#x2e;&#x63;&#x6f;&#109;</a> |<br>+—-+——————+</p>
 <p>a. 从表p1取出3条记录；<br>b. 拿着第1条记录去表p2查找满足WHERE的记录，代入该条件p1.Email = p2.Email AND p1.Id &gt; p2.Id后，发现没有满足的，所以不用删掉记录1；<br>c. 记录2同理；<br>d. 拿着第3条记录去表p2查找满足WHERE的记录，发现有一条记录满足，所以要从p1删掉记录3；<br>e. 3条记录遍历完，删掉了1条记录，这个DELETE也就结束了。</p>
 ]]></content>
       <categories>
@@ -942,10 +972,57 @@
 
 
 
+<h3 id="OOM异常"><a href="#OOM异常" class="headerlink" title="OOM异常"></a>OOM异常</h3><p>OOM异常就是out of Memory Error，内存溢出异常，其中也分为多种</p>
+<ul>
+<li>java.lang.StackOverflowError</li>
+<li>java.lang.OutOfMemoryError: Java heap space</li>
+<li>java.lang.OutOfMemoryError：GC overhead limit exceeded</li>
+<li>java.lang.OutOfMemoryError：Direct buffer memory</li>
+<li>java.lang.OutOfMemoryError：unable to create new native thread</li>
+<li>java.lang.OutOfMemoryError：MetaSpace</li>
+</ul>
+<p><strong>StackOverflowErroe</strong></p>
+<p>报这个错误一般是由于方法深层次的调用，默认的线程栈空间大小一般具体的硬件平台有关，栈内存为线程私有的空间，每个线程都有自己私有的栈内存，栈空间内存设置过大，创建线程数量较多的时候会出现栈内存溢出。</p>
+<p><strong>Heap space</strong></p>
+<p>Heap size 设置 JVM堆的设置是指：java程序执行过程中JVM能够调配使用的内存空间的设置。JVM在启动的时候会自己主动设置Heap size的值，其<strong>初始空间(即-Xms)是物理内存的1/64</strong>，<strong>最大空间(-Xmx)是物理内存的1/4</strong>。能够利用JVM提供的-Xmn -Xms -Xmx等选项可进行设置。Heap size 的大小是Young Generation 和Tenured Generaion 之和。</p>
+<p>Demo：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OOMHeapSpaceDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">30</span>*<span class="number">1024</span>*<span class="number">1024</span>];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p>然后修改堆内存的初始容量和最大容量为5MB</p>
+<p>运行程序，查看结果：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">Exception in thread <span class="string">&quot;main&quot;</span> java.lang.OutOfMemoryError: Java heap space</span><br><span class="line">	at jvm.OOMHeapSpaceDemo.main(OOMHeapSpaceDemo.java:<span class="number">7</span>)</span><br></pre></td></tr></table></figure>
 
-
-
+<p><strong>GC overhead limit exceeded</strong></p>
+<p>GC回收时间过长时会抛出outOfMemroyError，过长的定义是：超过98%的时间用来做GC并且回收不到2%的堆内存。<br> 连续多次GC都只回收了不到2%的极端情况下会抛出。假如不抛出GC overhead limit 错误会发生什么信况呢?<br> 那就是GC清理的这么点内存很快会再次填满，迫使GC 再次执行。这样就形成恶性循环,<br>CPU使用率一直是100%， 两GC 却没有任何效果</p>
+<p><strong>Direct buffer memory</strong></p>
+<p>写NIO程序经常使用到ByteBuffer来读取或者写入数据，这是一种基于通道与缓冲区的I/O方式。它可以使用Native函数库直接分配堆外内存，然后通过一个存储在java堆里面的DirectByteBuffer对象作为这块内存的引用进行操作。这样能在一些场景中提高性能，因为避免了java堆和Native堆中来回复制数据。</p>
+<ul>
+<li>ByteBuffer.allocate(capability) ：这种方式是分配JVM堆内存，属于GC管辖范围之内。由于需要拷贝，所以速度相对较慢；</li>
+<li>ByteBuffer.allocateDirect(capability)：这种方式是直接分配OS本地内存，不属于GC管辖范围之内，由于不需要内存拷贝所以速度相对较快。</li>
+</ul>
+<p>但是如果不断分配本地内存，堆内存很少使用，那么JVM就不需要执行GC,DirectByteBuffer对象就不会被回收。这时候堆内存充足，但是本地内存已经用光了，再次尝试分配的时候就会出现OutOfMemoryError，那么程序就直接崩溃了</p>
+<p><strong>unable to create new native thread</strong></p>
+<p>准确的说，这一个异常是和程序运行的平台相关的。导致的原因：</p>
+<ul>
+<li>创建了太多的线程，一个应用创建多个线程，超过系统承载极限；</li>
+<li>服务器不允许应用程序创建这么多的线程，Linux系统默认的允许单个进程可以创建的线程数量是1024个，当创建多 线程数量多于这个数字的时候就会抛出此异常</li>
+</ul>
+<p>如何解决呢？</p>
+<ul>
+<li>想办法减少应用程序创建的线程的数量，分析应用是否真的需要创建这么多的线程。如果不是，改变代码将线程数量降到最低；</li>
+<li>对于有的应用，确实需要创建很多的线程，远超过Linux限制的1024个 限制，那么可以通过修改Linux服务器的配置，扩大Linux的默认限制。</li>
+</ul>
+<p><strong>MetaSpace</strong></p>
+<p>元空间的本质和永久代类似，都是对JVM规范中的方法区的实现。不过元空间与永久代之间最大的区别在于：元空间不在虚拟机中，而是使用的本地内存。因此，默认情况下，元空间的大小仅仅受到本地内存的限制 。</p>
+<p>元空间存放了以下的内容：</p>
+<ul>
+<li>虚拟机加载的类信息；</li>
+<li>常量池；</li>
+<li>静态变量；</li>
+<li>即时编译后的代码</li>
+</ul>
+<p>模拟MetaSpace空间溢出，我们不断生成类往元空间里灌，类占据的空间总是会超过MetaSpace指定的空间大小的</p>
+<p>查看元空间的大小：<code>java -XX:+PrintFlagsInitial</code></p>
 <h2 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a>JVM</h2><h3 id="Java内存模型JMM"><a href="#Java内存模型JMM" class="headerlink" title="Java内存模型JMM"></a>Java内存模型JMM</h3><p>JMM规范了Java虚拟机与计算机内存是如何协同工作的：规定了一个线程如何和何时可以看到由其他线程修改过后的共享变量的值，以及在必须时如何同步的访问共享变量。</p>
 <p><img src="/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/4.png"></p>
 <p><strong>线程私有的：</strong></p>
@@ -978,6 +1055,53 @@
 <li><p>直接内存 (非运行时数据区的一部分)</p>
 </li>
 </ul>
+<h2 id="Java-锁"><a href="#Java-锁" class="headerlink" title="Java 锁"></a>Java 锁</h2><p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gyotj6nq6uj313j0o4tan.jpg" alt="img"></p>
+<h3 id="乐观锁-悲观锁"><a href="#乐观锁-悲观锁" class="headerlink" title="乐观锁 悲观锁"></a>乐观锁 悲观锁</h3><p>悲观锁：对于同一个数据的并发操作，悲观锁认为自己在使用数据的时候一定有别的线程来修改数据，因此在获取数据的时候会先加锁，确保数据不会被别的线程修改。Java中，synchronized关键字和Lock的实现类都是悲观锁。</p>
+<p>乐观锁：认为自己在使用数据的时候不会有别的线程来修改数据，所以不会添加锁，只是在更新数据的时候去判断之前有没有别的线程更新了这个数据，如果这个数据没有被更新则将自己的数据成功写入，如果数据已经被其他线程更新，则根据不同的实现方式执行不同的操作，例如报错或者自动重试。乐观锁在java中是通过无锁编程来实现的，最常采用的是CAS算法，Java原子类中的递增操作就通过CAS自旋实现的。</p>
+<ul>
+<li><p>悲观锁适合写操作多的场景，先加锁可以保证写操作时数据正确</p>
+</li>
+<li><p>乐观锁适合读操作多的场景，不加锁的特点能够使其读操作的性能大幅提升</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gyottyzosyj30xh0a1759.jpg" alt="img"></p>
+</li>
+</ul>
+<h3 id="自旋锁VS适应性自旋锁"><a href="#自旋锁VS适应性自旋锁" class="headerlink" title="自旋锁VS适应性自旋锁"></a>自旋锁VS适应性自旋锁</h3><p>阻塞或唤醒一个Java线程需要操作系统切换CPU状态来完成，这种状态转换需要耗费处理器时间。如果同步代码块中的内容过于简单，状态转换消耗的时间有可能比用户代码执行的时间还要长。</p>
+<p>在许多场景中，同步资源的锁定时间很短，为了这一小段时间去切换线程，线程挂起和恢复现场的花费可能会让系统得不偿失。如果物理机器有多个处理器，能够让两个或以上的线程同时并行执行，我们就可以让后面那个请求锁的线程不放弃CPU的执行时间，看看持有锁的线程是否很快就会释放锁。</p>
+<p>而为了让当前线程“稍等一下”，我们需让当前线程进行自旋，如果在自旋完成后前面锁定同步资源的线程已经释放了锁，那么当前线程就可以不必阻塞而是直接获取同步资源，从而避免切换线程的开销。这就是自旋锁。</p>
+<p>自旋锁本身是有缺点的，它不能代替阻塞，自旋锁虽然避免了线程切换的开销，但它要占用处理器的时间，如果锁被占用的时间很短，自旋锁等待的效果就会非常好，反之则会白白浪费处理器资源，因此自旋等待的时间必须要有一定的限度，自旋超过了限定次数，通常是10次没有成功获得，则挂起线程。</p>
+<p>实现原理同样也是CAS.</p>
+<p>自适应意味着自旋的时间（次数）不再固定，而是由前一次在同一个锁上的自旋时间及锁的拥有者的状态来决定。如果在同一个锁对象上，自旋等待刚刚成功获得过锁，并且持有锁的线程正在运行中，那么虚拟机就会认为这次自旋也是很有可能再次成功，进而它将允许自旋等待持续相对更长的时间。如果对于某个锁，自旋很少成功获得过，那在以后尝试获取这个锁时将可能省略掉自旋过程，直接阻塞线程，避免浪费处理器资源。</p>
+<p>在自旋锁中 另有三种常见的锁形式:TicketLock、CLHlock和MCSlock，本文中仅做名词介绍，不做深入讲解，感兴趣的同学可以自行查阅相关资料。</p>
+<h3 id="无锁VS偏向锁VS轻量级锁VS重量级锁"><a href="#无锁VS偏向锁VS轻量级锁VS重量级锁" class="headerlink" title="无锁VS偏向锁VS轻量级锁VS重量级锁"></a>无锁VS偏向锁VS轻量级锁VS重量级锁</h3><p>这四种锁的状态是针对synchronized的。</p>
+<p>目前锁的一共有四种状态，级别从低到高依次是 无锁 偏向锁 轻量级锁 和重量级锁，锁的状态只能升级不能降级</p>
+<p>Mark Word内容（在对象头中）</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gypouewmatj30xu0aiab6.jpg" alt="image-20220125100237895"></p>
+<p><strong>无锁</strong></p>
+<p>无锁没有对资源进行锁定，所有的线程都能访问并修改同一个资源，但同时只能有一个线程能修改成功。</p>
+<p>无锁的特点是修改在循环内进行，线程会不断地尝试修改共享资源。如果没有冲突就修改成功并退出，否则就继续循环尝试。如果有多个线程修改同一个值，必定会有一个线程能够修改成功，而其他修改失败的线程会不断尝试知道修改成功。</p>
+<p><strong>偏向锁</strong></p>
+<p>偏向锁是指一段同步代码一直被一个线程所访问，那么该线程会自动获取锁，降低锁获取锁的代价。</p>
+<p>偏向锁只有遇到其他线程尝试竞争偏向锁的时候，持有偏向锁的线程才会释放锁，线程不会主动释放偏向锁，偏向锁的撤销，需要等待全局安全点（在这个时间点上没有字节码正在执行）,它会首先暂停拥有偏向锁的线程，判断锁对象是否处于被锁定状态，撤销偏向锁后恢复到无锁（标志位01）或者轻量级锁（00）</p>
+<p><strong>轻量级锁</strong></p>
+<p>该锁是指锁是偏向锁的时候，被另外的线程所访问，偏向锁就会升级为轻量级锁，其他线程会通过自旋的形式尝试获取锁，不会阻塞，从而提高性能。</p>
+<p>若当前只有一个等待线程，则该线程通过自旋进行等待。但是当自旋超过一定的次数，或者一个线程在持有锁，一个在自旋，又有第三个来访时，轻量级锁升级为重量级锁</p>
+<p><strong>重量级锁</strong></p>
+<p>升级为重量级锁时，锁标志的状态值变为10，此时Mark Word中存储的是指向重量级锁的指针，此时等待锁的线程都会进入阻塞状态。</p>
+<p>综上，偏向锁通过对比Mark Word解决加锁问题，避免执行CAS操作。而轻量级锁是通过用CAS操作和自旋来解决加锁问题，避免线程阻塞和唤醒而影响性能。重量级锁是将除了拥有锁的线程以外的线程都阻塞。</p>
+<h3 id="公平锁-VS-非公平锁"><a href="#公平锁-VS-非公平锁" class="headerlink" title="公平锁 VS 非公平锁"></a>公平锁 VS 非公平锁</h3><p>公平锁是指多个线程按照申请锁的顺序来获取锁，线程直接进入队列中排队，队列中的第一个线程才能获得锁。公平锁的优点是等待锁的线程不会饿死。缺点是整体吞吐效率相对非公平锁要低，等待队列中除第一个线程以外的所有线程都会阻塞，CPU唤醒阻塞线程的开销比非公平锁大。</p>
+<p>非公平锁是多个线程加锁时直接尝试获取锁，获取不到才会到等待队列的队尾等待。但如果此时锁刚好可用，那么这个线程可以无需阻塞直接获取到锁，所以非公平锁有可能出现后申请锁的线程先获取锁的场景。非公平锁的优点是可以减少唤起线程的开销，整体的吞吐效率高，因为线程有几率不阻塞直接获得锁，CPU不必唤醒所有线程。缺点是处于等待队列中的线程可能会饿死，或者等很久才会获得锁。</p>
+<h3 id="可重入锁VS非可重入锁"><a href="#可重入锁VS非可重入锁" class="headerlink" title="可重入锁VS非可重入锁"></a>可重入锁VS非可重入锁</h3><p>可重入锁又名递归锁，是指在同一个线程在外层方法获取锁的时候，再进入该线程的内层方法会自动获取锁（前提锁对象得是同一个对象或者class），不会因为之前已经获取过还没释放而阻塞。Java中ReentrantLock和synchronized都是可重入锁，可重入锁的一个优点是可一定程度避免死锁。</p>
+<p>非可重入锁可能会出现死锁现象。</p>
+<p>当线程尝试获取锁时，可重入锁先尝试获取并更新status值，如果status==0表示没有其他线程在执行同步代码，则把status设置为1，当前线程开始执行。如果status≠0，则判断当前线程是否能够获取到这个锁的线程，如果是的话status+1，则当前线程可以在此获取到锁。而非可重入锁是直接去获取并尝试更新当前status的值，如果不为0的话会导致其获取锁失败，当前线程阻塞。   </p>
+<p>释放锁时，可重入锁同样先获取当前status的值，在当前线程是持有锁的线程的前提下。如果status-1 == 0，则表示当前线程所有重复获取锁的操作都已经执行完毕，然后该线程才会真正释放锁。而非可重入锁则是在确定当前线程是持有锁的线程之后，直接将status置为0，将锁释放。</p>
+<h3 id="独享锁VS共享锁"><a href="#独享锁VS共享锁" class="headerlink" title="独享锁VS共享锁"></a>独享锁VS共享锁</h3><p>独享锁也叫排他锁，是指该锁一次只能被一个线程所持有。如果线程T对数据A加上排它锁后，则其他线程不能再对A加任何类型的锁。获得排它锁的线程即能读数据又能修改数据。JDK中的synchronized和JUC中Lock的实现类就是互斥锁。</p>
+<p>共享锁是指该锁可被多个线程所持有。如果线程T对数据A加上共享锁后，则其他线程只能对A再加共享锁，不能加排它锁。获得共享锁的线程只能读数据，不能修改数据。</p>
+<h3 id="分布式锁"><a href="#分布式锁" class="headerlink" title="分布式锁"></a>分布式锁</h3><p>分布式锁所要解决的问题的本质是 能够对分布在多台机器中的线程对共享资源的互斥访问。</p>
+<ul>
+<li>基于Mysql,分布式环境中的线程连接同一个数据库，利用数据库中的行锁来达到互斥访问，但是性能较低</li>
+<li>Zookeeper,Zookeeper中的数据是存在内存的，并且基于其的顺序节点，临时节点，Watch机制能非常好的来实现</li>
+<li>基于Redis，Redis的数据也是具有内存的，基于Redis的消费订阅功能，数据超时功能，lua脚本功能等。</li>
+</ul>
 <h2 id="Java进程与线程"><a href="#Java进程与线程" class="headerlink" title="Java进程与线程"></a>Java进程与线程</h2><h3 id="创建进程的方式"><a href="#创建进程的方式" class="headerlink" title="创建进程的方式"></a>创建进程的方式</h3><ul>
 <li><p>继承Thread类，并复写run方法，创建该类对象，调用start方法开启线程</p>
 </li>
@@ -988,7 +1112,7 @@
 </li>
 </ul>
 <p>A extends Thread：</p>
-<p>简单</p>
+<p>  简单</p>
 <p>不能再继承其他类了(Java单继承)</p>
 <p>同份资源不共享</p>
 <p>A implements Runnable:(推荐)</p>
@@ -1042,8 +1166,8 @@
 <p><strong>最主要的三种使用方式</strong></p>
 <ol>
 <li><strong>修饰实例方法</strong>  作用于当前对象实例加锁，进入同步代码块之前要获得当前对象实例的锁</li>
-<li>修饰静态方法，也就是给当前类加锁，会作用于当前类的所有对象实例，进入同步代码块前要获得当前class的锁，记住访问静态synchronized方法占用的锁是当前类的锁，而访问非静态synchronized方法占用的锁是当前实例对象锁。</li>
-<li>修饰代码块，指定加锁对象，对给定对象/类加锁， synchronized(this|object) 表示进入同步代码库前要获得给定对象的锁，synchronized(类.class) 表示进入同步代码块前要获得当前class的锁</li>
+<li><strong>修饰静态方法</strong>，也就是给当前类加锁，会作用于当前类的所有对象实例，进入同步代码块前要获得当前class的锁，记住访问静态synchronized方法占用的锁是当前类的锁，而访问非静态synchronized方法占用的锁是当前实例对象锁。</li>
+<li><strong>修饰代码块</strong>，指定加锁对象，对给定对象/类加锁， synchronized(this|object) 表示进入同步代码库前要获得给定对象的锁，synchronized(类.class) 表示进入同步代码块前要获得当前class的锁</li>
 </ol>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span>  <span class="title">method</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="keyword">static</span> <span class="title">method</span><span class="params">()</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">synchronized</span>(<span class="keyword">this</span>) &#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
@@ -1110,6 +1234,10 @@
 
 
 <h3 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h3><p>通常情况下，我们创建的变量是可以被任何一个线程访问并修改的。<strong>如果想实现每一个线程都有自己的专属本地变量该如何解决呢？</strong> JDK 中提供的<code>ThreadLocal</code>类正是为了解决这样的问题。 <strong><code>ThreadLocal</code>类主要解决的就是让每个线程绑定自己的值，可以将<code>ThreadLocal</code>类形象的比喻成存放数据的盒子，盒子中可以存储每个线程的私有数据。</strong></p>
+<p>每一个ThreadLocal能够放一个线程级别的变量，可是它本身能够被多个线程共享使用，并且又能够达到线程安全的目的，且绝对线程安全。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">static</span> ThreadLocal&lt;String&gt; RESOURCE = <span class="keyword">new</span> ThreadLocal&lt;String&gt;();</span><br></pre></td></tr></table></figure>
+
+<p>RESOURCE代表一个能够存放String类型的ThreadLocal对象。此时不论什么一个线程能够并发訪问这个变量，对它进行写入、读取操作，都是线程安全的。比方一个线程通过RESOURCE.set(“aaaa”);将数据写入ThreadLocal中，在不论什么一个地方，都能够通过RESOURCE.get();将值获取出来。</p>
 <p><strong>如果你创建了一个<code>ThreadLocal</code>变量，那么访问这个变量的每个线程都会有这个变量的本地副本，这也是<code>ThreadLocal</code>变量名的由来。他们可以使用 <code>get（）</code> 和 <code>set（）</code> 方法来获取默认值或将其值更改为当前线程所存的副本的值，从而避免了线程安全问题。</strong></p>
 <p><strong>原理</strong></p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">    <span class="comment">//与此线程有关的ThreadLocal值。由ThreadLocal类维护</span></span><br><span class="line">    ThreadLocal.ThreadLocalMap threadLocals = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//与此线程有关的InheritableThreadLocal值。由InheritableThreadLocal类维护</span></span><br><span class="line">    ThreadLocal.ThreadLocalMap inheritableThreadLocals = <span class="keyword">null</span>;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -1131,6 +1259,8 @@
 <p>如果一个对象只具有弱引用，那就类似于<strong>可有可无的生活用品</strong>。弱引用与软引用的区别在于：只具有弱引用的对象拥有更短暂的生命周期。在垃圾回收器线程扫描它 所管辖的内存区域的过程中，一旦发现了只具有弱引用的对象，不管当前内存空间足够与否，都会回收它的内存。不过，由于垃圾回收器是一个优先级很低的线程， 因此不一定会很快发现那些只具有弱引用的对象。</p>
 <p>弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java 虚拟机就会把这个弱引用加入到与之关联的引用队列中。</p>
 </blockquote>
+<p><strong>使用场景</strong></p>
+<p>Spring的事务管理器通过AOP切入业务代码，在进入业务代码前，会依据相应的事务管理器提取出相应的事务对象，假如事务管理器是DataSourceTransactionManager，就会从DataSource中获取一个连接对象，通过一定的包装后将其保存在ThreadLocal中。而且Spring也将DataSource进行了包装，重写了当中的getConnection()方法，或者说该方法的返回将由Spring来控制，这样Spring就能让线程内多次获取到的Connection对象是同一个。<br>为什么要放在ThreadLocal里面呢？由于Spring在AOP后并不能向应用程序传递參数。应用程序的每一个业务代码是事先定义好的，Spring并不会要求在业务代码的入口參数中必须编写Connection的入口參数。此时Spring选择了ThreadLocal，通过它保证连接对象始终在线程内部，不论什么时候都能拿到，此时Spring很清楚什么时候回收这个连接，也就是很清楚什么时候从ThreadLocal中删除这个元素。<br>从Spring事务管理器的设计上能够看出。Spring利用ThreadLocal得到了一个非常完美的设计思路，同一时候它在设计时也十分清楚ThreadLocal中元素应该在什么时候删除。由此，我们简单地觉得ThreadLocal尽量使用在一个全局的设计上。而不是一种打补丁的间接方法。</p>
 <h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><p>线程池就是提前创建若干个线程，如果有任务需要处理，线程池里的线程就会处理任务，处理完之后线程并不会被销毁，而是等待下一个任务。由于创建和销毁线程都是消耗系统资源的，所以当你想要频繁的创建和销毁线程的时候就可以考虑使用线程池来提升系统的性能。</p>
 <p>线程池的好处：</p>
 <ul>
@@ -1261,7 +1391,7 @@
 <li><code>AtomicLongFieldUpdater</code>：原子更新长整形字段的更新器</li>
 <li><code>AtomicReferenceFieldUpdater</code>：原子更新引用类型字段的更新器</li>
 </ul>
-<h4 id="AtomicInteger"><a href="#AtomicInteger" class="headerlink" title="AtomicInteger"></a>AtomicInteger</h4><p>常用方法</p>
+<h4 id="AtomicInteger-cas"><a href="#AtomicInteger-cas" class="headerlink" title="AtomicInteger(cas)"></a>AtomicInteger(cas)</h4><p>常用方法</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">get</span><span class="params">()</span> <span class="comment">//获取当前的值</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndSet</span><span class="params">(<span class="keyword">int</span> newValue)</span><span class="comment">//获取当前的值，并设置新的值</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndIncrement</span><span class="params">()</span><span class="comment">//获取当前的值，并自增</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndDecrement</span><span class="params">()</span> <span class="comment">//获取当前的值，并自减</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndAdd</span><span class="params">(<span class="keyword">int</span> delta)</span> <span class="comment">//获取当前的值，并加上预期的值</span></span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">compareAndSet</span><span class="params">(<span class="keyword">int</span> expect, <span class="keyword">int</span> update)</span> <span class="comment">//如果输入的数值等于预期值，则以原子方式将该值设置为输入值（update）</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">lazySet</span><span class="params">(<span class="keyword">int</span> newValue)</span><span class="comment">//最终设置为newValue,使用 lazySet 设置之后可能导致其他线程在之后的一小段时间内还是可以读到旧的值。</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function">  <span class="comment">// 使用 AtomicInteger 之后，不用对 increment() 方法加锁也可以保证线程安全。</span></span></span><br><span class="line"><span class="function">  class AtomicIntegerTest </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> AtomicInteger count = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line">    <span class="comment">//使用AtomicInteger之后，不需要对该方法加锁，也可以实现线程安全。</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      count.incrementAndGet();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCount</span><span class="params">()</span> </span>&#123;</span><br><span class="line">      <span class="keyword">return</span> count.get();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>AtomicInteger 类主要利用 CAS (compare and swap) + volatile 和 native 方法来保证原子操作，从而避免 synchronized 的高开销，执行效率大为提升。</p>
@@ -1271,15 +1401,26 @@
 <p>网络层  实现两个<strong>主机</strong>之间的数据透明传送（<strong>不一定可靠(IP)**）。主要功能：路由选择Routing；存储转发Forwarding；（一部分的）拥塞控制 **ICMP</strong>  路由器</p>
 <p>数据链路层  将源自网络层来的数据<strong>可靠地</strong>传输到<strong>相邻节点</strong>的目标机网络层 **Ethernet以太网协议，用于实现链路层的数据传输和地址封装 **交换机</p>
 <p>物理层 确保原始的数据可在各种物理媒体上以比特流的形式<strong>可靠地</strong>传输</p>
+<p><strong>TCP/IP的体系结构</strong></p>
+<p>应用层（各种应用层协议如TELNET,FTP,SMTP等），运输层，网际层IP，网络接口层</p>
+<p><strong>五层协议的体系结构</strong></p>
+<p>应用层 运输层 网络层 数据链路层 物理层</p>
+<p>应用层的任务是通过应用进程间的交互来完成特定网络应用。</p>
 <p><strong>应用层协议如下：</strong></p>
-<p>(1)域名系统(Domain Name System，DNS)：用于实现网络设备名字到baiIP地址映射的网络服务。</p>
+<p>(1)域名系统(Domain Name System，DNS)：用于实现网络设备名字到IP地址映射的网络服务。</p>
 <p>(2)文件传输协议(File Transfer Protocol，FTP)：用于实现交互式文件传输功能。</p>
 <p>(3)简单邮件传送协议(Simple Mail Transfer Protocol, SMTP)：用于实现电子邮箱传送功能。</p>
 <p>(4)超文本传输协议(HyperText Transfer Protocol，HTTP)：用于实现WWW服务。</p>
 <p>(5)简单网络管理协议(simple Network Management Protocol，SNMP)：用于管理与监视网络设备。</p>
 <p>(6)远程登录协议(Telnet)：用于实现远程登录功能。</p>
-<p><strong>ICMP</strong>是（Internet Control Message Protocol）baiInternet控制报文协议。它是TCP/IP协议簇的一个子协议，用于在IP主机、路由器之间传递控制消息。属于网络层协议</p>
+<p><strong>ICMP</strong>是（Internet Control Message Protocol）Internet控制报文协议。它是TCP/IP协议簇的一个子协议，用于在IP主机、路由器之间传递控制消息。属于网络层协议</p>
 <p>控制消息是指网络通不通、主机是否可达、路由是否可用等网络本身的消息。这些控制消息虽然并不传输用户数据，但是对于用户数据的传递起着重要的作用。</p>
+<p><strong>运输层</strong></p>
+<p>运输层的主要任务是负责向两台主机进程之间的通信提供通用的数据传输服务。</p>
+<p><strong>网络层</strong></p>
+<p>在计算机网络中进行通信的两个计算机之间可能会经过很多个数据链路，也可能还要经过很多通信子网。网络层的主要任务就是选择合适的网间路由和交换结点，确保数据及时传送。</p>
+<p><strong>数据链路层</strong></p>
+<p>数据链路层通常简称为链路层。两台主机之间的数据传输，总是一段一段的链路上传送的，这就需要使用专门的链路层协议。在两个相邻节点之间传送数据时，数据链路层将网络层交下来的IP数据报组装成帧。</p>
 <h3 id="端到端，点到点的区别"><a href="#端到端，点到点的区别" class="headerlink" title="端到端，点到点的区别"></a>端到端，点到点的区别</h3><ul>
 <li><strong>端到端是针对传输层</strong>说的。在数据传输之前，先为数据的传输开辟一条通道，然后在进行传输。</li>
 <li><strong>点到点通信是针对数据链路层或网络层</strong>来说的，是指一个设备发数据给<strong>直接连接</strong>的其他设备，通过一台一台直接相连的设备把数据传递到接收端。</li>
@@ -1402,7 +1543,7 @@
 <p>　　② 鉴别：可选的客户端认证，和强制的服务器端认证。</p>
 <p>　　③ 完整性：传送的消息包括消息完整性检查（使用MAC）。</p>
 <h3 id="输入url到页面加载"><a href="#输入url到页面加载" class="headerlink" title="输入url到页面加载"></a>输入url到页面加载</h3><p>1、输入地址</p>
-<p>2、浏览器查找域名的 IP 地址　　</p>
+<p>2、浏览器查找域名的 IP 地址，DNS解析，TCP连接　</p>
 <p>3、浏览器向 web 服务器发送一个 HTTP 请求</p>
 <p>4、服务器的永久重定向响应</p>
 <p>5、浏览器跟踪重定向地址</p>
@@ -1417,7 +1558,9 @@
 <p>根DNS服务器没有记录具体的域名和IP地址的对应关系，而是告诉本地DNS服务器，你可以到域服务器上去继续查询，并给出域服务器的地址，这个过程是迭代的过程。</p>
 <p>本地DNS服务器继续向域服务器发出请求，在这个例子中，请求的对象是.com域服务器， .com域服务器收到请求之后，也不会直接返回域名和IP地址的对应关系，而是告诉本地DNS服务器请求的域名的解析服务器地址。</p>
 <p>最后，本地DNS服务器向域名的解析服务器发出请求，这时就能收到一个域名和IP地址对应关系，本地DNS服务器不仅要把IP地址返回给用户电脑，还会把这个对应关系保存在缓存中，以备下次别的用户查询时，可以直接返回结果，加快网络访问。</p>
-<h3 id="Cookie-Session区别"><a href="#Cookie-Session区别" class="headerlink" title="Cookie,Session区别"></a>Cookie,Session区别</h3><h4 id="存储位置"><a href="#存储位置" class="headerlink" title="存储位置"></a>存储位置</h4><ul>
+<h3 id="Cookie-Session区别"><a href="#Cookie-Session区别" class="headerlink" title="Cookie,Session区别"></a>Cookie,Session区别</h3><p>Cookie一般用来保存用户信息，比如网页的自动登录的功能，存放一个Token在Cookie中，下次登录的时候根据Token值来查找用户即可。</p>
+<p>Session的主要作用是通过服务端记录用户的状态。典型的场景是购物车，当你要添加商品到购物车的时候，系统不知道是哪个用户操作的，服务端给特定的用户创建特定的session后就可以标识这个用户。</p>
+<h4 id="存储位置"><a href="#存储位置" class="headerlink" title="存储位置"></a>存储位置</h4><ul>
 <li>Session: 服务端</li>
 <li>Cookie:客户端</li>
 </ul>
@@ -1503,6 +1646,12 @@
 <h4 id="TCP三次握手"><a href="#TCP三次握手" class="headerlink" title="TCP三次握手"></a><strong>TCP三次握手</strong></h4><p>第一次握手：建立连接时，客户端发送syn包（syn=1，seq=j）到服务器，并进入SYN_SENT状态，等待服务器确认；SYN：同步序列编号（Synchronize Sequence Numbers）。</p>
 <p>第二次握手：服务器收到syn包，必须确认客户的SYN（ack=j+1），同时自己也发送一个SYN包（syn=k），即SYN+ACK包，此时服务器进入SYN_RECV状态；</p>
 <p>第三次握手：客户端收到服务器的SYN+ACK包，向服务器发送确认包ACK(ack=k+1），此包发送完毕，客户端和服务器进入ESTABLISHED（TCP连接成功）状态，完成三次握手</p>
+<p><strong>为什么需要三次握手</strong></p>
+<p>三次握手的目的就是建立可靠的通信信道，说到通讯，简单来说就是数据的发送与接收，而三次握手最主要的目的就是双方确认自己与对方的发送与接收是正常的。</p>
+<p><strong>为什么需要SYN</strong></p>
+<p>接收端传回所发送的SYN是为了告诉发送端，我接收到的信息确实就是你所发送的信号。</p>
+<p><strong>为什么还需要ACK</strong></p>
+<p>双方通信无误必须是两者互相发送信息都是无误的。传了SYN，证明发送方到接收方的通道没有问题，但是接收方到发送方的通道还需要ack信号来确认。</p>
 <p><strong>三次握手改成两次会出现什么情况</strong></p>
 <p>现在把三次握手改成仅需要两次握手，死锁是可能发生的。作为例子，考虑计算机S和C之间的通信，假定C给S发送一个连接请求分组，S收到了这个分组，并发 送了确认应答分组。按照两次握手的协定，S认为连接已经成功地建立了，可以开始发送数据分组。可是，C在S的应答分组在传输中被丢失的情况下，将不知道S 是否已准备好，不知道S建立什么样的序列号，C甚至怀疑S是否收到自己的连接请求分组。在这种情况下，C认为连接还未建立成功，将忽略S发来的任何数据分 组，只等待连接确认应答分组。而S在发出的分组超时后，重复发送同样的分组。这样就形成了死锁。</p>
 <p>有人会困惑为什么要进行三次握手呢（两次确认）？这主要是为了防止已失效的请求连接报文忽然又传送到了，从而产生错误。<br>假定A向B发送一个连接请求，由于一些原因，导致A发出的连接请求在一个网络节点逗留了比较多的时间。此时A会将此连接请求作为无效处理 又重新向B发起了一次新的连接请求，B正常收到此连接请求后建立了连接，数据传输完成后释放了连接。如果此时A发出的第一次请求又到达了B，B会以为A又发起了一次连接请求，<code>如果是两次握手：此时连接就建立了，B会一直等待A发送数据，从而白白浪费B的资源</code>。 <code>如果是三次握手：由于A没有发起连接请求，也就不会理会B的连接响应，B没有收到A的确认连接，就会关闭掉本次连接</code>。</p>
@@ -1528,7 +1677,8 @@
 <li>tcp的接收端会丢弃重复的数据</li>
 <li>流量控制：tcp连接的每一方都有固定大小的缓冲空间，tcp的接收端只允许发送端发送连接接收端缓冲区能接纳的数据，当接收方来不及处理发送方的数据，能提示发送方降低发送的速率，防止包丢失。tcp使用的流量控制协议是可变大小的滑动窗口协议</li>
 <li>拥塞控制：当网络拥塞时，减少数据的发送</li>
-<li>停止等待协议ARQ：基本原理是每发完一个分组就停止发送，等待对方确认，在收到确认后再发下一个分组，超时重传：当tcp发出一个字段后，它启动一个定时器，等待目的端确认收到这个报文段，如果不能及时确认，将重发</li>
+<li>停止等待协议ARQ：基本原理是每发完一个分组就停止发送，等待对方确认，在收到确认后再发下一个分组。</li>
+<li>超时重传：当tcp发出一个字段后，它启动一个定时器，等待目的端确认收到这个报文段，如果不能及时确认，将重发</li>
 </ul>
 <p><strong>滑动窗口</strong></p>
 <ul>
@@ -1538,10 +1688,22 @@
 </ul>
 <p><strong>拥塞控制</strong></p>
 <p>在某段时间，若对网络中某一资源的需求超过了该资源所能提供的可用部分，网络的性能就要变坏。这种情况就叫拥塞。拥塞控制就是为了防止过多的数据注入到网络中，这样就可以使网络中的路由器或链路不致过载。拥塞控制所要做的都有一个前提，就是网络能够承受现有的网络负荷。</p>
-<p>TCP的拥塞控制四种算法  慢开始 拥塞避免 快重传 快恢复</p>
-<p><strong>慢开始</strong>：由小到大逐渐增大发送窗口 ，要注意，发送方每收到一个确认报文段，cwnd+1（不包括缺失重传的确认），也就是说，每经过一个传输伦次（RTT时间），cwnd加倍。</p>
+<p>为了进行拥塞控制，TCP发送方要维持一个拥塞窗口（cwnd）的状态变量。拥塞控制窗口的大小取决于网络的拥塞程度，并且动态变化。发送方让自己的发送窗口取为拥塞窗口和接收方的接收窗口中较小的一个。</p>
+<p>TCP的拥塞控制四种算法  <strong>慢开始 拥塞避免 快重传 快恢复</strong></p>
+<p><strong>慢开始</strong>：由小到大逐渐增大发送窗口 ，要注意，发送方每收到一个确认报文段，cwnd+1（不包括缺失重传的确认），也就是说，每经过一个传输伦次（RTT时间），cwnd加倍。初始值为1。</p>
 <p><strong>拥塞避免</strong>：设置一个窗口值，大于时采用拥塞避免，让拥塞窗口cwnd缓慢增大，每经过一个往返时间RTT就把发送的cwnd+1</p>
 <p><strong>快重传与快恢复</strong>：当接收方收到了一个失序的报文，马上报告给发送方，我没收到，赶紧重传（<strong>天下武功唯快不破</strong>），假如M2收到了，M3没有收到，之后的M4,M5,M6又发送了，此时接收方一共连续给发送方反馈了4个M2确认报文。那么快重传规定，发送方只要连续收到3个重复确认，立即重传对方发来的M3</p>
+<p><strong>ARQ协议</strong></p>
+<p>自动重传请求。如果发送方在发送后一段时间之内没有收到确认帧，它通常会重新发送。ARQ协议包括停止等待ARQ和连续ARQ协议。</p>
+<p><strong>停止等待ARQ</strong></p>
+<ul>
+<li>停止等待ARQ协议是为了实现可靠传输的，他的基本原理就是每发完一个分组就停止发送，等待对方确认，通过ack，如果过了一段时间，还是没有收到ack确认，说明没有发送成功，需要重新发送，直到收到确认后再发下一个分组。</li>
+<li>在停止等待协议中，若接收方收到重复分组，就丢弃该分组，但同时还要发送确认。</li>
+</ul>
+<p><strong>连续ARQ协议</strong></p>
+<p>连续ARQ协议可提高信道利用率。发送方维持一个发送窗口，凡位于发送窗口内的分组可以连续发送出去，而不需要等待对方确认。接收方一般采用累积确认，对按序到达的最后一个分组发送确认，表明这个分组为止的所有分组都已经正确收到了。</p>
+<p>优点：信道利用率高，容易实现，即使确认丢失，也不必重传。</p>
+<p>缺点：不能向发送方反映出已经正确收到的所有分组的信息。</p>
 <h3 id="SYN-攻击"><a href="#SYN-攻击" class="headerlink" title="SYN 攻击"></a>SYN 攻击</h3><p>SYN攻击属于<a href="https://link.jianshu.com/?t=http://baike.baidu.com/view/365.htm">DoS</a>攻击的一种，它利用<a href="https://link.jianshu.com/?t=http://baike.baidu.com/view/1240122.htm">TCP协议</a>缺陷，通过发送大量的半连接请求，耗费<a href="https://link.jianshu.com/?t=http://baike.baidu.com/view/2089.htm">CPU</a>和<a href="https://link.jianshu.com/?t=http://baike.baidu.com/view/1082.htm">内存</a>资源。</p>
 <p>TCP三次握手的第二次握手时服务器接收到连接请求（syn= j），将此信息加入未连接队列，并发送请求包给客户（syn=k,ack=j+1），此时进入SYN_RECV状态。当服务器未收到客户端的确认包时，重发请求包，一直到超时或半连接数量超过半连接队列的最大值时，将此条目从未连接队列删除。<br> SYN攻击利用TCP协议三次握手的原理，大量发送伪造源IP的SYN包也就是<strong>伪造第一次握手数据包</strong>，服务器每接收到一个SYN包就会为这个连接信息分配核心内存并放入半连接队列，如果短时间内接收到的SYN太多，半连接队列就会溢出，操作系统会把这个连接信息丢弃造成不能连接，当攻击的SYN包超过半连接队列的最大值时，正常的客户发送SYN数据包请求连接就会被服务器丢弃。目标系统运行缓慢，严重者引起网络堵塞甚至系统瘫痪。每种操作系统半连接队列大小（Backlog参数）不一样所以抵御SYN攻击的能力也不一样。</p>
 <h3 id="socket"><a href="#socket" class="headerlink" title="socket"></a>socket</h3><p>　　这是为了实现以上的通信过程而建立成来的通信管道，其真实的代表是客户端和服务器端的一个通信进程，双方进程通过socket进行通信，而通信的规则采用指定的协议。</p>
@@ -1550,7 +1712,7 @@
 <p>　　很多其它协议都是基于这两个协议。如http就是基于tcp的，用socket可以创建tcp连接，也可以创建udp连接。</p>
 <p>　　这意味着，用socket可以创建任何协议的连接，因为其它协议都是基于此的。</p>
 <p>　　一个Socket实例由一个IP地址和一个端口号唯一确定。<br>　　Socket是一种用于网络通信的低层开发接口，借助于通信两端的应用程序(实际上是Socket)可以利用输入输出流完成数据交换。</p>
-<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　　　3）适合于客户端和服务器端之间信息实时交互；<br>　　　　4）可以加密,数据安全性强。 </p>
+<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　　　　　　　3）适合于客户端和服务器端之间信息实时交互；<br>　　　　　　　　4）可以加密,数据安全性强。 </p>
 <p><strong>Socket 传输的缺点</strong><br>　　1）需对传输的数据进行解析，转化成应用级的数据；<br>　　2）对开发人员的开发水平要求高；<br>　　3）相对于Http协议传输，增加了开发量</p>
 <p>基于Socket传输的特点：Socket 传输方式适合于对传输速度，安全性，实时交互，费用等要求高的应用中，如网络游戏，手机应用，银行内部交互等‘’。</p>
 <h2 id="Mysql数据库知识点"><a href="#Mysql数据库知识点" class="headerlink" title="Mysql数据库知识点"></a>Mysql数据库知识点</h2><h3 id="数据库三大范式"><a href="#数据库三大范式" class="headerlink" title="数据库三大范式"></a>数据库三大范式</h3><ol>
@@ -1558,7 +1720,8 @@
 <li>第二范式：要有主键</li>
 <li>第三范式：不可存在传递依赖，你如商品表里面关联商类别表，那么只需要一个关联字段peoduct_type_name,那就属于存在传递依赖的情况，第三范式主要是从空间的角度来考虑，避免产生冗余信息，浪费磁盘空间</li>
 </ol>
-<h3 id="两种存储引擎"><a href="#两种存储引擎" class="headerlink" title="两种存储引擎"></a>两种存储引擎</h3><p>InnoDB 和 MyISAM</p>
+<h3 id="两种存储引擎"><a href="#两种存储引擎" class="headerlink" title="两种存储引擎"></a>两种存储引擎</h3><p>MyISAM是MySql的默认数据库引擎，虽然性能极佳，而且提高了大量的特性，包括全文索引，压缩，空间函数等。但MyISAM不支持事务和行级锁，而且做大的缺陷是崩溃后无法安全恢复。</p>
+<p>InnoDB 和 MyISAM</p>
 <ul>
 <li>InnoDB<strong>支持事务</strong>，可以进行Commit和Rollback；</li>
 <li>MyISAM 只支持表级锁，而 InnoDB 还<strong>支持行级锁</strong>，提高了并发操作的性能；</li>
@@ -1566,6 +1729,7 @@
 <li>MyISAM <strong>崩溃</strong>后发生损坏的概率比 InnoDB 高很多，而且<strong>恢复的速度</strong>也更慢；</li>
 <li>MyISAM 支持<strong>压缩</strong>表和空间数据索引，InnoDB需要更多的内存和存储；</li>
 <li>InnoDB 支持在线<strong>热备份</strong></li>
+<li>MVCC:InnodDB支持。</li>
 </ul>
 <p><strong>MyISAM</strong> 管理非事务表。它提供高速存储和检索（MyISAM强调的是性能，每次查询具有原子性，其执行速度比InnoDB更快），以及全文搜索能力。如果表比较小，或者是只读数据（有大量的SELECT），还是可以使用MyISAM；</p>
 <p><strong>InnoDB</strong> 支持事务，并发情况下有很好的性能，基本可以替代MyISAM</p>
@@ -1587,6 +1751,7 @@
 <h3 id="事务的并发问题"><a href="#事务的并发问题" class="headerlink" title="事务的并发问题"></a><strong>事务的并发问题</strong></h3><p>　　<strong>1、脏读：事务A读取了事务B更新的数据，然后B回滚操作，那么A读取到的数据是脏数据</strong></p>
 <p>　　<strong>2、不可重复读：事务 A 多次读取同一数据，事务 B 在事务A多次读取的过程中，对数据作了更新并提交，导致事务A多次读取同一数据时，结果 不一致。</strong></p>
 <p>　　<strong>3、幻读：在同一事务内查询返回不同的结果集合。一般是由于其他事务插入并提交了一些记录造成的在一个事务中使用相同的 SQL 两次读取，第二次读取到了其他事务新插入的行。幻读与不可重复读类似。它发生在一个事务（T1）读取了几行数据，接着另一个并发事务（T2）插入了一些数据时。在随后的查询中，第一个事务（T1）就会发现多了一些原本不存在的记录，就好像发生了幻觉一样，所以称为幻读。</strong></p>
+<p>​       <strong>4、丢失修改：是指在一个事务读取一个数据时，另外一个事务也访问了该数据，那么在第一个事务中修改了这个数据后，第二个事务也修改了这个数据，这样第一个事务内的修改的结果就被丢失了</strong></p>
 <p>　　<strong>小结：不可重复读的和幻读很容易混淆，不可重复读侧重于修改，幻读侧重于新增或删除。解决不可重复读的问题只需锁住满足条件的行，解决幻读需要锁表</strong></p>
 <p><strong>不可重复读和幻读区别：</strong></p>
 <p>不可重复读的重点是修改比如多次读取一条记录发现其中某些列的值被修改，幻读的重点在于新增或者删除比如多次读取一条记录发现记录增多或减少了。</p>
@@ -1645,7 +1810,7 @@
 <p>　　假设没有“快照读”，那么当一个更新的事务没有提交时，另一个对更新数据进行查询的事务会因为无法查询而被阻塞（因为上了X锁，即写锁，所以不能得到S锁，即读锁），这种情况下，并发能力就相当的差。而“快照读”就可以完成高并发的查询，不过，“读提交”只能避免“脏读”，并不能避免“不可重复读”和“幻读”。</p>
 </li>
 <li><p><strong>可重复读</strong>，对同一字段的多次读取结果都是一致的，除非数据是被本身事务自己所修改，<strong>可以阻止脏读和不可重复读，但幻读仍有可能发生</strong>。</p>
-<p>顾名思义，就是专门针对“不可重复读”这种情况而制定的隔离级别，自然，它就可以有效的避免“不可重复读”。而它也是MySql的默认隔离级别。</p>
+<p>顾名思义，就是专门针对“不可重复读”这种情况而制定的隔离级别，自然，它就可以有效的避免“不可重复读”。<strong>而它也是MySql的默认隔离级别。</strong></p>
 <p>事例：程序员拿着信用卡去享受生活（卡里当然是只有3.6万），当他埋单时（事务开启，不允许其他事务的UPDATE修改操作），收费系统事先检测到他的卡里有3.6万。这个时候他的妻子不能转出金额了。接下来收费系统就可以扣款了。</p>
 <p>　　分析：重复读可以解决不可重复读问题。写到这里，应该明白的一点就是，不可重复读对应的是修改，即UPDATE操作。但是可能还会有幻读问题。因为幻读问题对应的是插入INSERT操作，而不是UPDATE操作。</p>
 <p>　　在这个级别下，普通的查询同样是使用的“快照读”，但是，和“读提交”不同的是，当事务启动时，就不允许进行“修改操作（Update）”了，而“不可重复读”恰恰是因为两次读取之间进行了数据的修改，因此，“可重复读”能够有效的避免“不可重复读”，但却避免不了“幻读”，因为幻读是由于“插入或者删除操作（Insert or Delete）”而产生的。</p>
@@ -1669,6 +1834,30 @@
 <p>MVCC的重要特性:<br>(1)MVCC只支持RC(读取已提交)和RR(可重复读)隔离级别。<br>(2)MVCC能解决脏读、不可重复读问题，不能解决丢失更新问题和幻读问题。<br>(3)MVCC是用来解决读写操作之间的阻塞问题。使得在并发读写数据库时，可以做到在读操作时不用阻塞写操作，写操作也不用阻塞读操作，提高了数据库并发读写的性能。</p>
 <p><strong>总结</strong></p>
 <p>1、MVCC的实现主要依赖于数据库在每个表中添加的三个隐藏字段以及事务在查询时创建的快照（read view）和数据库支持多版本数据，数据库中存在数据版本链(Undo log)。<br>2、InnoDB支持多版本数据，在更新或者删除数据时，并不会立马删除原有行记录，而是将旧版本存入回滚段中的Undo log内，并通过回滚指针形成一个数据链，可以通过这个指针访问链上的历代数据版本，正是这种机制使得数据库数据产生了多个版本，为通过MVCC进行快照读提供了可能。<br>3、并不是所有的查询都是进行快照读，使用普通的select 语句进行查询时会生成快照，进行快照读；使用select … lock in share mode，select … for update，insert，update，delete 语句等语句进行查询或者更新时还是会使用锁机制，进行锁阻塞。<br>4、使用MVCC的作用(意义)是非阻塞的解决了事务读写冲突，提高了并发性能。<br>5、MVCC只支持RC(读取已提交)和RR(可重复读)隔离级别。<br>6、MVCC能解决脏读、不可重复读问题，不能解决丢失更新问题和幻读问题。<br>7、InnoDB使用锁机制和MVCC来共同作用，进行并发控制的，虽然MVCC不能解决幻读和丢失更新问题，但通过与锁机制(行级锁的Next-Key Locks算法的使用、排他锁等）一起作用可以达到可串行化隔离级别的效果，禁止了幻读、更新丢失等问题。</p>
+<h3 id="锁机制与InnoDB锁算法"><a href="#锁机制与InnoDB锁算法" class="headerlink" title="锁机制与InnoDB锁算法"></a>锁机制与InnoDB锁算法</h3><ul>
+<li>InnoDB 支持行级锁和表级锁，默认是行级锁</li>
+<li>MyISAM采用表级锁</li>
+</ul>
+<p>表级锁与行级锁的对比：</p>
+<ul>
+<li>表级锁：MySQL中锁定粒度最大的一种锁，对当前操作的整张表加锁</li>
+<li>行级锁：MySQL中锁定粒度最小的一种锁，只针对当前操作的行进行加锁。</li>
+</ul>
+<p><strong>InnoDB存储引擎的锁的算法有三种</strong></p>
+<ul>
+<li>Record lock:单个行记录上的锁</li>
+<li>Gap lock:间隙锁 锁定一个范围，不包括记录本身</li>
+<li>Next-key lock:record + gap 锁定一个范围，包含记录本身</li>
+</ul>
+<h3 id="大表优化"><a href="#大表优化" class="headerlink" title="大表优化"></a>大表优化</h3><p>当MySQL单表记录数过大的时候，数据库的CRUD性能会明显下降，一些常见的优化措施如下：</p>
+<ul>
+<li>限定数据的范围，查询的时候添加范围，例如时间范围等</li>
+<li>读/写分离，经典的数据库拆分方案，主库负责写，从库负责读</li>
+<li>垂直分区：根据数据库里面数据表的相关性进行拆分，简单来说就是数据表列的拆分，把一张比较多的表拆分为多张表</li>
+<li>水平分区：保持数据表结构不变，通过某种策略存储数据分片。这样每一片数据分散到不同的表或者库中，达到了分布式的目的。水平拆分可以支撑非常大的数据量。</li>
+</ul>
+<h3 id="池化设计思想，数据库连接池"><a href="#池化设计思想，数据库连接池" class="headerlink" title="池化设计思想，数据库连接池"></a>池化设计思想，数据库连接池</h3><p>这种设计会初始预设资源，解决的问题就是抵消每次获取资源的消耗，如创建线程的开销，获取远程连接的开销等。除了初始化资源，池化设计还包括了如下特征：池子的初始值，池子的活跃值，池子的最大值等，这些特征可以直接映射到java线程池和数据库连接池的成员属性中。</p>
+<p>数据库连接本质就是一个socket的连接。数据库服务端还要维护一些缓存和用户权限信息之类的所以占用了一些内存。在连接池中，创建连接后，将其放置在池中，并再次使用它，因此不必建立新的连接。如果使用了所有连接，则会建立一个新连接并将其添加到池中。</p>
 <h3 id="mysql联合索引详解"><a href="#mysql联合索引详解" class="headerlink" title="mysql联合索引详解"></a>mysql联合索引详解</h3><p>联合索引又叫复合索引。对于复合索引：Mysql从左到右的使用索引中的字段，一个查询可以只使用索引中的一部份，但只能是最左侧部分。例如索引是key index （a,b,c）。 可以支持a | a,b| a,b,c 3种组合进行查找，但不支持 b,c进行查找 .当最左侧字段是常量引用时，索引就十分有效。</p>
 <p>  两个或更多个列上的索引被称作复合索引。</p>
 <p>  利用索引中的附加列，您可以缩小搜索的范围，但使用一个具有两列的索引 不同于使用两个单独的索引。复合索引的结构与电话簿类似，人名由姓和名构成，电话簿首先按姓氏对进行排序，然后按名字对有相同姓氏的人进行排序。如果您知 道姓，电话簿将非常有用；如果您知道姓和名，电话簿则更为有用，但如果您只知道名不姓，电话簿将没有用处。</p>
@@ -1726,9 +1915,11 @@
 <li>倒排文件(Inverted File)：所有单词的倒排列表往往顺序地存储在磁盘的某个文件里，这个文件即被称之为倒排文件，倒排文件是存储倒排索引的物理文件。</li>
 </ul>
 <h3 id="Mysql索引实现（B-B树）"><a href="#Mysql索引实现（B-B树）" class="headerlink" title="Mysql索引实现（B+ B树）"></a>Mysql索引实现（B+ B树）</h3><h4 id="索引定义"><a href="#索引定义" class="headerlink" title="索引定义"></a>索引定义</h4><p>数据库索引：索引是对数据库中的一个或多个列的值进行排序的数据结构，以协助快速查询，更新数据库表中的数据</p>
+<p>MYSQL索引使用的数据结构主要是BTree索引和哈希索引。对于哈希索引来说，底层的数据结构就是哈希表，因此在绝大多数需求为单条记录查询的时候，可以选择哈希索引，查询性能高，其余情况建议使用BTree索引。</p>
 <p>B-tree，B是balance，一般用于<strong>数据库的索引</strong>。使用B-tree结构可以显著减少定位记录时所经历的中间过程，从而加快存取速度。而B+tree是B-tree的一个变种，MySQL就普遍使用B+tree实现其索引结构。　　</p>
 <p>　　一般来说，索引本身也很大，不可能全部存储在内存中，因此<strong>索引往往以索引文件的形式存储的磁盘上</strong>。这样的话，索引查找过程中就要产生磁盘I/O消耗，相对于内存存取，I/O存取的消耗要高几个数量级，所以评价一个数据结构作为索引的优劣最重要的指标就是在查找过程中磁盘I/O操作次数的渐进复杂度。换句话说，索引的结构组织要尽量减少查找过程中磁盘I/O的存取次数。</p>
 <p>　　为了达到这个目的，磁盘按需读取，要求每次都会预读的长度一般为页的整数倍。而且数据库系统将一个节点的大小设为等于一个页，这样每个节点只需要一次I/O就可以完全载入。每次新建节点时，直接申请一个页的空间，这样就保证一个节点物理上也存储在一个页里，加之计算机存储分配都是按页对齐的，就实现了一个node只需一次I/O。并把B-tree中的m值设的非常大，就会让树的高度降低，有利于一次完全载入</p>
+<p>InnoDB:在根据主索引搜索时，直接找到key所在的节点即可取出数据，在根据辅助索引查找时，则需要先取出主键的值，再走一遍主索引。</p>
 <p><strong>聚集索引：</strong></p>
 <p>　　该索引中键值的<strong>逻辑顺序决定了表中相应行的物理顺序</strong>。 </p>
 <p>　　聚集索引确定表中数据的物理顺序。聚集索引类似于电话簿，后者按姓氏排列数据。由于聚集索引规定数据在表中的物理存储顺序，因此一个表只能包含一个聚集索引。但该索引可以包含多个列（组合索引），就像电话簿按姓氏和名字进行组织一样。 </p>
@@ -1813,12 +2004,12 @@
 <li><p>悲观锁：认为数据随时会被修改，因此每次读取数据之前都会上锁，防止其它事务读取或修改数据；应用于<strong>数据更新比较频繁</strong>的场景；</p>
 </li>
 <li><p>乐观锁：操作数据时不会上锁，但是更新时会判断在此期间有没有别的事务更新这个数据，若被更新过，则失败重试；适用于</p>
-<p>读多写少</p>
-<p>的场景。乐观锁的实现方式有：</p>
+<p>读多写少的场景。乐观锁的实现方式有：</p>
 <ul>
 <li>加一个版本号或者时间戳字段，每次数据更新时同时更新这个字段；</li>
-<li>先读取想要更新的字段或者所有字段，更新的时候比较一下，只有字段没有变化才进行更新</li>
 </ul>
+</li>
+<li><p>先读取想要更新的字段或者所有字段，更新的时候比较一下，只有字段没有变化才进行更新</p>
 </li>
 </ul>
 <h3 id="Drop-Delete-Truncate"><a href="#Drop-Delete-Truncate" class="headerlink" title="Drop/Delete/Truncate"></a>Drop/Delete/Truncate</h3><ul>
@@ -1904,7 +2095,32 @@
 <p>redis用于存储使用较为频繁的数据到缓存中，读取速度快</p>
 <p>（3）需求上</p>
 <p>mysql和redis因为需求的不同，一般都是配合使用。</p>
-<h2 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h2><h3 id="分页和分段"><a href="#分页和分段" class="headerlink" title="分页和分段"></a>分页和分段</h3><ul>
+<h2 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h2><h3 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h3><p>内存管理主要是做什么呢？</p>
+<p>主要负责内存的分配与回收（malloc函数：申请内存，free函数：释放内存）,另外地址转换也就是将逻辑地址转换成相应的物理地址功能也是操作系统内存管理做的事情。</p>
+<h4 id="内存管理机制"><a href="#内存管理机制" class="headerlink" title="内存管理机制"></a>内存管理机制</h4><p>简单分为连续分配管理方式和非连续分配管理方式。前者是指为一个用户程序分配一个连续的内存空间，常见的如块式管理，后者允许一个程序使用的内存分布在离散或者说不相邻的内存中，常见的如页式管理和段式管理。</p>
+<p><strong>块式管理</strong>：远古时代的计算机操作系统的内存管理方式。将内存分为几个固定大小的块，每个块中只包含一个进程，如果程序需要进程的话就给他分配一块，如果只需要很小的空间的话，很大一部分就会被浪费了，这些在每个块中未被利用的空间叫做<strong>碎片</strong>。</p>
+<p><strong>页式管理：</strong>把主存分为大小相等且固定的一页一页的形式，页较小，相对相比于块式管理的划分力度更大，提高了内存利用率，较少了碎片，页式管理通过页表对应逻辑地址和物理地址。</p>
+<p><strong>段式管理：</strong>段式管理将主存分为一段段的，每一段的空间又要比一页的空间小很多，但是最重要的是段式有实际意义的，每个段定义了一组逻辑信息，例如主程序段MAIN，栈段S，段式管理通过段表对应逻辑地址和物理地址。</p>
+<p><strong>段页式管理：</strong>结合了段式管理和页式管理的优点，简单来说段页式管理机制就是吧主存先分成若干段，每个段又分成若干页，段与段之间以及段的内部的都是离散的。</p>
+<h4 id="快表和多级页表"><a href="#快表和多级页表" class="headerlink" title="快表和多级页表"></a>快表和多级页表</h4><p>在分页管理中有两点非常重要，虚拟地址到物理地址的转换要快，解决虚拟地址空间大，页表也会很大的问题。</p>
+<p>快表是来解决转换速度的问题，可以理解为一种高速缓冲存储器Cache，其中的内容是页表的一部分或者全部内容。做为页表的Cache，它的作用于页表相似，但是提高了访问速度。</p>
+<p>流程：</p>
+<ol>
+<li>根据虚拟地址中的页号查快表</li>
+<li>如果该页在快表中，直接从快表中读取相应的物理地址</li>
+<li>如果该页不在快表中，就访问内存中的页表，再从页表中得到物理地址，同时将页表中的该映射表项添加到快表中</li>
+<li>快表填满后，又要等级新页的时候，就按照一定的淘汰策略淘汰快表中的一个页。</li>
+</ol>
+<p>多级页表的主要目的是避免把全部页表一直放在内存中占用过多的空间，特别是那些根本就不需要的页表就不需要保存在内存中，属于典型的时间换空间的场景。</p>
+<h4 id="物理地址和虚拟地址"><a href="#物理地址和虚拟地址" class="headerlink" title="物理地址和虚拟地址"></a>物理地址和虚拟地址</h4><p>逻辑地址有操作系统决定，物理地址指的是真实物理内存中的地址，更具体一点就是内存地址寄存器中的地址，物理地址是内存单元真正的地址。</p>
+<h4 id="CPU寻址"><a href="#CPU寻址" class="headerlink" title="CPU寻址"></a>CPU寻址</h4><p>现代处理器使用的是一种称为虚拟寻址的寻址方式，使用虚拟寻址，CPU需要将虚拟地址转换为物理地址，这样才能访问到真是的物理地址。完成该任务的硬件是CPU中的一个被称为内存管理单元的硬件。</p>
+<p>通过虚拟地址访问内存的优势</p>
+<ul>
+<li>程序可以使用一系列相邻的虚拟地址来访问物理内存中不相邻的大内存缓冲区</li>
+<li>程序可以使用一些列虚拟地址来访问大于可用物理内存的内存缓冲区。当物理内存的供应量变小时，内存管理器会将物理内存页保存到磁盘文件，数据或者代码页会根据需要在物理内存与磁盘之间移动</li>
+<li>不同进程使用的虚拟地址彼此隔离。</li>
+</ul>
+<h3 id="分页和分段"><a href="#分页和分段" class="headerlink" title="分页和分段"></a>分页和分段</h3><ul>
 <li>页式存储：用户空间划分为大小相等的部分称为页（page），内存空间划分为同样大小的区域称为页框，分配时以页为单位，按进程需要的页数分配，逻辑上相邻的页物理上不一定相邻；</li>
 <li>段式存储：用户进程地址空间按照自身逻辑关系划分为若干个段（segment）（如代码段，数据段，堆栈段），内存空间被动态划分为长度不同的区域，分配时以段为单位，每段在内存中占据连续空间，各段可以不相邻；</li>
 <li>段页式存储：用户进程先按段划分，段内再按页划分，内存划分和分配按页。</li>
@@ -1918,6 +2134,7 @@
 <li>碎片：分段没有内碎片，但会产生外碎片；分页没有外碎片，但会产生内碎片（一个页填不满）</li>
 </ul>
 <h3 id="虚拟内存"><a href="#虚拟内存" class="headerlink" title="虚拟内存"></a>虚拟内存</h3><p>每个程序都拥有自己的地址空间，这个地址空间被分成大小相等的页，这些页被映射到物理内存；但不需要所有的页都在物理内存中，当程序引用到不在物理内存中的页时，由操作系统将缺失的部分装入物理内存。这样，对于程序来说，逻辑上似乎有很大的内存空间，只是实际上有一部分是存储在磁盘上，因此叫做虚拟内存。</p>
+<p>正式因为虚拟内存的存在，通过虚拟内存可以让程序可以拥有超过系统物理内存大小的可用内存空间，另外虚拟内存为每个进程提供了一个一致的，私有的地址空间，它让每个进程产生了一种自己在独享主存的错觉。</p>
 <p>虚拟内存的优点是让程序可以获得更多的可用内存。</p>
 <h4 id="局部性原理"><a href="#局部性原理" class="headerlink" title="局部性原理"></a>局部性原理</h4><p>局部性原理表现在以下两个方面：</p>
 <ol>
@@ -3133,6 +3350,73 @@
 <p>不想用双亲委派模型肯定不是覆盖findClass方法呀，覆盖这个方法就等于默认使用双亲委派模型。</p>
 <p>不想使用双亲委派模型，我们可以自定义自己的类加载器，需要继承 java.lang.ClassLoader，但是如果是要自定类加载器，也是需要继承ClassLoader，但是覆盖的是findClass方法，这点需要做下补充说明，这点看源码就可以确认，可以参考博客：</p>
 <p>双亲委派模型-&gt;重写loadClass（）方法，自定义类加载器-&gt;重写findClass（）方法应该需要被强调一下。</p>
+<h2 id="JVM重要参数"><a href="#JVM重要参数" class="headerlink" title="JVM重要参数"></a>JVM重要参数</h2><h3 id="堆内存相关"><a href="#堆内存相关" class="headerlink" title="堆内存相关"></a>堆内存相关</h3><h4 id="显示指定堆内存"><a href="#显示指定堆内存" class="headerlink" title="显示指定堆内存"></a>显示指定堆内存</h4><p>与性能有关的最常见实践之一是根据应用程序要求初始化堆内存。</p>
+<p>相关指令,指定最小堆与最大堆</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-Xms&lt;heap size&gt;[unit] </span><br><span class="line">-Xmx&lt;heap size&gt;[unit]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>heap size</strong> 表示要初始化内存的具体大小。</li>
+<li><strong>unit</strong> 表示要初始化内存的单位。单位为*<strong>“ g”*** (GB) 、*</strong>“ m”*<strong>（MB）、**<em>“ k”</em></strong>（KB）。</li>
+</ul>
+<p>举个栗子🌰，如果我们要为JVM分配最小2 GB和最大5 GB的堆内存大小，我们的参数应该这样来写：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-Xms2G -Xmx5G</span><br></pre></td></tr></table></figure>
+
+<h4 id="显示新生代内存（Young-Generation）"><a href="#显示新生代内存（Young-Generation）" class="headerlink" title="显示新生代内存（Young Generation）"></a>显示新生代内存（Young Generation）</h4><p>根据Oracle官方文档，在堆的总可用内存配置完成之后，第二大影响因素为Young Generation 在堆内存中所占用的比例，默认情况下，最大大小为1310MB，无最小限制。</p>
+<p>一共有两种指定的方法</p>
+<p><strong>通过<code>-XX:NewSize</code>和<code>-XX:MaxNewSize</code>指定</strong></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-XX:NewSize=&lt;young size&gt;[unit] </span><br><span class="line">-XX:MaxNewSize=&lt;young size&gt;[unit]</span><br></pre></td></tr></table></figure>
+
+<p>举个栗子🌰，如果我们要为 新生代分配 最小256m 的内存，最大 1024m的内存我们的参数应该这样来写：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">-XX:NewSize=256m</span><br><span class="line">-XX:MaxNewSize=1024m</span><br></pre></td></tr></table></figure>
+
+<p><strong>2.通过<code>-Xmn&lt;young size&gt;[unit]</code>指定</strong></p>
+<p>举个栗子🌰，如果我们要为 新生代分配256m的内存（NewSize与MaxNewSize设为一致），我们的参数应该这样来写：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-Xmn256m </span><br></pre></td></tr></table></figure>
+
+<p>GC调优策略中很重要的一条经验是这么说的</p>
+<p>将新对象预留在新生代，由于Full GC的成本远高于Minor GC,因此尽可能将对象分配在新生代是明智的，实际项目中根据GC日志分析新生代空间大小分配是否合理。</p>
+<p>另外，你还可以通过**<code>-XX:NewRatio=&lt;int&gt;</code>**来设置新生代和老年代内存的比值。</p>
+<p>比如下面的参数就是设置新生代（包括Eden和两个Survivor区）与老年代的比值为1。也就是说：新生代与老年代所占比值为1：1，新生代占整个堆栈的 1/2。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-XX:NewRatio=<span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="显示指定永久代-元空间的大小"><a href="#显示指定永久代-元空间的大小" class="headerlink" title="显示指定永久代/元空间的大小"></a>显示指定永久代/元空间的大小</h4><p><strong>从Java 8开始，如果我们没有指定 Metaspace 的大小，随着更多类的创建，虚拟机会耗尽所有可用的系统内存（永久代并不会出现这种情况）。</strong></p>
+<p>JDK 1.8 之前永久代还没被彻底移除的时候通常通过下面这些参数来调节方法区大小</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-XX:PermSize=N <span class="comment">//方法区 (永久代) 初始大小</span></span><br><span class="line">-XX:MaxPermSize=N <span class="comment">//方法区 (永久代) 最大大小,超过这个值将会抛出 OutOfMemoryError 异常:java.lang.OutOfMemoryError: PermGen</span></span><br></pre></td></tr></table></figure>
+
+<p>相对而言，垃圾收集行为在这个区域是比较少出现的，但并非数据进入方法区后就“永久存在”了。</p>
+<p><strong>JDK 1.8 的时候，方法区（HotSpot 的永久代）被彻底移除了（JDK1.7 就已经开始了），取而代之是元空间，元空间使用的是本地内存。</strong></p>
+<p>下面是一些常用参数：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-XX:MetaspaceSize=N <span class="comment">//设置 Metaspace 的初始（和最小大小）</span></span><br><span class="line">-XX:MaxMetaspaceSize=N <span class="comment">//设置 Metaspace 的最大大小，如果不指定大小的话，随着更多类的创建，虚拟机会耗尽所有可用的系统内存。</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="垃圾收集相关"><a href="#垃圾收集相关" class="headerlink" title="垃圾收集相关"></a>垃圾收集相关</h3><h4 id="垃圾回收器"><a href="#垃圾回收器" class="headerlink" title="垃圾回收器"></a>垃圾回收器</h4><p>JVM有四种类型的GC实现</p>
+<ul>
+<li>串行垃圾收集器</li>
+<li>并行垃圾收集器</li>
+<li>CMS垃圾收集器</li>
+<li>G1垃圾收集器</li>
+</ul>
+<p>可以用以下参数声明这些实现</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-XX:+UseSerialGC</span><br><span class="line">-XX:+UseParallelGC</span><br><span class="line">-XX:+UseParNewGC</span><br><span class="line">-XX:+UseG1GC</span><br></pre></td></tr></table></figure>
+
+<h4 id="GC记录"><a href="#GC记录" class="headerlink" title="GC记录"></a>GC记录</h4><p>为了严格控制应用程序的运行状况，我们应该始终检查JVM的垃圾回收性能，最简单的方法是以人类可读的格式记录GC活动</p>
+<p>使用以下参数，我们可以记录GC活动</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">-XX:+UseGCLogFileRotation </span><br><span class="line">-XX:NumberOfGCLogFiles=&lt; number of log files &gt; </span><br><span class="line">-XX:GCLogFileSize=&lt; file size &gt;[ unit ]</span><br><span class="line">-Xloggc:/path/to/gc.log</span><br></pre></td></tr></table></figure>
+
+<h2 id="JVM内存管理查看指令"><a href="#JVM内存管理查看指令" class="headerlink" title="JVM内存管理查看指令"></a>JVM内存管理查看指令</h2><h3 id="Jstat-gcutil-pid"><a href="#Jstat-gcutil-pid" class="headerlink" title="Jstat -gcutil pid"></a>Jstat -gcutil pid</h3><p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gyoslu3o7aj30na0b4wia.jpg" alt="img"></p>
+<p>最后的参数1000是让1秒刷新一次，我们看内存回收只看一条数据其实是看不出来什么的，往往需要观察一段时间的垃圾回收才能有所了然，下面对各个字段做一个简单的说明：</p>
+<p>S0:Survivor 0区的空间使用率</p>
+<p>S1:Survivor 1区的空间使用率</p>
+<p>E:Eden区的空间使用率</p>
+<p>O:老年代的空间使用率</p>
+<p>M:元数据区的空间使用率</p>
+<p>CCS:类指针压缩空间使用率</p>
+<p>YGC:新生代GC次数</p>
+<p>YGCT:新生代GC总时长</p>
+<p>FGC:FullGC总次数</p>
+<p>FGCT:FullGC总时长</p>
+<p>GCT:总共的GC时长<br>————————————————</p>
+<h3 id="查看jvm-参数设置及内存使用"><a href="#查看jvm-参数设置及内存使用" class="headerlink" title="查看jvm 参数设置及内存使用"></a>查看jvm 参数设置及内存使用</h3><p>Jmap -heap pid</p>
+<p>这个命令给出的信息还是比较全的，从结构上分为几个部分：HeapConfiguration、Heap Usage，其中Heap Useage又分为PS Young Generation和PS Old Generation，PS Young Generation又分为Eden Space\From Space\To space，所以可以看出这个命令也主要是围绕GC操纵空间堆来的，包括堆的基本配置以及堆的使用情况，这个命令其实很实用，上面就是配置下面就是实用情况，当堆内存不足的时候可以很直观的看出哪个参数设置得不合理，如果看堆设置没看出有什么问题，那么再结合jstat -gcutil pid看看垃圾回收情况，差不多就能看出大概是什么原因导致堆内存溢出了。<br>————————————————</p>
 ]]></content>
       <categories>
         <category>Java</category>
@@ -6962,7 +7246,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#105;&#x74;&#64;&#x67;&#x69;&#x74;&#104;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;">&#103;&#105;&#x74;&#64;&#x67;&#x69;&#x74;&#104;&#x75;&#98;&#46;&#99;&#x6f;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#x69;&#116;&#64;&#x67;&#105;&#116;&#104;&#x75;&#x62;&#46;&#99;&#x6f;&#109;">&#103;&#x69;&#116;&#64;&#x67;&#105;&#116;&#104;&#x75;&#x62;&#46;&#99;&#x6f;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
