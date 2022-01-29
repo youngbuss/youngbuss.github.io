@@ -31,7 +31,7 @@
 <meta property="og:description" content="Redis概述远程服务字典 免费和开源 当下最热门的NoSQL 技术  Redis作用   内存存储，持久化，内存中是断电即失，所以说持久化层很重要 效率高，可以用于高速缓存 发布订阅信息 地图信息分析 计时器，计数器（浏览量）">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-23T04:39:54.000Z">
-<meta property="article:modified_time" content="2022-01-13T14:33:15.385Z">
+<meta property="article:modified_time" content="2022-01-29T13:39:21.194Z">
 <meta property="article:author" content="Yang">
 <meta property="article:tag" content="Redis">
 <meta name="twitter:card" content="summary">
@@ -232,7 +232,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-01-13 22:33:15" itemprop="dateModified" datetime="2022-01-13T22:33:15+08:00">2022-01-13</time>
+                <time title="修改时间：2022-01-29 21:39:21" itemprop="dateModified" datetime="2022-01-29T21:39:21+08:00">2022-01-29</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,22 +293,19 @@
 <li><strong>单线程</strong>：Redis的瓶颈不是cpu的运行速度，而往往是网络带宽和机器的内存大小。单线程切换开销小，容易实现。</li>
 </ul>
 <p>多路复用是指使用一个线程来检查多个文件描述符（Socket）的就绪状态，比如调用select和poll函数，传入多个文件描述符（FileDescription，简称FD），如果有一个文件描述符（FileDescription）就绪，则返回，否则阻塞直到超时。得到就绪状态后进行真正的操作可以在同一个线程里执行，也可以启动线程执行（比如使用线程池）。虾米意思？就是派一个代表，同时监听多个文件描述符是否有数据到来。等着等着，如有有数据，就告诉某某你的数据来啦！赶紧来处理吧。有没有很感动，一个人待着，帮了很多人。医院的黄牛，一个人排队，大家只要把钱给它，它就会把号给需要的人，开个玩笑。。。。</p>
-<h2 id="Redis网络模型"><a href="#Redis网络模型" class="headerlink" title="Redis网络模型"></a>Redis网络模型</h2><h3 id="单线程模型原因"><a href="#单线程模型原因" class="headerlink" title="单线程模型原因"></a>单线程模型原因</h3><ol>
-<li><p>使用单线程模型能带来更好的可维护性，方便开发和调试；</p>
-</li>
-<li><p>使用单线程模型也能并发的处理客户端的请求；</p>
-</li>
-<li><p>Redis 服务中运行的绝大多数操作的性能瓶颈都不是 CPU；</p>
-</li>
-<li><p>可维护性</p>
-</li>
-<li><p>并发处理</p>
+<h2 id="Redis网络模型"><a href="#Redis网络模型" class="headerlink" title="Redis网络模型"></a>Redis网络模型</h2><h3 id="单线程模型"><a href="#单线程模型" class="headerlink" title="单线程模型"></a>单线程模型</h3><p>Redis 基于Reactor模式来设计开发了自己的一套搞笑的时间处理模型</p>
+<h3 id="单线程模型原因"><a href="#单线程模型原因" class="headerlink" title="单线程模型原因"></a>单线程模型原因</h3><ol>
+<li>使用单线程模型能带来更好的可维护性，方便开发和调试；</li>
+<li>使用单线程模型也能并发的处理客户端的请求；</li>
+<li>Redis 服务中运行的绝大多数操作的性能瓶颈都不是 CPU；</li>
+<li>可维护性</li>
+<li>并发处理</li>
+</ol>
+<p>Redis 通过IO多路复用程序来监听来及客户端的大量连接，或者说是监听多个socket，它会将感兴趣的事件及类型注册到内核中并监听每个事件是否发生。这样的好处非常明显：<strong>I/O多路复用技术的使用让Redis不需要额外创建多余的线程来监听客户端的大量连接，降低了资源的消耗</strong></p>
 <p>使用单线程模型也并不意味着程序不能并发的处理任务，Redis 虽然使用单线程模型处理用户的请求，但是它却使用 I/O 多路复用机制<strong>并发</strong>处理来自客户端的多个连接，同时等待多个连接发送的请求。</p>
 <p>在 I/O 多路复用模型中，最重要的函数调用就是 <code>select</code> 以及类似函数，该方法的能够同时监控多个文件描述符（也就是客户端的连接）的可读可写情况，当其中的某些文件描述符可读或者可写时，<code>select</code> 方法就会返回可读以及可写的文件描述符个数。</p>
 <p>使用 I/O 多路复用技术能够极大地减少系统的开销，系统不再需要额外创建和维护进程和线程来监听来自客户端的大量连接，减少了服务器的开发成本和维护成本。</p>
-</li>
-</ol>
-<p>Redis6.0 引入多线程主要是为了提高网络 IO 读写性能，因为这个算是 Redis 中的一个性能瓶颈（Redis 的瓶颈主要受限于内存和网络）。</p>
+<p><strong>Redis6.0 引入多线程主要是为了提高网络 IO 读写性能</strong>，因为这个算是 Redis 中的一个性能瓶颈（Redis 的瓶颈主要受限于内存和网络）。</p>
 <p>虽然，Redis6.0 引入了多线程，但是 Redis 的多线程只是在网络数据的读写这类耗时操作上使用了， 执行命令仍然是单线程顺序执行。因此，你也不需要担心线程安全问题。</p>
 <p>Redis6.0 的多线程默认是禁用的，只使用主线程。如需开启需要修改 redis 配置文件 redis.conf ：</p>
 <p>开启多线程后，还需要设置线程数，否则是不生效的。同样需要修改 redis 配置文件 redis.conf :</p>
@@ -321,6 +318,13 @@
 <li>主线程阻塞等待 IO 线程将数据回写 Socket 完毕。</li>
 <li>解除绑定，清空等待队列。</li>
 </ul>
+<h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p>大量请求的key根本不存在于缓存中，导致请求直接落在了数据库上。</p>
+<p>解决方法</p>
+<p>最基本的就是首先做好参数校验，一些不合法的参数请求直接抛出异常。</p>
+<ul>
+<li>缓存无效key,如果数据库和缓存都查不到某一个key的数据就写入到一个Redis中并设置过期时间，可以解决请求的key变化不频繁的问题，并不能根本解决问题</li>
+<li>布隆过滤器：具体做法是把所有可能存在的请求的值放在布隆过滤器中，当用户请求过来的时候，先判断用户发来的请求是否存在于布隆过滤器中，不存在的话，直接返回参数请求错误信息给客户，存在的话走后面的流程。</li>
+</ul>
 <h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>我发现缓存雪崩这名字起的有点意思，哈哈。</p>
 <p>实际上，缓存雪崩描述的就是这样一个简单的场景：缓存在同一时间大面积的失效，后面的请求都直接落到了数据库上，造成数据库短时间内承受大量请求。这就好比雪崩一样，摧枯拉朽之势，数据库的压力可想而知，可能直接就被这么多请求弄宕机了。</p>
 <p>举个例子：系统的缓存模块出了问题比如宕机导致不可用。造成系统的所有访问，都要走数据库。</p>
@@ -329,7 +333,7 @@
 <h3 id="解决办法"><a href="#解决办法" class="headerlink" title="解决办法"></a>解决办法</h3><p>针对 Redis 服务不可用的情况：</p>
 <p>采用 Redis 集群，避免单机出现问题整个缓存服务都没办法使用。</p>
 <p>限流，避免同时处理大量的请求。</p>
-<p>针对热点缓存失效的情况：</p>
+<p><strong>针对热点缓存失效的情况：</strong></p>
 <p>设置不同的失效时间比如随机设置缓存的失效时间。</p>
 <p>缓存永不失效。</p>
 <h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><p>安装简单 不建议使用windows 推荐使用linux</p>
@@ -348,7 +352,8 @@
 <p>（4）操作系统将缓冲区中的数据转移到磁盘控制器上(数据在磁盘缓存中)。</p>
 <p>（5）磁盘控制器将数据写到磁盘的物理介质中(数据真正落到磁盘上)。</p>
 <p>提供了两种策略机制，也就是RDB和AOF。</p>
-<h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>RDB其实就是把数据以快照的形式保存在磁盘上。什么是快照呢，你可以理解成把当前时刻的数据拍成一张照片保存下来。</p>
+<h3 id="RDB（快照）"><a href="#RDB（快照）" class="headerlink" title="RDB（快照）"></a>RDB（快照）</h3><p>RDB其实就是把数据以快照的形式保存在磁盘上。什么是快照呢，你可以理解成把当前时刻的数据拍成一张照片保存下来。</p>
+<p>Redis 可以通过创建快照来获得存储在内存里面的数据在某个时间点上的副本。Redis 创建快照之后，可以对快照进行备份，可以将快照复制到其他服务器从而创建具有相同数据的服务器副本，还可以将快照留在原地以便重启服务器的时候使用。</p>
 <p>RDB持久化是指在指定的时间间隔内将内存中的数据集快照写入磁盘。也是默认的持久化方式，这种方式是就是将内存中数据以快照的方式写入到二进制文件中,默认的文件名为dump.rdb。</p>
 <p>在我们安装了redis之后，所有的配置都是在redis.conf文件中，里面保存了RDB和AOF两种持久化机制的各种配置。</p>
 <p>既然RDB机制是通过把某个时刻的所有数据生成一个快照来保存，那么就应该有一种触发机制，是实现这个过程。对于RDB来说，提供了三种机制：save、bgsave、自动化</p>
@@ -361,12 +366,20 @@
 <ul>
 <li>在一定间隔时间做一次备份，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改</li>
 </ul>
-<h3 id="AOF机制"><a href="#AOF机制" class="headerlink" title="AOF机制"></a><strong>AOF机制</strong></h3><p>全量备份总是耗时的，有时候我们提供一种更加高效的方式AOF，工作机制很简单，redis会将每一个收到的写命令都通过write函数追加到文件中。通俗的理解就是日志记录。</p>
+<h3 id="AOF机制"><a href="#AOF机制" class="headerlink" title="AOF机制"></a><strong>AOF机制</strong></h3><p>开启AOF后，每次执行一条会更改Redis数据中的数据的命令，Redis就会将该命令写入到磁盘中的AOF文件。AOF文件的保存位置和RDB文件的位置相同，都是通过dir参数设置的。</p>
+<p>有三种方式</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">appendfsync always # 每次有数据修改时发生</span><br><span class="line">appendfsync everysec # 每秒钟同步一次，显示地将多个写命令同步到磁盘中</span><br><span class="line">appendfsync <span class="keyword">no</span> # 让操作系统决定</span><br></pre></td></tr></table></figure>
+
+
+
+<p>全量备份总是耗时的，有时候我们提供一种更加高效的方式AOF，工作机制很简单，redis会将每一个收到的写命令都通过write函数追加到文件中。通俗的理解就是日志记录。</p>
 <p><strong>优势</strong></p>
 <p>每修改同步：appendfsync always 同步持久化,每次发生数据变更会被立即记录到磁盘,性能较差但数据完整性比较好<br>·每秒同步：appendfsync everysec 异步操作，每秒记录,如果一秒内宕机，有数据丢失<br>不同步：appendfsync no 从不同步<br><strong>劣势</strong></p>
 <p>相同数据集的数据而言aof文件要远大于rdb文件，恢复速度慢于rdb<br>aof运行效率要慢于rdb,每秒同步策略效率较好，不同步效率和rdb相同</p>
 <p>如果同时开启了两个机制，会使用aof来加载数据，引文aof加载的数据更完整</p>
-<h2 id="aof重写机制"><a href="#aof重写机制" class="headerlink" title="aof重写机制"></a>aof重写机制</h2><p>aof重写：可以理解为一个aof的压缩过程，aof文件是一个持续追加的过程，所以随着redis运行，肯定会越来越大，为了控制体积，redis设计了aof文件重写机制。</p>
+<h2 id="aof重写机制"><a href="#aof重写机制" class="headerlink" title="aof重写机制"></a>aof重写机制</h2><p>Redis 4.0 开始支持RDB 和AOF 的混合持久化</p>
+<p>如果打开，AOF重写的时候就直接把RDB的内容写到AOF文件开头，这样做的好处是可以结合RDB和AOF的优点，快速加载同时避免丢失过多的数据。缺点是AOF里面的RDB部门是压缩格式，可读性较差。</p>
+<p>aof重写：可以理解为一个aof的压缩过程，aof文件是一个持续追加的过程，所以随着redis运行，肯定会越来越大，为了控制体积，redis设计了aof文件重写机制。</p>
 <p>AOF的重写是会fork一个子进程运行的，不会影响redis主进程的读写功能</p>
 <p>AOF重写，不是对原AOF文件进行读取，而是直接读取库中的数据，进行重写。将一个key的多个数据，写成一条命令</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># 假设服务器对键list执行了以下命令s;</span><br><span class="line">127.0.0.1:6379&gt; RPUSH list &quot;A&quot; &quot;B&quot;</span><br><span class="line">(integer) 2</span><br><span class="line">127.0.0.1:6379&gt; RPUSH list &quot;C&quot;</span><br><span class="line">(integer) 3</span><br><span class="line">127.0.0.1:6379&gt; RPUSH list &quot;D&quot; &quot;E&quot;</span><br><span class="line">(integer) 5</span><br><span class="line">127.0.0.1:6379&gt; LPOP list</span><br><span class="line">&quot;A&quot;</span><br><span class="line">127.0.0.1:6379&gt; LPOP list</span><br><span class="line">&quot;B&quot;</span><br><span class="line">127.0.0.1:6379&gt; RPUSH list &quot;F&quot; &quot;G&quot;</span><br><span class="line">(integer) 5</span><br><span class="line">127.0.0.1:6379&gt; LRANGE list 0 -1</span><br><span class="line">1) &quot;C&quot;</span><br><span class="line">2) &quot;D&quot;</span><br><span class="line">3) &quot;E&quot;</span><br><span class="line">4) &quot;F&quot;</span><br><span class="line">5) &quot;G&quot;</span><br></pre></td></tr></table></figure>
@@ -386,10 +399,19 @@
 <li>AOF文件大小超过阈值，默认1M</li>
 <li>AOF文件增长率超过阈值，默认100%</li>
 </ol>
+<h2 id="缓存数据设置过期时间"><a href="#缓存数据设置过期时间" class="headerlink" title="缓存数据设置过期时间"></a>缓存数据设置过期时间</h2><p>一般情况下，我们设置保存的缓存数据的时候都会设置一个过期时间，因为内存是有限的，如果缓存中的所有数据都是一直保存的话，分分钟直接Out of memory.</p>
+<p>Redis 自带了给缓存数据设置过期时间的功能 exp key 60 这样</p>
+<p>Redis 中除了字符串类型有自己独有设置过期时间的命令setex外，其他方法都需要依靠expire命令来设置过期时间。另外 persist 命令可以移除一个键的过期时间。</p>
+<p><strong>其他作用</strong></p>
+<p>很多时候，我们的业务场景只需要某个数据存在某一段时间。</p>
+<p><strong>Redis 如何判断数据是否过期的呢</strong></p>
+<p>Redis 通过一个叫做过期字典来保存数据过期时间，类似hash表。过期字典的键指向Redis数据库中的某个key,过期字典的值是一个long long类型的整数，这个整数保存了key所指向的数据库键的过期时间。</p>
 <h2 id="过期策略"><a href="#过期策略" class="headerlink" title="过期策略"></a>过期策略</h2><p>redis过期key并不是过期时间一到就会立即删除，redis使用的是定时删除、惰性删除两种策略</p>
 <p><strong>1.定期删除</strong></p>
 <p>有过期时间的key放在单独的字典中<br>每100ms随机抽取20个key，删除其中过期的key，如果过期的key超过1/4，则会继续重复上述行为，否则，等待下100ms再随机抽取20key，执行删除<br><strong>2.惰性删除</strong></p>
-<p>获取key时，检查是否过期，若过期立即删除。</p>
+<p>获取key时，检查是否过期，若过期立即删除。这样对CPU最友好，但是可能会造成套多过期key没有被删除。</p>
+<p>Redis采用的是定期删除 + 惰性删除</p>
+<p>但是仅仅通过给key设置过期时间还是有问题的，可能还是漏掉很多过期key,解决的方法是Redis 内存淘汰机制。</p>
 <h2 id="淘汰策略"><a href="#淘汰策略" class="headerlink" title="淘汰策略"></a>淘汰策略</h2><p>有了以上过期策略的说明后，就很容易理解为什么需要淘汰策略了，因为不管是定期采样删除还是惰性删除都不是一种完全精准的删除，就还是会存在key没有被删除掉的场景，所以就需要内存淘汰策略进行补充。</p>
 <p>八种淘汰策略：</p>
 <p>noeviction：当内存使用超过配置的时候会返回错误，不会驱逐任何键</p>
@@ -786,7 +808,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">Redis概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%AB%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8D%95%E7%BA%BF%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Redis为什么快，为什么单线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">Redis网络模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.1.</span> <span class="nav-text">单线程模型原因</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9"><span class="nav-number">4.</span> <span class="nav-text">缓存雪崩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">4.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">4.2.</span> <span class="nav-text">解决办法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">5.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">6.</span> <span class="nav-text">基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8F"><span class="nav-number">7.</span> <span class="nav-text">持久化方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB"><span class="nav-number">7.1.</span> <span class="nav-text">RDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF%E6%9C%BA%E5%88%B6"><span class="nav-number">7.2.</span> <span class="nav-text">AOF机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#aof%E9%87%8D%E5%86%99%E6%9C%BA%E5%88%B6"><span class="nav-number">8.</span> <span class="nav-text">aof重写机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5"><span class="nav-number">9.</span> <span class="nav-text">过期策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="nav-number">10.</span> <span class="nav-text">淘汰策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">11.</span> <span class="nav-text">底层数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">11.1.</span> <span class="nav-text">简单动态字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8"><span class="nav-number">11.2.</span> <span class="nav-text">链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E5%85%B8"><span class="nav-number">11.3.</span> <span class="nav-text">字典</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A9%E5%AE%B9%E6%AD%A5%E9%AA%A4"><span class="nav-number">11.3.1.</span> <span class="nav-text">扩容步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%90%E8%BF%9B%E5%BC%8Frehash"><span class="nav-number">11.3.2.</span> <span class="nav-text">渐进式rehash</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%B7%83%E8%A1%A8-skiplist"><span class="nav-number">11.4.</span> <span class="nav-text">跳跃表 skiplist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88-intset"><span class="nav-number">11.5.</span> <span class="nav-text">整数集合 intset</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E5%88%97%E8%A1%A8-ziplist"><span class="nav-number">11.6.</span> <span class="nav-text">压缩列表 ziplist</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">12.</span> <span class="nav-text">五大数据类型及其实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%B1%BB%E5%9E%8B%E4%B8%8E%E7%BC%96%E7%A0%81"><span class="nav-number">12.1.</span> <span class="nav-text">对象的类型与编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Key"><span class="nav-number">12.2.</span> <span class="nav-text">Redis-Key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String"><span class="nav-number">12.3.</span> <span class="nav-text">String</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#List"><span class="nav-number">12.4.</span> <span class="nav-text">List</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set-%E9%9B%86%E5%90%88"><span class="nav-number">12.5.</span> <span class="nav-text">Set(集合)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash"><span class="nav-number">12.6.</span> <span class="nav-text">Hash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zset-%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88"><span class="nav-number">12.7.</span> <span class="nav-text">Zset(有序集合)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">12.8.</span> <span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E7%89%B9%E6%AE%8A%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">13.</span> <span class="nav-text">三种特殊数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Geospatial"><span class="nav-number">13.1.</span> <span class="nav-text">Geospatial</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hyperloglog"><span class="nav-number">13.2.</span> <span class="nav-text">Hyperloglog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bitmaps"><span class="nav-number">13.3.</span> <span class="nav-text">Bitmaps</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1"><span class="nav-number">14.</span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E6%89%A7%E8%A1%8C%E4%BA%8B%E5%8A%A1"><span class="nav-number">14.1.</span> <span class="nav-text">正常执行事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%9E%8B%E5%BC%82%E5%B8%B8"><span class="nav-number">14.2.</span> <span class="nav-text">编译型异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BC%82%E5%B8%B8"><span class="nav-number">14.3.</span> <span class="nav-text">运行时异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7"><span class="nav-number">14.4.</span> <span class="nav-text">监控</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-%E6%95%B4%E5%90%88"><span class="nav-number">15.</span> <span class="nav-text">SpringBoot 整合</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">Redis概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E4%B8%BA%E4%BB%80%E4%B9%88%E5%BF%AB%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8D%95%E7%BA%BF%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">Redis为什么快，为什么单线程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Redis%E7%BD%91%E7%BB%9C%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.</span> <span class="nav-text">Redis网络模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B"><span class="nav-number">3.1.</span> <span class="nav-text">单线程模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%E5%8E%9F%E5%9B%A0"><span class="nav-number">3.2.</span> <span class="nav-text">单线程模型原因</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="nav-number">4.</span> <span class="nav-text">缓存穿透</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9"><span class="nav-number">5.</span> <span class="nav-text">缓存雪崩</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-number">5.1.</span> <span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">解决办法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="nav-number">6.</span> <span class="nav-text">基本使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">7.</span> <span class="nav-text">基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8F"><span class="nav-number">8.</span> <span class="nav-text">持久化方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB%EF%BC%88%E5%BF%AB%E7%85%A7%EF%BC%89"><span class="nav-number">8.1.</span> <span class="nav-text">RDB（快照）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF%E6%9C%BA%E5%88%B6"><span class="nav-number">8.2.</span> <span class="nav-text">AOF机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#aof%E9%87%8D%E5%86%99%E6%9C%BA%E5%88%B6"><span class="nav-number">9.</span> <span class="nav-text">aof重写机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%93%E5%AD%98%E6%95%B0%E6%8D%AE%E8%AE%BE%E7%BD%AE%E8%BF%87%E6%9C%9F%E6%97%B6%E9%97%B4"><span class="nav-number">10.</span> <span class="nav-text">缓存数据设置过期时间</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%87%E6%9C%9F%E7%AD%96%E7%95%A5"><span class="nav-number">11.</span> <span class="nav-text">过期策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5"><span class="nav-number">12.</span> <span class="nav-text">淘汰策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%95%E5%B1%82%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="nav-number">13.</span> <span class="nav-text">底层数据结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="nav-number">13.1.</span> <span class="nav-text">简单动态字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8"><span class="nav-number">13.2.</span> <span class="nav-text">链表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AD%97%E5%85%B8"><span class="nav-number">13.3.</span> <span class="nav-text">字典</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%A9%E5%AE%B9%E6%AD%A5%E9%AA%A4"><span class="nav-number">13.3.1.</span> <span class="nav-text">扩容步骤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%B8%90%E8%BF%9B%E5%BC%8Frehash"><span class="nav-number">13.3.2.</span> <span class="nav-text">渐进式rehash</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B7%B3%E8%B7%83%E8%A1%A8-skiplist"><span class="nav-number">13.4.</span> <span class="nav-text">跳跃表 skiplist</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B4%E6%95%B0%E9%9B%86%E5%90%88-intset"><span class="nav-number">13.5.</span> <span class="nav-text">整数集合 intset</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8E%8B%E7%BC%A9%E5%88%97%E8%A1%A8-ziplist"><span class="nav-number">13.6.</span> <span class="nav-text">压缩列表 ziplist</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%8F%8A%E5%85%B6%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">14.</span> <span class="nav-text">五大数据类型及其实现原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%B1%BB%E5%9E%8B%E4%B8%8E%E7%BC%96%E7%A0%81"><span class="nav-number">14.1.</span> <span class="nav-text">对象的类型与编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-Key"><span class="nav-number">14.2.</span> <span class="nav-text">Redis-Key</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#String"><span class="nav-number">14.3.</span> <span class="nav-text">String</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#List"><span class="nav-number">14.4.</span> <span class="nav-text">List</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Set-%E9%9B%86%E5%90%88"><span class="nav-number">14.5.</span> <span class="nav-text">Set(集合)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hash"><span class="nav-number">14.6.</span> <span class="nav-text">Hash</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Zset-%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88"><span class="nav-number">14.7.</span> <span class="nav-text">Zset(有序集合)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">14.8.</span> <span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E7%A7%8D%E7%89%B9%E6%AE%8A%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">15.</span> <span class="nav-text">三种特殊数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Geospatial"><span class="nav-number">15.1.</span> <span class="nav-text">Geospatial</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hyperloglog"><span class="nav-number">15.2.</span> <span class="nav-text">Hyperloglog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Bitmaps"><span class="nav-number">15.3.</span> <span class="nav-text">Bitmaps</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E5%8A%A1"><span class="nav-number">16.</span> <span class="nav-text">事务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E5%B8%B8%E6%89%A7%E8%A1%8C%E4%BA%8B%E5%8A%A1"><span class="nav-number">16.1.</span> <span class="nav-text">正常执行事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BC%96%E8%AF%91%E5%9E%8B%E5%BC%82%E5%B8%B8"><span class="nav-number">16.2.</span> <span class="nav-text">编译型异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%BC%82%E5%B8%B8"><span class="nav-number">16.3.</span> <span class="nav-text">运行时异常</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%91%E6%8E%A7"><span class="nav-number">16.4.</span> <span class="nav-text">监控</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot-%E6%95%B4%E5%90%88"><span class="nav-number">17.</span> <span class="nav-text">SpringBoot 整合</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
