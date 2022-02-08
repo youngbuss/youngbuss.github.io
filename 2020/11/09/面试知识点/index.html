@@ -35,6 +35,8 @@
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gys8rq75nxj31b60no425.jpg">
 <meta property="og:image" content="http://example.com/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/1.JPG">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gyamjjl39bj31a40a00x8.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gz6db23axvj30s60eigms.jpg">
+<meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gz6d8sk7fjj30uk0je770.jpg">
 <meta property="og:image" content="http://example.com/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/4.png">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gyotj6nq6uj313j0o4tan.jpg">
 <meta property="og:image" content="https://tva1.sinaimg.cn/large/008i3skNly1gyottyzosyj30xh0a1759.jpg">
@@ -48,7 +50,7 @@
 <meta property="og:image" content="http://example.com/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/2.png">
 <meta property="og:image" content="http://example.com/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/3.png">
 <meta property="article:published_time" content="2020-11-09T11:15:23.000Z">
-<meta property="article:modified_time" content="2022-02-07T08:38:03.881Z">
+<meta property="article:modified_time" content="2022-02-08T14:51:00.517Z">
 <meta property="article:author" content="Yang">
 <meta property="article:tag" content="other">
 <meta name="twitter:card" content="summary">
@@ -250,7 +252,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2022-02-07 16:38:03" itemprop="dateModified" datetime="2022-02-07T16:38:03+08:00">2022-02-07</time>
+                <time title="修改时间：2022-02-08 22:51:00" itemprop="dateModified" datetime="2022-02-08T22:51:00+08:00">2022-02-08</time>
               </span>
 
           
@@ -793,8 +795,18 @@
 <p>HashMap 线程不安全的对象，内部没有上锁 优点就是效率高，缺点是 如果多个线程同时操作可能会出现线程不安全甚至出现死锁的情况</p>
 <p>ConcurrentHashMap 分段锁，将锁的力度变小，兼顾安全与性能</p>
 <h3 id="ConcurrentHashMap"><a href="#ConcurrentHashMap" class="headerlink" title="ConcurrentHashMap"></a>ConcurrentHashMap</h3><p>   <strong>ConcurrentHashMap是<a target="_blank" rel="noopener" href="http://lib.csdn.net/base/java">Java </a>5中支持高并发、高吞吐量的线程安全HashMap实现。</strong></p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gz6db23axvj30s60eigms.jpg" alt="image-20220208201805473"></p>
 <p> HashTable容器在竞争激烈的并发环境下表现出效率低下的原因，是因为所有访问HashTable的线程都必须竞争同一把锁，那假如容器里有多把锁，每一把锁用于锁容器其中一部分数据，那么当多线程访问容器里不同数据段的数据时，线程间就不会存在锁竞争，从而可以有效的提高并发访问效率，这就是ConcurrentHashMap所使用的锁分段技术，首先将数据分成一段一段的存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问。</p>
 <p>ConcurrentHashMap是由Segment数组结构和HashEntry数组结构组成。Segment是一种可重入锁ReentrantLock，在ConcurrentHashMap里扮演锁的角色，HashEntry则用于存储键值对数据。一个ConcurrentHashMap里包含一个Segment数组，Segment的结构和HashMap类似，是一种数组和链表结构， 一个Segment里包含一个HashEntry数组，每个HashEntry是一个链表结构的元素， 每个Segment守护者一个HashEntry数组里的元素,当对HashEntry数组的数据进行修改时，必须首先获得它对应的Segment锁。</p>
+<p><strong>java 1.8后</strong></p>
+<p>遍历查询链表效率太低了之前，因此1.8之后调整了底层的组成结构：</p>
+<p>1.8 在 1.7 的数据结构上做了大的改动，采用红黑树之后可以保证查询效率（<code>O(logn)</code></p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gz6d8sk7fjj30uk0je770.jpg" alt="image-20220208201552489"></p>
+<p>其中抛弃了原有的 Segment 分段锁，而采用了 <code>CAS + synchronized</code> 来保证并发安全性。</p>
+<p>也将之前存放数据的HashEntry改成了Node,但是作用是一样的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Node(<span class="keyword">int</span> hash,K key,V val,Node&lt;K,V&gt; next)&#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中的 <code>val next</code> 都用了 volatile 修饰，保证了可见性。</p>
 <h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>最底层用的是map来做这些事,其值作为hashmap的key</p>
 <p>其实原理就是HashMap</p>
 <p><strong>HashSet是如何保证不重复的</strong></p>
@@ -979,6 +991,18 @@
 <p>　　2.禁止指令重排序优化。有volatile修饰的变量，赋值后多执行了一个“load addl $0x0, (%esp)”操作，这个操作相当于一个<strong>内存屏障</strong>（指令重排序时不能把后面的指令重排序到内存屏障之前的位置），只有一个CPU访问内存时，并不需要内存屏障；（什么是指令重排序：是指CPU采用了允许将多条指令不按程序规定的顺序分开发送给各相应电路单元处理）。</p>
 <p><strong>volatile 性能：</strong></p>
 <p>　　volatile 的读性能消耗与普通变量几乎相同，但是写操作稍慢，因为它需要在本地代码中插入许多内存屏障指令来保证处理器不发生乱序执行。</p>
+<p><strong>volatile如何实现内存可见性：</strong></p>
+<p>深入来说：通过加入内存屏障和禁止重排序优化来实现的。</p>
+<p>1）对volatile变量执行写操作时，会在写操作后加入一条store屏障指令</p>
+<p>2）对volatile变量执行读操作时，会在读操作前加入一条load屏障执行</p>
+<p>通俗来讲：volatile变量在每次被线程访问时，都强迫从主内存中重读该变量的值，而当该变量发生变化时，又会强迫线程将最新的值刷新到主内存。</p>
+<p>这样任何时刻，不同的线程总能看到该变量的最新值。</p>
+<p><strong>线程写volatile变量的过程：</strong></p>
+<p>1，改变线程工作内存中volatile变量副本的值</p>
+<p>2，将改变后的副本从工作内存刷新到主内存。</p>
+<p><strong>线程读volatile变量过程：</strong></p>
+<p>1）从主内存读取volatile变量的最新值到线程工作内存中</p>
+<p>2）从工作内存读取volatile变量的副本</p>
 <h3 id="Synchronized-关键字-wait-notify"><a href="#Synchronized-关键字-wait-notify" class="headerlink" title="Synchronized 关键字(wait notify)"></a>Synchronized 关键字(wait notify)</h3><p>该关键字解决的问题是多个线程之间访问资源的同步性，synchronized关键字可以保证被它修饰的方法或者代码块在任意时刻只能有一个线程执行。</p>
 <p><strong>最主要的三种使用方式</strong></p>
 <ol>
@@ -1585,7 +1609,7 @@
 <p>　　很多其它协议都是基于这两个协议。如http就是基于tcp的，用socket可以创建tcp连接，也可以创建udp连接。</p>
 <p>　　这意味着，用socket可以创建任何协议的连接，因为其它协议都是基于此的。</p>
 <p>　　一个Socket实例由一个IP地址和一个端口号唯一确定。<br>　　Socket是一种用于网络通信的低层开发接口，借助于通信两端的应用程序(实际上是Socket)可以利用输入输出流完成数据交换。</p>
-<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　　　　　　　　　　　3）适合于客户端和服务器端之间信息实时交互；<br>　　　　　　　　　　　　4）可以加密,数据安全性强。 </p>
+<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　　　　　　　　　　　　　3）适合于客户端和服务器端之间信息实时交互；<br>　　　　　　　　　　　　　　4）可以加密,数据安全性强。 </p>
 <p><strong>Socket 传输的缺点</strong><br>　　1）需对传输的数据进行解析，转化成应用级的数据；<br>　　2）对开发人员的开发水平要求高；<br>　　3）相对于Http协议传输，增加了开发量</p>
 <p>基于Socket传输的特点：Socket 传输方式适合于对传输速度，安全性，实时交互，费用等要求高的应用中，如网络游戏，手机应用，银行内部交互等‘’。</p>
 <h2 id="Mysql数据库知识点"><a href="#Mysql数据库知识点" class="headerlink" title="Mysql数据库知识点"></a>Mysql数据库知识点</h2><h3 id="数据库三大范式"><a href="#数据库三大范式" class="headerlink" title="数据库三大范式"></a>数据库三大范式</h3><ol>
