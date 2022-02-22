@@ -377,7 +377,7 @@
 <p>a. 从驱动表（左表）取出N条记录；<br>b. 拿着这N条记录，依次到被驱动表（右表）查找满足WHERE条件的记录；</p>
 <p>所以，官方sql的过程就是👇</p>
 <p>先把Person表搬过来</p>
-<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#x6a;&#x6f;&#x68;&#x6e;&#x40;&#101;&#x78;&#97;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#x6a;&#x6f;&#x68;&#x6e;&#x40;&#101;&#x78;&#97;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a> |<br>| 2  | <a href="mailto:&#98;&#x6f;&#98;&#x40;&#101;&#120;&#97;&#109;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#111;&#109;">&#98;&#x6f;&#98;&#x40;&#101;&#120;&#97;&#109;&#x70;&#x6c;&#x65;&#x2e;&#x63;&#111;&#109;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#111;&#x68;&#x6e;&#64;&#x65;&#x78;&#x61;&#x6d;&#x70;&#108;&#101;&#46;&#x63;&#111;&#109;">&#x6a;&#111;&#x68;&#x6e;&#64;&#x65;&#x78;&#x61;&#x6d;&#x70;&#108;&#101;&#46;&#x63;&#111;&#109;</a> |<br>+—-+——————+</p>
+<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#111;&#x68;&#x6e;&#x40;&#x65;&#x78;&#97;&#109;&#112;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;">&#106;&#111;&#x68;&#x6e;&#x40;&#x65;&#x78;&#97;&#109;&#112;&#x6c;&#x65;&#46;&#x63;&#111;&#x6d;</a> |<br>| 2  | <a href="mailto:&#x62;&#x6f;&#x62;&#64;&#101;&#x78;&#97;&#109;&#112;&#108;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#x62;&#x6f;&#x62;&#64;&#101;&#x78;&#97;&#109;&#112;&#108;&#101;&#x2e;&#99;&#x6f;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#111;&#104;&#110;&#64;&#x65;&#x78;&#x61;&#109;&#x70;&#108;&#101;&#x2e;&#99;&#111;&#x6d;">&#x6a;&#111;&#104;&#110;&#64;&#x65;&#x78;&#x61;&#109;&#x70;&#108;&#101;&#x2e;&#99;&#111;&#x6d;</a> |<br>+—-+——————+</p>
 <p>a. 从表p1取出3条记录；<br>b. 拿着第1条记录去表p2查找满足WHERE的记录，代入该条件p1.Email = p2.Email AND p1.Id &gt; p2.Id后，发现没有满足的，所以不用删掉记录1；<br>c. 记录2同理；<br>d. 拿着第3条记录去表p2查找满足WHERE的记录，发现有一条记录满足，所以要从p1删掉记录3；<br>e. 3条记录遍历完，删掉了1条记录，这个DELETE也就结束了。</p>
 ]]></content>
       <categories>
@@ -1706,6 +1706,22 @@
 
 <p>AtomicInteger 类主要利用 CAS (compare and swap) + volatile 和 native 方法来保证原子操作，从而避免 synchronized 的高开销，执行效率大为提升。</p>
 <p>CAS 的原理是拿期望的值和原本的一个值作比较，如果相同则更新成新的值。UnSafe 类的 objectFieldOffset() 方法是一个本地方法，这个方法是用来拿到“原来的值”的内存地址，返回值是 valueOffset。另外 value 是一个 volatile 变量，在内存中可见，因此 JVM 可以保证任何时刻任何线程总能拿到该变量的最新值。</p>
+<h3 id="AQS"><a href="#AQS" class="headerlink" title="AQS"></a>AQS</h3><p>AQS，在java.util.concurrent.locks包中，AbstractQueuedSynchronizer这个类是并发包中的核心，了解其他类之前，需要先弄清楚AQS。在JUC的很多类中都会存在一个内部类Sync，Sync都是继承自AbstractQueuedSynchronizer。</p>
+<p>AQS就是一个同步器，要做的事情就相当于一个锁，所以就会有两个动作：一个是获取，一个是释放。获取释放的时候该有一个东西来记住他是被用还是没被用，这个东西就是一个状态。如果锁被获取了，也就是被用了，还有很多其他的要来获取锁，总不能给全部拒绝了，这时候就需要他们排队，这里就需要一个队列。这大概就清楚了AQS的主要构成了：</p>
+<ul>
+<li>获取和释放两个动作</li>
+<li>同步状态（原子操作）</li>
+<li>阻塞队列</li>
+</ul>
+<h4 id="state"><a href="#state" class="headerlink" title="state"></a>state</h4><p>AQS用32位整形来表示同步状态。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private volatile int state;</span><br></pre></td></tr></table></figure>
+
+<p>在互斥锁中表示线程是否已经获取了锁，0未获取，1已经获取，大于1表示重入数。</p>
+<p>AQS提供了getState(),setState(),compareAndSetState()来获取和修改state的值，这些操作需要atomic包的支持，采用CAS操作，保证其原子性和可见性。</p>
+<h4 id="CLH锁队列"><a href="#CLH锁队列" class="headerlink" title="CLH锁队列"></a>CLH锁队列</h4><p>CLH其实就是一个FIFO的队列，只不过稍微做了点改进。AQS中内部使用内部类Node来实现，是一个链表队列，原始CLH使用自旋锁，AQS的CLH则在每个node里使用一个状态字段来控制阻塞，不是自旋。</p>
+<p>AQS的CLH队列锁中，每个节点代表着一个需要获取锁的线程，该node中有两个常量SHARED共享模式，EXCLUSIVE独占模式。</p>
+<p>共享模式允许多个线程可以获取同一个锁，独占模式则一个锁只能被一个线程持有，其他线程必须要等待。</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1gzmhatg675j21740leabd.jpg" alt="img"></p>
 <h3 id="CAS"><a href="#CAS" class="headerlink" title="CAS"></a>CAS</h3><p>CAS操作包含三个操作数-内存位置V，预期原值A，新值B</p>
 <p>分为三个步骤：</p>
 <ol>
@@ -2335,6 +2351,34 @@
 <p>MVCC的重要特性:<br>(1)MVCC只支持RC(读取已提交)和RR(可重复读)隔离级别。<br>(2)MVCC能解决脏读、不可重复读问题，不能解决丢失更新问题和幻读问题。<br>(3)MVCC是用来解决读写操作之间的阻塞问题。使得在并发读写数据库时，可以做到在读操作时不用阻塞写操作，写操作也不用阻塞读操作，提高了数据库并发读写的性能。</p>
 <p><strong>总结</strong></p>
 <p>1、MVCC的实现主要依赖于数据库在每个表中添加的三个隐藏字段以及事务在查询时创建的快照（read view）和数据库支持多版本数据，数据库中存在数据版本链(Undo log)。<br>2、InnoDB支持多版本数据，在更新或者删除数据时，并不会立马删除原有行记录，而是将旧版本存入回滚段中的Undo log内，并通过回滚指针形成一个数据链，可以通过这个指针访问链上的历代数据版本，正是这种机制使得数据库数据产生了多个版本，为通过MVCC进行快照读提供了可能。<br>3、并不是所有的查询都是进行快照读，使用普通的select 语句进行查询时会生成快照，进行快照读；使用select … lock in share mode，select … for update，insert，update，delete 语句等语句进行查询或者更新时还是会使用锁机制，进行锁阻塞。<br>4、使用MVCC的作用(意义)是非阻塞的解决了事务读写冲突，提高了并发性能。<br>5、MVCC只支持RC(读取已提交)和RR(可重复读)隔离级别。<br>6、MVCC能解决脏读、不可重复读问题，不能解决丢失更新问题和幻读问题。<br>7、InnoDB使用锁机制和MVCC来共同作用，进行并发控制的，虽然MVCC不能解决幻读和丢失更新问题，但通过与锁机制(行级锁的Next-Key Locks算法的使用、排他锁等）一起作用可以达到可串行化隔离级别的效果，禁止了幻读、更新丢失等问题。</p>
+<h3 id="MySql如何解决幻读"><a href="#MySql如何解决幻读" class="headerlink" title="MySql如何解决幻读"></a>MySql如何解决幻读</h3><p>为什么需要解决幻读？ 高并发数据库系统中，需要保证事务与事务之间的隔离性和数据本身的一致性。</p>
+<h4 id="串行化"><a href="#串行化" class="headerlink" title="串行化"></a>串行化</h4><ul>
+<li>事务在读操作时，先加表级别的共享锁，直到事务结束才释放</li>
+<li>事务在写操作时，先加表级别的排它锁，直到事务结束才释放</li>
+</ul>
+<h4 id="MVCC-快照读-一致性读"><a href="#MVCC-快照读-一致性读" class="headerlink" title="MVCC(快照读/一致性读)"></a>MVCC(快照读/一致性读)</h4><p>因为MySQL默认的隔离级别是<strong>可重复读</strong>，这种隔离级别下，我们普通的SELECT语句都是快照读，也就是在一个事务内，多次执行SELECT语句，查询到的数据都是事务开始时那个状态的数据（这样就不会受其他事务修改数据的影响），这样就解决了幻读的问题。</p>
+<p>多数数据库都实现了多版本并发控制，并且都是靠保存数据快照来实现的。</p>
+<p>以 <code>InnoDB</code> 为例。可以理解为每一行中都冗余了两个字段，一个是行的创建版本，一个是行的删除（过期）版本。</p>
+<p>具体的版本号（trx_id）存在 <code>information_schema.INNODB_TRX</code> 表中。版本号（trx_id）随着每次事务的开启自增。</p>
+<p>事务每次取数据的时候都会取创建版本小于当前事务版本的数据，以及过期版本大于当前版本的数据。</p>
+<p>InnoDB 的 MVCC， 是 通过 在 每 行 记录 后面 保存 两个 隐藏 的 列 来 实现 的。 这 两个 列， 一个 保存 了 行的 创建 时间， 一个 保存 行的 过期 时间（ 或 删除 时间）。 当然 存储 的 并不是 实际 的 时间 值， 而是 系统 版 本号（ system version number）。 每 开始 一个 新的 事务， 系统 版本 号 都会 自动 递增。 事务 开始时 刻 的 系统 版 本号 会 作为 事务 的 版 本号， 用来 和 查询 到 的 每 行 记录 的 版本 号 进行 比较。</p>
+<p>MVCC 只在 REPEATABLE READ 和 READ COMMITTED 两个 隔离 级别 下 工作。</p>
+<p>MVCC快照读需满足条件：</p>
+<ol>
+<li>InnoDB 只 查找 版本 早于 当前 事务 版本 的 数据 行（ 也就是， 行的系统版本号小于或等于事务的系统版本号 这样可以确保事务读 取的行 要么是在事务开始前已经存在的， 要么是事务自身插入或者修改过的。</li>
+<li>行的删除版本要么未定义， 要么大于当前事务版本号。 这可以确保事务读取到的行 在事务开始之前未被删除。</li>
+</ol>
+<p>MVCC <strong>解决了基于快照读下的幻读</strong>，但是无法解决当前读下的幻读。</p>
+<h4 id="实时读"><a href="#实时读" class="headerlink" title="实时读"></a>实时读</h4><p>Next-key锁，包含两部分，记录锁(行锁), 间隙锁。</p>
+<p>记录锁是加在索引上的锁，间隙锁是加在索引之间的锁</p>
+<p>如果说快照读总是读取事务开始时那个状态的数据，实时读就是查询时总是执行这个查询时数据库中的数据。</p>
+<p>一般使用以下这两种查询语句进行查询时就是实时读。</p>
+<p>for update：IX锁(意向排它锁)，即在符合条件的rows上都加了排它锁</p>
+<p>lock in share mode：是IS锁(意向共享锁)，即在符合条件的rows上都加了共享锁</p>
+<p> 排它锁：X锁、 写锁，事务A对一个资源加了X锁后只有A本身能对该资源进行读和写操作，其他事务对该资源的读和写操作都将被阻塞，直到A释放锁为止 </p>
+<p>共享锁：S锁、 读锁， 事务A锁定的数据其他事务可以共享读该资源，但不能写，直到事务A释放</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">SELECT *** FOR UPDATE 在查询时会先申请X锁</span><br><span class="line">SELECT *** IN SHARE MODE 在查询时会先申请S锁</span><br><span class="line"></span><br><span class="line">select * from tb where id&gt;100 for update</span><br><span class="line"></span><br><span class="line">#主键索引id 会给id =100 的记录加上行锁</span><br><span class="line"># 索引id会加上gap锁，锁住id(100 , 无穷大)这个范围 其他事务对id&gt;100的范围的记录读和写操作都会被阻塞，插入id=1000时，会命中索引加上的锁会报出事务异常</span><br></pre></td></tr></table></figure>
+
 <h3 id="锁机制与InnoDB锁算法"><a href="#锁机制与InnoDB锁算法" class="headerlink" title="锁机制与InnoDB锁算法"></a>锁机制与InnoDB锁算法</h3><ul>
 <li>InnoDB 支持行级锁和表级锁，默认是行级锁</li>
 <li>MyISAM采用表级锁</li>
@@ -3151,13 +3195,75 @@
 <li><p>适配器模式</p>
 </li>
 </ul>
-<h3 id="Spring事务传播机制"><a href="#Spring事务传播机制" class="headerlink" title="Spring事务传播机制"></a>Spring事务传播机制</h3><p>PROPAGATION_REQUIRED – 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。</p>
+<h3 id="Spring事务"><a href="#Spring事务" class="headerlink" title="Spring事务"></a>Spring事务</h3><h4 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h4><ul>
+<li>原子性（Atomicity）：事务是一个原子操作，由一系列动作组成。事务的原子性确保动作要么全部完成，要么完全不起作用。</li>
+<li>一致性（Consistency）：一旦事务完成（不管成功还是失败），系统必须确保它所建模的业务处于一致的状态，而不会是部分完成部分失败。在现实中的数据不应该被破坏。</li>
+<li>隔离性（Isolation）：可能有许多事务会同时处理相同的数据，因此每个事务都应该与其他事务隔离开来，防止数据损坏。</li>
+<li>持久性（Durability）：一旦事务完成，无论发生什么系统错误，它的结果都不应该受到影响，这样就能从任何系统崩溃中恢复过来。通常情况下，事务的结果被写到持久化存储器中。</li>
+</ul>
+<h4 id="配置方式"><a href="#配置方式" class="headerlink" title="配置方式"></a>配置方式</h4><p>Spring支持编程式事务管理以及声明式事务管理两种方式。</p>
+<p><strong>编程式事务管理</strong></p>
+<p>编程式事务管理是侵入性事务管理，使用TransactionTemplate或者直接使用PlatformTransactionManager，对于编程式事务管理，Spring推荐使用TransactionTemplate。</p>
+<p><strong>声明式事务管理</strong></p>
+<p>声明式事务管理建立在AOP之上，其本质是对方法前后进行拦截，然后在目标方法开始之前创建或者加入一个事务，执行完目标方法之后根据执行的情况提交或者回滚。<br>编程式事务每次实现都要单独实现，但业务量大功能复杂时，使用编程式事务无疑是痛苦的，而声明式事务不同，声明式事务属于无侵入式，不会影响业务逻辑的实现，只需要在配置文件中做相关的事务规则声明或者通过注解的方式，便可以将事务规则应用到业务逻辑中。<br>显然声明式事务管理要优于编程式事务管理，这正是Spring倡导的非侵入式的编程方式。唯一不足的地方就是声明式事务管理的粒度是方法级别，而编程式事务管理是可以到代码块的，但是可以通过提取方法的方式完成声明式事务管理的配置。</p>
+<h4 id="传播机制"><a href="#传播机制" class="headerlink" title="传播机制"></a>传播机制</h4><p>PROPAGATION_REQUIRED – 支持当前事务，如果当前没有事务，就新建一个事务。这是最常见的选择。</p>
 <p>PROPAGATION_SUPPORTS – 支持当前事务，如果当前没有事务，就以非事务方式执行。</p>
 <p>PROPAGATION_MANDATORY – 支持当前事务，如果当前没有事务，就抛出异常。</p>
 <p>PROPAGATION_REQUIRES_NEW – 新建事务，如果当前存在事务，把当前事务挂起。</p>
 <p>PROPAGATION_NOT_SUPPORTED – 以非事务方式执行操作，如果当前存在事务，就把当前事务挂起。</p>
 <p>PROPAGATION_NEVER – 以非事务方式执行，如果当前存在事务，则抛出异常。</p>
 <p>PROPAGATION_NESTED – 如果当前存在事务，则在嵌套事务内执行。如果当前没有事务，则进行与PROPAGATION_REQUIRED类似的操作。</p>
+<h4 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h4><p>事务的隔离级别定义一个事务可能受其他并发务活动活动影响的程度，可以把事务的隔离级别想象为这个事务对于事物处理数据的自私程度。</p>
+<p>在一个典型的应用程序中，多个事务同时运行，经常会为了完成他们的工作而操作同一个数据。并发虽然是必需的，但是会导致以下问题：</p>
+<ol>
+<li>脏读（Dirty read）<br>脏读发生在一个事务读取了被另一个事务改写但尚未提交的数据时。如果这些改变在稍后被回滚了，那么第一个事务读取的数据就会是无效的。</li>
+<li>不可重复读（Nonrepeatable read）<br>不可重复读发生在一个事务执行相同的查询两次或两次以上，但每次查询结果都不相同时。这通常是由于另一个并发事务在两次查询之间更新了数据。</li>
+</ol>
+<blockquote>
+<p>不可重复读重点在修改。</p>
+</blockquote>
+<ol>
+<li>幻读（Phantom reads）<br>幻读和不可重复读相似。当一个事务（T1）读取几行记录后，另一个并发事务（T2）插入了一些记录时，幻读就发生了。在后来的查询中，第一个事务（T1）就会发现一些原来没有的额外记录。</li>
+</ol>
+<blockquote>
+<p>幻读重点在新增或删除。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ISOLATION_DEFAULT</td>
+<td>使用后端数据库默认的隔离级别</td>
+</tr>
+<tr>
+<td>ISOLATION_READ_UNCOMMITTED</td>
+<td>允许读取尚未提交的更改。可能导致脏读、幻读或不可重复读。</td>
+</tr>
+<tr>
+<td>ISOLATION_READ_COMMITTED</td>
+<td>（Oracle 默认级别）允许从已经提交的并发事务读取。可防止脏读，但幻读和不可重复读仍可能会发生。</td>
+</tr>
+<tr>
+<td>ISOLATION_REPEATABLE_READ</td>
+<td>（MYSQL默认级别）对相同字段的多次读取的结果是一致的，除非数据被当前事务本身改变。可防止脏读和不可重复读，但幻读仍可能发生。</td>
+</tr>
+<tr>
+<td>ISOLATION_SERIALIZABLE</td>
+<td>完全服从ACID的隔离级别，确保不发生脏读、不可重复读和幻影读。这在所有隔离级别中也是最慢的，因为它通常是通过完全锁定当前事务所涉及的数据表来完成的。</td>
+</tr>
+</tbody></table>
+<p>事物配置中有哪些属性可以配置?以下只是简单的使用参考</p>
+<ol>
+<li>事务的传播性：<br>@Transactional(propagation=Propagation.REQUIRED)</li>
+<li>事务的隔离级别：<br>@Transactional(isolation = Isolation.READ_UNCOMMITTED)</li>
+<li>只读：<br>@Transactional(readOnly=true)<br>该属性用于设置当前事务是否为只读事务，设置为true表示只读，false则表示可读写，默认值为false。</li>
+<li>事务的超时性：<br>@Transactional(timeout=30)</li>
+<li>回滚：<br>指定单一异常类：@Transactional(rollbackFor=RuntimeException.class)<br>指定多个异常类：@Transactional(rollbackFor={RuntimeException.class, Exception.class})</li>
+</ol>
 <h3 id="Transactional-rollbackFor-Exception-class"><a href="#Transactional-rollbackFor-Exception-class" class="headerlink" title="Transactional(rollbackFor=Exception.class)"></a>Transactional(rollbackFor=Exception.class)</h3><p><code>Exception</code> 分为运行时异常 <code>RuntimeException</code> 和非运行时异常。事务管理对于企业应用来说是至关重要的，即使出现异常情况，它也可以保证数据的一致性。</p>
 <p>当 <code>@Transactional</code> 注解作用于类上时，该类的所有 public 方法将都具有该类型的事务属性，同时，我们也可以在方法级别使用该标注来覆盖类级别的定义。如果类或者方法加了这个注解，那么这个类里面的方法抛出异常，就会回滚，数据库里面的数据也会回滚。</p>
 <p>在 <code>@Transactional</code> 注解中如果不配置<code>rollbackFor</code>属性,那么事务只会在遇到<code>RuntimeException</code>的时候才会回滚，加上 <code>rollbackFor=Exception.class</code>,可以让事务在遇到非运行时异常时也回滚。</p>
@@ -8381,7 +8487,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#117;&#x62;&#x2e;&#x63;&#111;&#109;">&#x67;&#105;&#x74;&#x40;&#103;&#105;&#x74;&#104;&#117;&#x62;&#x2e;&#x63;&#111;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#x69;&#116;&#64;&#103;&#105;&#116;&#x68;&#x75;&#98;&#46;&#x63;&#111;&#109;">&#103;&#x69;&#116;&#64;&#103;&#105;&#116;&#x68;&#x75;&#98;&#46;&#x63;&#111;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
