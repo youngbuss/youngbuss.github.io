@@ -377,7 +377,7 @@
 <p>a. 从驱动表（左表）取出N条记录；<br>b. 拿着这N条记录，依次到被驱动表（右表）查找满足WHERE条件的记录；</p>
 <p>所以，官方sql的过程就是👇</p>
 <p>先把Person表搬过来</p>
-<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#x6f;&#104;&#110;&#64;&#x65;&#x78;&#97;&#109;&#x70;&#108;&#x65;&#46;&#x63;&#111;&#109;">&#106;&#x6f;&#104;&#110;&#64;&#x65;&#x78;&#97;&#109;&#x70;&#108;&#x65;&#46;&#x63;&#111;&#109;</a> |<br>| 2  | <a href="mailto:&#x62;&#111;&#98;&#x40;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#x63;&#111;&#x6d;">&#x62;&#111;&#98;&#x40;&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#x63;&#111;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#111;&#x68;&#x6e;&#x40;&#x65;&#x78;&#97;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;">&#x6a;&#111;&#x68;&#x6e;&#x40;&#x65;&#x78;&#97;&#x6d;&#x70;&#x6c;&#x65;&#x2e;&#99;&#111;&#x6d;</a> |<br>+—-+——————+</p>
+<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#111;&#x68;&#x6e;&#64;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#x65;&#46;&#99;&#111;&#x6d;">&#106;&#111;&#x68;&#x6e;&#64;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#x65;&#46;&#99;&#111;&#x6d;</a> |<br>| 2  | <a href="mailto:&#x62;&#111;&#x62;&#64;&#101;&#120;&#97;&#109;&#112;&#x6c;&#x65;&#46;&#99;&#x6f;&#x6d;">&#x62;&#111;&#x62;&#64;&#101;&#120;&#97;&#109;&#112;&#x6c;&#x65;&#46;&#99;&#x6f;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#111;&#x68;&#x6e;&#x40;&#101;&#120;&#97;&#x6d;&#x70;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#x6a;&#111;&#x68;&#x6e;&#x40;&#101;&#120;&#97;&#x6d;&#x70;&#108;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a> |<br>+—-+——————+</p>
 <p>a. 从表p1取出3条记录；<br>b. 拿着第1条记录去表p2查找满足WHERE的记录，代入该条件p1.Email = p2.Email AND p1.Id &gt; p2.Id后，发现没有满足的，所以不用删掉记录1；<br>c. 记录2同理；<br>d. 拿着第3条记录去表p2查找满足WHERE的记录，发现有一条记录满足，所以要从p1删掉记录3；<br>e. 3条记录遍历完，删掉了1条记录，这个DELETE也就结束了。</p>
 ]]></content>
       <categories>
@@ -2271,7 +2271,7 @@
 <p>　　很多其它协议都是基于这两个协议。如http就是基于tcp的，用socket可以创建tcp连接，也可以创建udp连接。</p>
 <p>　　这意味着，用socket可以创建任何协议的连接，因为其它协议都是基于此的。</p>
 <p>　　一个Socket实例由一个IP地址和一个端口号唯一确定。<br>　　Socket是一种用于网络通信的低层开发接口，借助于通信两端的应用程序(实际上是Socket)可以利用输入输出流完成数据交换。</p>
-<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　　　　　　　　　　　　　　　　　3）适合于客户端和服务器端之间信息实时交互；<br>　　　　　　　　　　　　　　　　　　4）可以加密,数据安全性强。 </p>
+<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　　　　　　　　　　　　　　　　　　　3）适合于客户端和服务器端之间信息实时交互；<br>　　　　　　　　　　　　　　　　　　　　4）可以加密,数据安全性强。 </p>
 <p><strong>Socket 传输的缺点</strong><br>　　1）需对传输的数据进行解析，转化成应用级的数据；<br>　　2）对开发人员的开发水平要求高；<br>　　3）相对于Http协议传输，增加了开发量</p>
 <p>基于Socket传输的特点：Socket 传输方式适合于对传输速度，安全性，实时交互，费用等要求高的应用中，如网络游戏，手机应用，银行内部交互等‘’。</p>
 <h2 id="Mysql数据库知识点"><a href="#Mysql数据库知识点" class="headerlink" title="Mysql数据库知识点"></a>Mysql数据库知识点</h2><h3 id="数据库三大范式"><a href="#数据库三大范式" class="headerlink" title="数据库三大范式"></a>数据库三大范式</h3><ol>
@@ -2326,6 +2326,59 @@
 <p>2.无法用于排序</p>
 <p>3.有冲突可能</p>
 <p>4.Mysql自动管理，人为无法干预</p>
+<h3 id="Binlog"><a href="#Binlog" class="headerlink" title="Binlog"></a>Binlog</h3><p>Binlog:二进制日志，他记录了引起或可能引起数据库改变事件，包括事件发生的时间、开始位置、结束位置等信息</p>
+<p>基于 binlog，我们可以看到每一次对数据库的修改是在何时以何种方式执行的，从而可以实现对任意条操作的回滚</p>
+<p><strong>何时写？</strong></p>
+<ol>
+<li>select、show 等查询语句不会引起数据库改变，因此不会被记录在 binlog 中</li>
+<li>对于事务的执行，只有事务提交时才会一次性写入 binlog，对于非事务操作，则每次语句执行成功后都会直接写入 binlog</li>
+</ol>
+<p><strong>binlog_format</strong></p>
+<ol>
+<li>STATEMENT（SBR）</li>
+</ol>
+<p>mysql binlog 的默认模式</p>
+<p>在这个模式下，binlog 只会记录可能引起数据变更的 sql 语句</p>
+<p><strong>优点</strong></p>
+<p>这个模式下，因为没有记录实际的数据，所以日志量和 IO 都消耗很低，性能是最优的</p>
+<p><strong>缺点</strong></p>
+<p>有些操作并不是确定的，比如 uuid() 函数会随机产生唯一标识，当依赖 binlog 回放时，该操作生成的数据与原数据必然是不同的，此时可能造成无法预料的后果，具体的有：uuid()、user()、current_user()、found_rows()、row_count()、sysdate()</p>
+<p>由于所有的操作都依赖于先后顺序，所以像使用 AUTO_INCREMENT 生成主键 id 的 insert 方法、数据的恢复等都必须串行执行</p>
+<p><strong>ROW（RBR）</strong></p>
+<p>该模式下，binlog 会记录每次操作的源数据与修改后的目标数据，而不会记录 sql 语句</p>
+<p>从 mysql 5.6.2 版本开始，你可以通过在配置文件中指定 binlog_rows_query_log_events 配置项为 0 或 1 来决定是否同时记录 sql 语句</p>
+<p>优点</p>
+<ol>
+<li>精准还原</li>
+<li>并发恢复</li>
+</ol>
+<p><strong>MIXED（MBR）</strong></p>
+<p>混合模式，绝大部分操作使用 SBR 实现记录，除了以下操作：</p>
+<ol>
+<li>表的存储引擎为 NDB</li>
+<li>使用了uuid()、user()、current_user()、found_rows()、row_count()、sysdate() 等不确定函数（now() 函数仍然会以 SBR 方式记录）</li>
+<li>使用了 insert delay 语句</li>
+<li>使用了临时表</li>
+</ol>
+<p><strong>GTID</strong></p>
+<p>MySQL 5.6的新特性，全称是 Global Transaction Identifier，在 binlog 中唯一标识一个事务</p>
+<p>MySQL Server 在写binlog的时候，会先写一个特殊的 Binlog Event，类型为 GTID_Event，指定下一个事务的 GTID，然后再写事务的 Binlog。有了 GTID 就可以实现在日志重放中跳过某些操作</p>
+<h3 id="Crash-safe-redolog"><a href="#Crash-safe-redolog" class="headerlink" title="Crash safe-redolog"></a>Crash safe-redolog</h3><p>Binlog 实现了误删后的数据安全，那谁来保证掉电安全</p>
+<p>Binlog 是在事务提交后写入的，那么，如果事务提交前，或者事务提交后 binlog 写成功前，服务器突然宕机或者断电，怎么保证已提交的数据不丢失，没提交的数据能回滚呢？</p>
+<p>这要从 mysql 执行过程说起：</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1gzs88muq0zj20ik0e5wfl.jpg" alt="img"></p>
+<p>Binlog 是 Server 层拿到返回结果后记录的，所以他无法感知到事务的提交状态，crash safe 能力只能由存储引擎曾来做，innodb 靠 redolog 实现 crash-safe 能力的支持。</p>
+<p>Mysql 有个原则 – WAL（Write-Ahead Logging），先写日志后写磁盘。</p>
+<blockquote>
+<p>UPDATE A set C=C+1 WHERE ID=2</p>
+</blockquote>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1gzs8aoqmt5j20gl0mtwfj.jpg" alt="img"></p>
+<p><strong>crash safe 与恢复</strong></p>
+<p>异常情况发生再次启动后，innodb 查看 prepare 状态的 redolog 项对应的 binlog 是否已经</p>
+<ol>
+<li>Binlog 已写入，重放 binlog 实现事务提交</li>
+<li>Binlog 未写入，回滚相应的事务</li>
+</ol>
 <h3 id="事务的特点-ACID"><a href="#事务的特点-ACID" class="headerlink" title="事务的特点 ACID"></a>事务的特点 ACID</h3><p>ACID</p>
 <ul>
 <li>原子性：事务是数据库的逻辑工作单位，事务中包含的各操作要么完成，要么都不完成</li>
@@ -8690,7 +8743,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#105;&#116;&#64;&#103;&#x69;&#116;&#104;&#117;&#98;&#46;&#99;&#x6f;&#109;">&#x67;&#105;&#116;&#64;&#103;&#x69;&#116;&#104;&#117;&#98;&#46;&#99;&#x6f;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#x68;&#x75;&#98;&#x2e;&#x63;&#x6f;&#109;">&#103;&#x69;&#x74;&#x40;&#x67;&#105;&#116;&#x68;&#x75;&#98;&#x2e;&#x63;&#x6f;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
