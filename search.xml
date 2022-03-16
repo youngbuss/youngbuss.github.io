@@ -380,7 +380,7 @@
 <p>a. 从驱动表（左表）取出N条记录；<br>b. 拿着这N条记录，依次到被驱动表（右表）查找满足WHERE条件的记录；</p>
 <p>所以，官方sql的过程就是👇</p>
 <p>先把Person表搬过来</p>
-<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#x6f;&#x68;&#110;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#x6c;&#x65;&#46;&#99;&#111;&#109;">&#106;&#x6f;&#x68;&#110;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#x6c;&#x65;&#46;&#99;&#111;&#109;</a> |<br>| 2  | <a href="mailto:&#x62;&#x6f;&#x62;&#x40;&#101;&#x78;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#x63;&#x6f;&#109;">&#x62;&#x6f;&#x62;&#x40;&#101;&#x78;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#x63;&#x6f;&#109;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#111;&#104;&#x6e;&#64;&#101;&#x78;&#97;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#x6a;&#111;&#104;&#x6e;&#64;&#101;&#x78;&#97;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a> |<br>+—-+——————+</p>
+<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#x6f;&#104;&#x6e;&#64;&#x65;&#120;&#x61;&#x6d;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;">&#106;&#x6f;&#104;&#x6e;&#64;&#x65;&#120;&#x61;&#x6d;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;</a> |<br>| 2  | <a href="mailto:&#x62;&#x6f;&#98;&#x40;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#109;">&#x62;&#x6f;&#98;&#x40;&#x65;&#120;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#109;</a>  |<br>| 3  | <a href="mailto:&#106;&#111;&#104;&#110;&#64;&#x65;&#120;&#x61;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#106;&#111;&#104;&#110;&#64;&#x65;&#120;&#x61;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#99;&#x6f;&#x6d;</a> |<br>+—-+——————+</p>
 <p>a. 从表p1取出3条记录；<br>b. 拿着第1条记录去表p2查找满足WHERE的记录，代入该条件p1.Email = p2.Email AND p1.Id &gt; p2.Id后，发现没有满足的，所以不用删掉记录1；<br>c. 记录2同理；<br>d. 拿着第3条记录去表p2查找满足WHERE的记录，发现有一条记录满足，所以要从p1删掉记录3；<br>e. 3条记录遍历完，删掉了1条记录，这个DELETE也就结束了。</p>
 ]]></content>
       <categories>
@@ -1450,9 +1450,59 @@
 <p>一个专业的描述是，当多个线程访问一个对象时，如果不用进行额外的同步控制或其他的协调操作，调用这个对象的行为都可以获得正确的结果，就说这个线程是线程安全的</p>
 <p><strong>如何做到线程安全嗯？</strong></p>
 <p>实现线程安全的方法有很多种，其中在源码中最常见的方法是，采用sychronized关键字给代码块或方法加锁，比如StringBuffer</p>
+<ol>
+<li><p>不可变，不可变对象一定是线程安全的，多线程环境下应当尽量使对象成为不可变的，来满足线程安全，不可变的类型 final关键字修饰的基本数据类型，String,枚举类型，Number 部分子类，如 Long 和 Double 等数值包装类型，BigInteger 和 BigDecimal 等大数据类型。但同为 Number 的原子类 AtomicInteger 和 AtomicLong 则是可变的</p>
+</li>
+<li><p>互斥同步 synchronized ReentrantLock</p>
+</li>
+<li><p>非阻塞同步</p>
+<p><strong>1. CAS</strong></p>
+<p>随着硬件指令集的发展，我们可以使用基于冲突检测的乐观并发策略：先进行操作，如果没有其它线程争用共享数据，那操作就成功了，否则采取补偿措施（不断地重试，直到成功为止）。这种乐观的并发策略的许多实现都不需要将线程阻塞，因此这种同步操作称为非阻塞同步。</p>
+<p>乐观锁需要操作和冲突检测这两个步骤具备原子性，这里就不能再使用互斥同步来保证了，只能靠硬件来完成。硬件支持的原子性操作最典型的是：比较并交换（Compare-and-Swap，CAS）。CAS 指令需要有 3 个操作数，分别是内存地址 V、旧的预期值 A 和新值 B。当执行操作时，只有当 V 的值等于 A，才将 V 的值更新为 B。</p>
+<p><strong>2. AtomicInteger</strong></p>
+<p>J.U.C 包里面的整数原子类 AtomicInteger 的方法调用了 Unsafe 类的 CAS 操作。</p>
+<p>以下代码使用了 AtomicInteger 执行了自增的操作。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> AtomicInteger cnt = <span class="keyword">new</span> AtomicInteger();</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    cnt.incrementAndGet();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以下代码是 incrementAndGet() 的源码，它调用了 Unsafe 的 getAndAddInt() 。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">incrementAndGet</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> unsafe.getAndAddInt(<span class="keyword">this</span>, valueOffset, <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以下代码是 getAndAddInt() 源码，var1 指示对象内存地址，var2 指示该字段相对对象内存地址的偏移，var4 指示操作需要加的数值，这里为 1。通过 getIntVolatile(var1, var2) 得到旧的预期值，通过调用 compareAndSwapInt() 来进行 CAS 比较，如果该字段内存地址中的值等于 var5，那么就更新内存地址为 var1+var2 的变量为 var5+var4。</p>
+<p>可以看到 getAndAddInt() 在一个循环中进行，发生冲突的做法是不断的进行重试。</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndAddInt</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">int</span> var4)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> var5;</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        var5 = <span class="keyword">this</span>.getIntVolatile(var1, var2);</span><br><span class="line">    &#125; <span class="keyword">while</span>(!<span class="keyword">this</span>.compareAndSwapInt(var1, var2, var5, var5 + var4));</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> var5;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>3. ABA</strong></p>
+<p>如果一个变量初次读取的时候是 A 值，它的值被改成了 B，后来又被改回为 A，那 CAS 操作就会误认为它从来没有被改变过。</p>
+<p>J.U.C 包提供了一个带有标记的原子引用类 AtomicStampedReference 来解决这个问题，它可以通过控制变量值的版本来保证 CAS 的正确性。大部分情况下 ABA 问题不会影响程序并发的正确性，如果需要解决 ABA 问题，改用传统的互斥同步可能会比原子类更高效。</p>
+</li>
+<li><p>无同步方案</p>
+</li>
+<li><p>栈封闭，多个线程访问同一个方法的局部变量时，不会出现线程安全问题，因为局部变量存储在虚拟机栈中，属于线程私有的    </p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StackClosedExample</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add100</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100</span>; i++) &#123;</span><br><span class="line">            cnt++;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(cnt);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    StackClosedExample example = <span class="keyword">new</span> StackClosedExample();</span><br><span class="line">    ExecutorService executorService = Executors.newCachedThreadPool();</span><br><span class="line">    executorService.execute(() -&gt; example.add100());</span><br><span class="line">    executorService.execute(() -&gt; example.add100());</span><br><span class="line">    executorService.shutdown();</span><br><span class="line">&#125;</span><br><span class="line"><span class="number">100</span></span><br><span class="line"><span class="number">100</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>ThreadLocal</p>
+</li>
+<li><p>可重入代码</p>
+</li>
+</ol>
+<p>​        这种代码也叫做纯代码（Pure Code），可以在代码执行的任何时刻中断它，转而去执行另外一段代码（包括递归调用它本身），而在控制权返回后，原来的程序不会出现任何错误。</p>
+<p>可重入代码有一些共同的特征，例如不依赖存储在堆上的数据和公用的系统资源、用到的状态量都由参数中传入、不调用非可重入的方法等。</p>
 <p><strong>什么时候需要线程安全？</strong></p>
 <p>多个线程访问同一个资源</p>
 <p>资源是有状态的，数据是会变化的</p>
+<h3 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h3><p>在多线程中线程的执行顺序是依靠哪个线程先获得到CUP的执行权谁就先执行，虽然说可以通过线程的优先权进行设置，但是他只是获取CUP执行权的概率高点，但是也不一定必须先执行。在这种情况下如何保证线程按照一定的顺序进行执行，今天就来一个大总结，分别介绍一下几种方式。</p>
+<ul>
+<li>通过Object的wait和notify</li>
+<li>通过Condition的awiat和signal</li>
+<li>通过一个阻塞队列</li>
+<li>通过两个阻塞队列</li>
+<li>通过SynchronousQueue </li>
+<li>通过线程池的Callback回调</li>
+<li>通过同步辅助类CountDownLatch</li>
+<li>通过同步辅助类CyclicBarrier</li>
+</ul>
 <h3 id="Volatile"><a href="#Volatile" class="headerlink" title="Volatile"></a>Volatile</h3><p>先补充一下概念：Java 内存模型中的可见性、原子性和有序性。</p>
 <p><strong>可见性：</strong></p>
 <p>　　可见性是一种复杂的属性，因为可见性中的错误总是会违背我们的直觉。通常，我们无法确保执行读操作的线程能适时地看到其他线程写入的值，有时甚至是根本不可能的事情。为了确保多个线程之间对内存写入操作的可见性，必须使用同步机制。</p>
@@ -3076,7 +3126,7 @@
 <li>信号量 允许同一时刻多个线程访问同一资源</li>
 <li>事件</li>
 </ol>
-<h4 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h4><blockquote>
+<h4 id="线程同步-1"><a href="#线程同步-1" class="headerlink" title="线程同步"></a>线程同步</h4><blockquote>
 <p>为什么需要线程同步：线程有时候会和其他线程共享一些资源，比如内存、数据库等。当多个线程同时读写同一份共享资源的时候，可能会发生冲突。因此需要线程的同步，多个线程按顺序访问资源。</p>
 </blockquote>
 <ul>
@@ -8834,7 +8884,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#x69;&#116;&#x40;&#103;&#x69;&#116;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;">&#x67;&#x69;&#116;&#x40;&#103;&#x69;&#116;&#x68;&#x75;&#x62;&#x2e;&#99;&#x6f;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
