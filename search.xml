@@ -380,7 +380,7 @@
 <p>a. 从驱动表（左表）取出N条记录；<br>b. 拿着这N条记录，依次到被驱动表（右表）查找满足WHERE条件的记录；</p>
 <p>所以，官方sql的过程就是👇</p>
 <p>先把Person表搬过来</p>
-<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#111;&#104;&#x6e;&#64;&#101;&#120;&#97;&#x6d;&#112;&#108;&#x65;&#x2e;&#99;&#111;&#109;">&#106;&#111;&#104;&#x6e;&#64;&#101;&#120;&#97;&#x6d;&#112;&#108;&#x65;&#x2e;&#99;&#111;&#109;</a> |<br>| 2  | <a href="mailto:&#98;&#x6f;&#98;&#x40;&#101;&#x78;&#97;&#109;&#x70;&#108;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#98;&#x6f;&#98;&#x40;&#101;&#x78;&#97;&#109;&#x70;&#108;&#101;&#x2e;&#99;&#x6f;&#x6d;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#x6f;&#x68;&#x6e;&#64;&#101;&#x78;&#x61;&#109;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;">&#x6a;&#x6f;&#x68;&#x6e;&#64;&#101;&#x78;&#x61;&#109;&#x70;&#x6c;&#101;&#46;&#99;&#x6f;&#x6d;</a> |<br>+—-+——————+</p>
+<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#106;&#x6f;&#x68;&#110;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#x6c;&#x65;&#46;&#99;&#111;&#109;">&#106;&#x6f;&#x68;&#110;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#x6c;&#x65;&#46;&#99;&#111;&#109;</a> |<br>| 2  | <a href="mailto:&#x62;&#x6f;&#x62;&#x40;&#101;&#x78;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#x63;&#x6f;&#109;">&#x62;&#x6f;&#x62;&#x40;&#101;&#x78;&#97;&#109;&#x70;&#x6c;&#101;&#46;&#x63;&#x6f;&#109;</a>  |<br>| 3  | <a href="mailto:&#x6a;&#111;&#104;&#x6e;&#64;&#101;&#x78;&#97;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;">&#x6a;&#111;&#104;&#x6e;&#64;&#101;&#x78;&#97;&#x6d;&#x70;&#x6c;&#101;&#x2e;&#x63;&#x6f;&#x6d;</a> |<br>+—-+——————+</p>
 <p>a. 从表p1取出3条记录；<br>b. 拿着第1条记录去表p2查找满足WHERE的记录，代入该条件p1.Email = p2.Email AND p1.Id &gt; p2.Id后，发现没有满足的，所以不用删掉记录1；<br>c. 记录2同理；<br>d. 拿着第3条记录去表p2查找满足WHERE的记录，发现有一条记录满足，所以要从p1删掉记录3；<br>e. 3条记录遍历完，删掉了1条记录，这个DELETE也就结束了。</p>
 ]]></content>
       <categories>
@@ -653,10 +653,19 @@
 <li>对于引用类型，final使其引用不变，也就不能引用其他对象，但被引用的对象本身是可以修改的</li>
 </ul>
 <p><strong>2.方法</strong></p>
-<p>声明方法不能被子类重写</p>
+<p>声明方法不能被子类重写,但是可以重载</p>
 <p>private方法被隐式地指定为final。</p>
 <p><strong>3.类</strong></p>
 <p>声明该类不允许被继承,类不可变</p>
+<p><strong>4.变量</strong></p>
+<p>表示变量一旦被赋值就不可以更改它的值</p>
+<p>(1) 修饰成员变量</p>
+<ul>
+<li>如果final 修饰的是类变量，只能在静态初始化块中指定初始值或者声明该类变量时指定初始值</li>
+<li>如果final修饰的是成员变量，可以在非静态初始化块，声明该变量或者构造器中执行初始值</li>
+</ul>
+<p>(2) 修饰局部变量</p>
+<p>系统不会为局部变量进行初始化，局部变量必须由程序员显式初始化，因此使用final修饰局部变量时，即可以在定义时指定默认值（后面的代码不能对变量再赋值），也可以不指定默认值，而在后面的代码中对final变量赋初值(仅一次)</p>
 <p>修饰的是基本类型，这个值本身不能修改</p>
 <p>修饰的是引用类型，引用的指向不能修改</p>
 <p>final Student student = new Student(1,”bubu”);</p>
@@ -708,12 +717,13 @@
 <p>​    <strong>4、</strong> 匿名内部类是没有构造方法的。因为它连名字都没有何来构造方法</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OuterClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> InnerClass <span class="title">getInnerClass</span><span class="params">(<span class="keyword">final</span> <span class="keyword">int</span> num,String str2)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> InnerClass()&#123;</span><br><span class="line">            <span class="keyword">int</span> number = num + <span class="number">3</span>;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getNumber</span><span class="params">()</span></span>&#123;</span><br><span class="line">                <span class="keyword">return</span> number;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;        <span class="comment">/* 注意：分号不能省 */</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        OuterClass out = <span class="keyword">new</span> OuterClass();</span><br><span class="line">        InnerClass inner = out.getInnerClass(<span class="number">2</span>, <span class="string">&quot;chenssy&quot;</span>);</span><br><span class="line">        System.out.println(inner.getNumber());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">InnerClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getNumber</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">----------------</span><br><span class="line">Output:</span><br><span class="line"><span class="number">5</span></span><br></pre></td></tr></table></figure>
 
+<p><strong>为什么这个形参一定是final??</strong></p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h03otaf59rj20yq0faq7m.jpg" alt="image-20220309155935388"></p>
+<p>![image-20220309155933886](../../../Library/Application Support/typora-user-images/image-20220309155933886.png)</p>
 <h4 id="静态内部类"><a href="#静态内部类" class="headerlink" title="静态内部类"></a>静态内部类</h4><p>在java提高篇—–关键字static中提到Static可以修饰成员变量、方法、代码块，其他它还可以修饰内部类，使用static修饰的内部类我们称之为静态内部类，不过我们更喜欢称之为嵌套内部类。静态内部类与非静态内部类之间存在一个最大的区别，我们知道非静态内部类在编译完成之后会隐含地保存着一个引用，该引用是指向创建它的外围内，但是静态内部类却没有。没有这个引用就意味着：</p>
 <p>   <strong>1、</strong> 它的创建是不需要依赖于外围类的。</p>
 <p>   <strong>2、</strong> 它不能使用任何外围类的非static成员变量和方法。</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OuterClass</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String sex;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String name = <span class="string">&quot;chenssy&quot;</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *静态内部类</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">InnerClass1</span></span>&#123;</span><br><span class="line">        <span class="comment">/* 在静态内部类中可以存在静态成员 */</span></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">static</span> String _name1 = <span class="string">&quot;chenssy_static&quot;</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="comment">/* </span></span><br><span class="line"><span class="comment">             * 静态内部类只能访问外围类的静态成员变量和方法</span></span><br><span class="line"><span class="comment">             * 不能访问外围类的非静态成员变量和方法</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            System.out.println(<span class="string">&quot;OutClass name :&quot;</span> + name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 非静态内部类</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">InnerClass2</span></span>&#123;</span><br><span class="line">        <span class="comment">/* 非静态内部类中不能存在静态成员 */</span></span><br><span class="line">        <span class="keyword">public</span> String _name2 = <span class="string">&quot;chenssy_inner&quot;</span>;</span><br><span class="line">        <span class="comment">/* 非静态内部类中可以调用外围类的任何成员,不管是静态的还是非静态的 */</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span>&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;OuterClass name：&quot;</span> + name);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@desc</span> 外围类方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@author</span> chenssy</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@data</span> 2013-10-25</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="comment">/* 外围类访问静态内部类：内部类. */</span></span><br><span class="line">        System.out.println(InnerClass1._name1);</span><br><span class="line">        <span class="comment">/* 静态内部类 可以直接创建实例不需要依赖于外围类 */</span></span><br><span class="line">        <span class="keyword">new</span> InnerClass1().display();</span><br><span class="line">        </span><br><span class="line">        <span class="comment">/* 非静态内部的创建需要依赖于外围类 */</span></span><br><span class="line">        OuterClass.InnerClass2 inner2 = <span class="keyword">new</span> OuterClass().n<span class="function">ew <span class="title">InnerClass2</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="comment">/* 访问非静态内部类的成员需要使用非静态内部类的实例 */</span></span><br><span class="line">        System.out.println(inner2._name2);</span><br><span class="line">        inner2.display();</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        OuterClass outer = <span class="keyword">new</span> OuterClass();</span><br><span class="line">        outer.display();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">----------------</span><br><span class="line">Output:</span><br><span class="line">chenssy_static</span><br><span class="line">OutClass name :chenssy</span><br><span class="line">chenssy_inner</span><br><span class="line">OuterClass name：chenssy</span><br></pre></td></tr></table></figure>
-
-
 
 <h3 id="容器类"><a href="#容器类" class="headerlink" title="容器类"></a>容器类</h3><p>分类主要分为以下两个类型</p>
 <ul>
@@ -763,10 +773,11 @@
 <h3 id="抽象类与接口的区别"><a href="#抽象类与接口的区别" class="headerlink" title="抽象类与接口的区别"></a>抽象类与接口的区别</h3><p>区别：</p>
 <ul>
 <li>抽象类的修饰符是abstract ，接口的修饰符是interface 。另外对于实现的子类来说，有extends 和 implements 之分</li>
-<li>接口中的变量是public final 类型的共有常量，不能修改。抽象类中的变量可以进行修改赋值操作；。比如i,j</li>
+<li>接口中的变量是public final 类型的共有常量，不能修改。抽象类中的变量可以进行修改赋值操作，且可以是各种类型的；。比如i,j</li>
 <li>接口中的方法必须是抽象方法，而抽象类中的方法可以不是抽象方法，我们可以在非抽象方法中进行一些初始化操作，那么子类将会持有该属性，比如例子中的isLoading 字段</li>
 <li>对于非抽象子类来说，必须实现或继承 接口或抽象类中的所有抽象方法 比如MyClass和MyClass2</li>
 <li>对于抽象子类来说，可以不用实现或继承这些方法。比如MyClass3和MyClass4</li>
+<li>抽象类只能继承一个，接口可以实现多个</li>
 </ul>
 <p>相同点：</p>
 <ul>
@@ -794,6 +805,7 @@
 <ul>
 <li>接口里面可以有实现的方法，注意要在方法的声明上加上default或者static</li>
 </ul>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h03p8nzsk5j210g0l0jxy.jpg" alt="image-20220309161436851"></p>
 <h3 id="数组在内存中如何分配"><a href="#数组在内存中如何分配" class="headerlink" title="数组在内存中如何分配"></a>数组在内存中如何分配</h3><p>对于Java数组的初始化，有以下两种方式</p>
 <ul>
 <li>静态初始化：初始化时由程序员显示指定每个数组元素的初始值，由系统决定数组长度</li>
@@ -824,6 +836,7 @@
 <p>StringBuffer,StringBuilder都是在原有对象上进行操作</p>
 <p>所以如果需要经常改变字符串内容则建议采用这两者</p>
 <p>二者的区别是前者是线程安全的，后者是线程不安全的</p>
+<p>StringBuffer方法都是synchronized修饰的</p>
 <p>线程不安全的性能更高，所以在开发中优先采用StringBuilder</p>
 <p>线程安全：多线程环境下，对这个对象的访问不需要加入额外的同步控制，操作的数据结果依然是正确的，例如synchronized</p>
 <p>什么时候会考虑线程安全问题呢？多个线程访问同一个资源的情况下才会考虑，单线程则不考虑。</p>
@@ -848,8 +861,8 @@
 <li>重写：发生在父类子类之间，方法名相同，参数列表相同</li>
 </ul>
 <h3 id="List和Set的区别"><a href="#List和Set的区别" class="headerlink" title="List和Set的区别"></a>List和Set的区别</h3><p>二者都继承自Collection接口</p>
-<p>List 有序可重复 ArrayList LinkedList</p>
-<p>Set 无序  不可重复 HashSet TreeSet，元素不可重复，重复元素会被覆盖掉，元素虽然无放入顺序，但是元素在set中的位置是由该元素的hashcode决定的，其位置其实是固定的，加上set的Object方法必须定义equals()方法。</p>
+<p>List 有序可重复 ArrayList LinkedList，按对象进入的顺序保存对象，可重复，允许多个NUll元素对象，可以使用iterator 取出所有元素，在逐一遍历，还可以使用get(int index)获取指定下标的元素</p>
+<p> Set:无序  不可重复 HashSet TreeSet，元素不可重复，重复元素会被覆盖掉，元素虽然无放入顺序，但是元素在set中的位置是由该元素的hashcode决定的，其位置其实是固定的，加上set的Object方法必须定义equals()方法。取元素时只能使用Iterator接口取得所有元素，在逐一遍历各个元素。</p>
 <h3 id="List"><a href="#List" class="headerlink" title="List"></a>List</h3><p>在单线程开发中经常用到ArrayList,但是它是不安全的。</p>
 <p>线程安全的list,目前比较常用的构建线程安全的List有三种方法：</p>
 <ul>
@@ -883,7 +896,10 @@
 <p>快速排序主要是对那些基本类型数据（int,short,long等）排序， 而合并排序用于对对象类型进行排序</p>
 <p>使用不同类型的排序算法主要是由于快速排序是不稳定的，而合并排序是稳定的。这里的稳定是指比较相等的数据在排序之后仍然按照排序之前的前后顺序排列。对于基本数据类型，稳定性没有意义，而对于对象类型，稳定性是比较重要的，因为对象相等的判断可能只是判断关键属性，最好保持相等对象的非关键属性的顺序与排序前一直；另外一个原因是由于合并排序相对而言比较次数比快速排序少，移动（对象引用的移动）次数比快速排序多，而对于对象来说，比较一般比移动耗时。</p>
 <h3 id="ArrayList-LinkList"><a href="#ArrayList-LinkList" class="headerlink" title="ArrayList LinkList"></a>ArrayList LinkList</h3><p>对于处理一列数据项，Java 提供了两个类ArrayList 和LinkedList ，ArrayList 的内部实现是基于内部数组Object[] ，从概念上讲，它更像数组，但LinkedList 的内部实现是基于一组连接的记录，所以，它更像一个链表结构，它们在性能上有很大的差别。</p>
-<p>  在ArrayList 的前面或中间插入数据时，必须将其后的所有数据相应的后移，这样必然要花费较多时间，所以，当你的操作是在一列数据的后面添加数据而不是在前面或中间，并且需要随机地访问其中的元素时，使用ArrayList 会提供比较好的性能；而访问链表中的某个元素时，就必须从链表的一端开始沿着连接方向一个一个元素地去查找，直到找到所需的元素为止，所以，当你的操作是在一列数据的前面或中间添加或删除数据，并且按照顺序访问其中的元素时，就应该使用LinkedList 了。</p>
+<p>ArrayList:基于动态数组的，连续内存存储，适合下标访问(随机访问), 扩容机制：因为数组长度固定，超出长度存数据时需要新建数组，然后将老数组的数据拷贝到新数组中，如果不是尾部插入数据还会涉及到元素的移动，使用尾插法并指定初始容量可以极大提升性能。</p>
+<p>LinkedList:基于链表，可以存储在分散的内存中，适合做数据插入及删除操作，不适合查询：需要逐一遍历</p>
+<p>遍历LinkedList必须使用iterator，不能使用for循环，因此每次for循环体内通过get(i)取得某一元素时都需要对list重新进行遍历，性能消耗极大。</p>
+<p>在ArrayList 的前面或中间插入数据时，必须将其后的所有数据相应的后移，这样必然要花费较多时间，所以，当你的操作是在一列数据的后面添加数据而不是在前面或中间，并且需要随机地访问其中的元素时，使用ArrayList 会提供比较好的性能；而访问链表中的某个元素时，就必须从链表的一端开始沿着连接方向一个一个元素地去查找，直到找到所需的元素为止，所以，当你的操作是在一列数据的前面或中间添加或删除数据，并且按照顺序访问其中的元素时，就应该使用LinkedList 了。</p>
 <p>如果在编程中，两种情形交替出现，这时，可以考虑使用List 这样的通用接口，而不用关心具体的实现，在具体的情形下，它的性能由具体的实现来保证。</p>
 <p><strong>案例：LinkedList 实现栈</strong></p>
 <p>  ArrayList 的查询效率比较高，增删动作的效率比较差，适用于查询比较频繁，增删动作较少的元素管理的集合。LinkedList 的查询效率低，但是增删效率很高。适用于增删动作的比较频繁，查询次数较少的元素管理集合。</p>
@@ -895,6 +911,13 @@
 <p>ArrayList  数组 是连续一块内存空间</p>
 <p>LinkedList 双向链表 不是连续的内存空间</p>
 <p><strong>一个常规的结论</strong></p>
+<p>为什么<a href="https://so.csdn.net/so/search?q=%E6%95%B0%E7%BB%84&spm=1001.2101.3001.7020">数组</a>比链表查询速度更快？</p>
+<ul>
+<li><p>数组由于是紧凑连续存储,可以随机访问，通过索引快速找到对应元素，而且相对节约存储空间。但正因为连续存储，内存空间必须一次性分配够，所以说数组如果要扩容，需要重新分配一块更大的空间，再把数据全部复制过去，时间复杂度 O(N)；而且你如果想在数组中间进行插入和删除，每次必须搬移后面的所有数据以保持连续，时间复杂度 O(N)。</p>
+</li>
+<li><p>链表因为元素不连续，而是靠指针指向下一个元素的位置，所以不存在数组的扩容问题；如果知道某一元素的前驱和后驱，操作指针即可删除该元素或者插入新元素，时间复杂度O(1)。但是正因为存储空间不连续，你无法根据一个索引算出对应元素的地址，所以不能随机访问；而且由于每个元素必须存储指向前后元素位置的指针，会消耗相对更多的储存空间。</p>
+</li>
+</ul>
 <p>ArrayList查找块，因为是连续的内存空间，方便寻址，但删除插入慢，因为需要发生数据的迁移</p>
 <p>LinkedList 查找慢，因为需要通过指针一个个寻找，但删除，插入快，因为只需要该表前后节点的指针指向即可,LinkedList有头尾指针，尾部添加新元素不需要遍历~</p>
 <p><img src="/2020/11/09/%E9%9D%A2%E8%AF%95%E7%9F%A5%E8%AF%86%E7%82%B9/1.JPG"></p>
@@ -1130,7 +1153,7 @@
 <p>字节码即扩展名.class文件，它是由java编译器编译Java源程序生成JVM能够理解的代码，这种代码就是字节码，它不面向任何平台只面向JVM。</p>
 <p>我们写的<strong>java文件会通过java编译器编译成java字节码文件</strong>（也就是.class文件），这个过程是java编译过程。而我们的java虚拟机执行的就是字节码文件。字节码文件会通过java解释器（JVM的一部分）再解释成机器码运行。</p>
 <p>采用字节码的好处：</p>
-<p>Java语言编译成字节码通过JVM实现跨平台，保留了解释性语言可移植的特点（Java是编译和解释并存），这也体现了Java语言”一次编译到处运行”的特点，在一定程度上解决了解释语言执行效率低的问题。</p>
+<p>Java语言编译成字节码通过JVM实现跨平台，保留了解释性语言可移植的特点（Java是编译和解释并存），这也体现了Java语言”一次编译到处运行”的特点，在一定程度上解决了解释语言执行效率低的问题。Java语言通过字节码的方式，在一定程度上解决了传统解释性语言执行效率低的问题，同时又保证了解释型语言可移植的特点。所以Java程序运行时比较高效，而且，由于字节码并不专对一种特定的机器，因此JAVA语言无须重新编译便可在多种不同的计算机上运行。</p>
 <h2 id="Hash相关知识"><a href="#Hash相关知识" class="headerlink" title="Hash相关知识"></a>Hash相关知识</h2><h3 id="Hash冲突"><a href="#Hash冲突" class="headerlink" title="Hash冲突"></a>Hash冲突</h3><p>1.开放地址方法</p>
 <p>　　（1）线性探测</p>
 <p>　　　按顺序决定值时，如果某数据的值已经存在，则在原来值的基础上往后加一个单位，直至不发生哈希冲突。　</p>
@@ -1404,8 +1427,10 @@
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Resource</span></span>&#123;  <span class="comment">//生产者和消费者都要操作的资源  </span></span><br><span class="line">    <span class="keyword">private</span> String name;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> count=<span class="number">1</span>;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">boolean</span> flag=<span class="keyword">false</span>;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">set</span><span class="params">(String name)</span></span>&#123;  </span><br><span class="line">        <span class="keyword">if</span>(flag)  </span><br><span class="line">            <span class="keyword">try</span>&#123;wait();&#125;<span class="keyword">catch</span>(Exception e)&#123;&#125;  </span><br><span class="line">        <span class="keyword">this</span>.name=name+<span class="string">&quot;---&quot;</span>+count++;  </span><br><span class="line">        System.out.println(Thread.currentThread().getName()+<span class="string">&quot;...生产者...&quot;</span>+<span class="keyword">this</span>.name);  </span><br><span class="line">        flag=<span class="keyword">true</span>;  </span><br><span class="line">        <span class="keyword">this</span>.notify();  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">out</span><span class="params">()</span></span>&#123;  </span><br><span class="line">        <span class="keyword">if</span>(!flag)  </span><br><span class="line">            <span class="keyword">try</span>&#123;wait();&#125;<span class="keyword">catch</span>(Exception e)&#123;&#125;  </span><br><span class="line">        System.out.println(Thread.currentThread().getName()+<span class="string">&quot;...消费者...&quot;</span>+<span class="keyword">this</span>.name);  </span><br><span class="line">        flag=<span class="keyword">false</span>;  </span><br><span class="line">        <span class="keyword">this</span>.notify();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Producer</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> Resource res;  </span><br><span class="line">    Producer(Resource res)&#123;  </span><br><span class="line">        <span class="keyword">this</span>.res=res;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;  </span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;  </span><br><span class="line">            res.set(<span class="string">&quot;商品&quot;</span>);  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Consumer</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> Resource res;  </span><br><span class="line">    Consumer(Resource res)&#123;  </span><br><span class="line">        <span class="keyword">this</span>.res=res;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;  </span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;  </span><br><span class="line">            res.out();  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;  </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ProducerConsumerDemo</span></span>&#123;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;  </span><br><span class="line">        Resource r=<span class="keyword">new</span> Resource();  </span><br><span class="line">        Producer pro=<span class="keyword">new</span> Producer(r);  </span><br><span class="line">        Consumer con=<span class="keyword">new</span> Consumer(r);  </span><br><span class="line">        Thread t1=<span class="keyword">new</span> Thread(pro);  </span><br><span class="line">        Thread t2=<span class="keyword">new</span> Thread(con);  </span><br><span class="line">        t1.start();  </span><br><span class="line">        t2.start();  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;<span class="comment">//运行结果正常，生产者生产一个商品，紧接着消费者消费一个商品。  </span></span><br></pre></td></tr></table></figure>
 
 <h3 id="Sleep-Wait区别"><a href="#Sleep-Wait区别" class="headerlink" title="Sleep Wait区别"></a>Sleep Wait区别</h3><p><strong>所属的类不同</strong> sleep是定义在Thread上，wait是定义在Object上</p>
-<p><strong>对于锁资源的处理方式不同</strong>  sleep不会释放锁，wait会释放锁</p>
+<p><strong>对于锁资源的处理方式不同</strong>  sleep不会释放锁，wait会释放锁，而且会加入到等待队列中</p>
 <p><strong>使用范围</strong>：sleep可以使用在任何代码块，wait必须在同步方法或者同步代码块中执行</p>
+<p>sleep一般用于当前线程休眠，或者轮循暂停操作，wait则多用于多线程之间的通信</p>
+<p>sleep会让出CPU执行时间且强制上下文切换，wait则不一定，wait后可能还有机会重新竞争到锁继续执行的</p>
 <p><strong>与wait配套使用的方法：</strong> </p>
 <p>​    void notify()//唤醒在此对象监视器上等待的单个线程</p>
 <p>​    void notifyAll() //唤醒在此对象监视器上的所有线程</p>
@@ -1415,6 +1440,12 @@
 <p><strong>为什么wait必须写在同步代码块中</strong></p>
 <p>原因是避免CPU切换到其他线程，而其他线程又提前执行了notify方法，那这样就达不到我们的预期，先wait再由其他线程来唤醒，所以需要一个同步锁来保护</p>
 <p><a href="https://www.jianshu.com/p/def7f016dd5e">java wait()方法用法详解 - 简书 (jianshu.com)</a></p>
+<h3 id="join-yield"><a href="#join-yield" class="headerlink" title="join,yield"></a>join,yield</h3><p>1.锁池</p>
+<p>所有需要竞争同步锁的线程都会放在锁池当中，比如当前对象的锁已经被其中一个线程得到，则其他线程需要在这个锁池进行等待，当前面的线程释放同步锁后锁池中的线程去竞争同步锁，当某个线程得到后会进入就绪队列进行等待CPU资源分配。</p>
+<p>2.等待池</p>
+<p>当我们调用wait()方法后，线程会放到等待池当中，等待池的线程是不太会去竞争同步锁。只有调用了notify()或者notifyAll()后，等待池的线程才会开始去竞争锁。</p>
+<p>Yield() 执行后线程直接进入到就绪状态，马上释放了CPU的执行权，但是依然保留了CPU的执行资格，所以有可能CPU下次执行线程调度还会让这个线程获取到执行权继续执行。</p>
+<p>join() 执行后线程进入阻塞状态，例如在线程B中调用A的join()，那线程B会进入阻塞队列，等到线程A结束或者中断线程。</p>
 <h3 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h3><p><strong>线程安全的理解？</strong></p>
 <p>一个专业的描述是，当多个线程访问一个对象时，如果不用进行额外的同步控制或其他的协调操作，调用这个对象的行为都可以获得正确的结果，就说这个线程是线程安全的</p>
 <p><strong>如何做到线程安全嗯？</strong></p>
@@ -1606,6 +1637,12 @@
 <p>弱引用可以和一个引用队列（ReferenceQueue）联合使用，如果弱引用所引用的对象被垃圾回收，Java 虚拟机就会把这个弱引用加入到与之关联的引用队列中。</p>
 </blockquote>
 <p><strong>使用场景</strong></p>
+<ol>
+<li>在进行对象跨层传递的时候，使用ThreadLocal可以避免多次传递，打破层次间的约束</li>
+<li>线程间数据隔离</li>
+<li>进行事务操作，用于存储线程事务信息</li>
+<li>数据库连接，Session会话管理</li>
+</ol>
 <p>Spring的事务管理器通过AOP切入业务代码，在进入业务代码前，会依据相应的事务管理器提取出相应的事务对象，假如事务管理器是DataSourceTransactionManager，就会从DataSource中获取一个连接对象，通过一定的包装后将其保存在ThreadLocal中。而且Spring也将DataSource进行了包装，重写了当中的getConnection()方法，或者说该方法的返回将由Spring来控制，这样Spring就能让线程内多次获取到的Connection对象是同一个。<br>为什么要放在ThreadLocal里面呢？由于Spring在AOP后并不能向应用程序传递參数。应用程序的每一个业务代码是事先定义好的，Spring并不会要求在业务代码的入口參数中必须编写Connection的入口參数。此时Spring选择了ThreadLocal，通过它保证连接对象始终在线程内部，不论什么时候都能拿到，此时Spring很清楚什么时候回收这个连接，也就是很清楚什么时候从ThreadLocal中删除这个元素。<br>从Spring事务管理器的设计上能够看出。Spring利用ThreadLocal得到了一个非常完美的设计思路，同一时候它在设计时也十分清楚ThreadLocal中元素应该在什么时候删除。由此，我们简单地觉得ThreadLocal尽量使用在一个全局的设计上。而不是一种打补丁的间接方法。</p>
 <h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><p>线程池就是提前创建若干个线程，如果有任务需要处理，线程池里的线程就会处理任务，处理完之后线程并不会被销毁，而是等待下一个任务。由于创建和销毁线程都是消耗系统资源的，所以当你想要频繁的创建和销毁线程的时候就可以考虑使用线程池来提升系统的性能。</p>
 <p>线程池的好处：</p>
@@ -1691,6 +1728,8 @@
 <h4 id="线程池策略"><a href="#线程池策略" class="headerlink" title="线程池策略"></a><strong>线程池策略</strong></h4><p><strong>corePoolSize：核心线程数；maximunPoolSize：最大线程数</strong><br>每当有新的任务到线程池时，<br><strong>第一步：</strong> 先判断线程池中当前线程数量是否达到了<strong>corePoolSize</strong>，若未达到，则新建线程运行此任务，且任务结束后将该线程保留在线程池中，不做销毁处理，若当前线程数量已达到<strong>corePoolSize</strong>，则进入下一步；<br><strong>第二步：</strong> 判断工作队列(workQueue)是否已满，未满则将新的任务提交到工作队列中，满了则进入下一步；<br><strong>第三步：</strong> 判断线程池中的线程数量是否达到了<strong>maxumunPoolSize</strong>，如果未达到，则新建一个工作线程来执行这个任务，如果达到了则使用<strong>拒绝策略</strong>来处理这个任务。<strong>注意：</strong> 在线程池中的线程数量超过<strong>corePoolSize</strong>时，每当有线程的空闲时间超过了keepAliveTime，这个线程就会被终止。直到线程池中线程的数量不大于<strong>corePoolSize</strong>为止。<br>（由第三步可知，在一般情况下，Java线程池中会长期保持<strong>corePoolSize</strong>个线程。）</p>
 <p><strong>拒绝策略</strong></p>
 <p><strong>当工作队列满且线程个数达到maximunPoolSize后所采取的策略</strong>：<br>1.AbortPolicy：<strong>默认策略；</strong>新任务提交时直接抛出未检查的异常RejectedExecutionException，该异常可由调用者捕获。<br>2.CallerRunsPolicy：既不抛弃任务也不抛出异常，使用调用者所在线程运行新的任务。<br>3.DiscardPolicy：丢弃新的任务，且不抛出异常。<br>4.DiscardOldestPolicy：调用poll方法丢弃工作队列队头的任务，然后尝试提交新任务<br>5.自定义策略：根据用户需要定制。</p>
+<h4 id="线程复用原理"><a href="#线程复用原理" class="headerlink" title="线程复用原理"></a>线程复用原理</h4><p>线程池将线程和任务进行解耦，线程是线程，任务是任务，摆脱了之前通过Thread创建线程时的一个线程必须对应一个任务的限制。</p>
+<p>在线程池中，同一个线程可以从阻塞队列中不断获取新任务来执行，其核心原理在于线程池对Thread进行了封装，并不是每次执行任务都会调用Thread.start() 来创建线程，而是让每个线程去执行一个”循环任务”，在这个循环任务中不停检查是否有任务需要被执行，如果有则直接执行，也就是调用任务中的run方法，将run方法当成一个普通的方法执行，通过这种方式只使用固定的线程就将所有任务的run方法串联起来了。</p>
 <h4 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h4><figure class="highlight java"><table><tr><td class="code"><pre><span class="line">mport java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 这是一个简单的Runnable类，需要大约5秒钟来执行其任务。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> shuang.kou</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String command;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyRunnable</span><span class="params">(String s)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.command = s;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot; Start. Time = &quot;</span> + <span class="keyword">new</span> Date());</span><br><span class="line">        processCommand();</span><br><span class="line">        System.out.println(Thread.currentThread().getName() + <span class="string">&quot; End. Time = &quot;</span> + <span class="keyword">new</span> Date());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">processCommand</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">5000</span>);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.command;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//编写测试程序，我们这里以阿里巴巴推荐的使用 ThreadPoolExecutor 构造函数自定义参数的方式来创建线程池。</span></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ArrayBlockingQueue;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.ThreadPoolExecutor;</span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.TimeUnit;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadPoolExecutorDemo</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> CORE_POOL_SIZE = <span class="number">5</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_POOL_SIZE = <span class="number">10</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> QUEUE_CAPACITY = <span class="number">100</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Long KEEP_ALIVE_TIME = <span class="number">1L</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//使用阿里巴巴推荐的创建线程池的方式</span></span><br><span class="line">        <span class="comment">//通过ThreadPoolExecutor构造函数自定义参数创建</span></span><br><span class="line">        ThreadPoolExecutor executor = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">                CORE_POOL_SIZE,</span><br><span class="line">                MAX_POOL_SIZE,</span><br><span class="line">                KEEP_ALIVE_TIME,</span><br><span class="line">                TimeUnit.SECONDS,</span><br><span class="line">                <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;(QUEUE_CAPACITY),</span><br><span class="line">                <span class="keyword">new</span> ThreadPoolExecutor.CallerRunsPolicy());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) &#123;</span><br><span class="line">            <span class="comment">//创建WorkerThread对象（WorkerThread类实现了Runnable 接口）</span></span><br><span class="line">            Runnable worker = <span class="keyword">new</span> MyRunnable(<span class="string">&quot;&quot;</span> + i);</span><br><span class="line">            <span class="comment">//执行Runnable</span></span><br><span class="line">            executor.execute(worker);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//终止线程池</span></span><br><span class="line">        executor.shutdown();</span><br><span class="line">        <span class="keyword">while</span> (!executor.isTerminated()) &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(<span class="string">&quot;Finished all threads&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 
@@ -2276,7 +2315,7 @@
 <p>　　很多其它协议都是基于这两个协议。如http就是基于tcp的，用socket可以创建tcp连接，也可以创建udp连接。</p>
 <p>　　这意味着，用socket可以创建任何协议的连接，因为其它协议都是基于此的。</p>
 <p>　　一个Socket实例由一个IP地址和一个端口号唯一确定。<br>　　Socket是一种用于网络通信的低层开发接口，借助于通信两端的应用程序(实际上是Socket)可以利用输入输出流完成数据交换。</p>
-<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　　　　　　　　　　　　　　　　　　　3）适合于客户端和服务器端之间信息实时交互；<br>　　　　　　　　　　　　　　　　　　　　4）可以加密,数据安全性强。 </p>
+<p><strong>Socket 传输的优点</strong><br>　　1) 传输数据为字节级，传输数据可自定义，数据量小（对于手机应用讲：费用低）；<br>　　2）传输数据时间短，性能高；<br>　　　　　　　　　　　　　　　　　　　　　　　　　　3）适合于客户端和服务器端之间信息实时交互；<br>　　　　　　　　　　　　　　　　　　　　　　　　　　4）可以加密,数据安全性强。 </p>
 <p><strong>Socket 传输的缺点</strong><br>　　1）需对传输的数据进行解析，转化成应用级的数据；<br>　　2）对开发人员的开发水平要求高；<br>　　3）相对于Http协议传输，增加了开发量</p>
 <p>基于Socket传输的特点：Socket 传输方式适合于对传输速度，安全性，实时交互，费用等要求高的应用中，如网络游戏，手机应用，银行内部交互等‘’。</p>
 <h2 id="Mysql数据库知识点"><a href="#Mysql数据库知识点" class="headerlink" title="Mysql数据库知识点"></a>Mysql数据库知识点</h2><h3 id="数据库三大范式"><a href="#数据库三大范式" class="headerlink" title="数据库三大范式"></a>数据库三大范式</h3><ol>
@@ -3019,12 +3058,18 @@
 <p><strong>阻塞-&gt;退出</strong>：跟上一项原因类似。</p>
 <h4 id="僵尸进程"><a href="#僵尸进程" class="headerlink" title="僵尸进程"></a>僵尸进程</h4><p>一个子进程结束后，它的父进程并没有等待它（调用wait或者waitpid），那么这个子进程将成为一个僵尸进程。僵尸进程是一个已经死亡的进程，但是并没有真正被销毁。它已经放弃了几乎所有内存空间，没有任何可执行代码，也不能被调度，仅仅在进程表中保留一个位置，记载该进程的进程ID、终止状态以及资源利用信息(CPU时间，内存使用量等等)供父进程收集，除此之外，僵尸进程不再占有任何内存空间。这个僵尸进程可能会一直留在系统中直到系统重启。</p>
 <p>危害：占用进程号，而系统所能使用的进程号是有限的；占用内存。</p>
-<h4 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h4><p>new runnable blocked waiting time-waiting terminated</p>
+<h4 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h4><p>new,runnable, blocked, waiting ,time-waiting, terminated</p>
 <ol>
 <li>当进入到同步代码块或者同步方法时，且没有获取到锁，线程就进入到了blocked状态，直到被释放锁，重新进入到runnable状态</li>
 <li>当线程调用wait或者join时，线程都会进入到waiting状态，当调用notify或notifyAll时，或者join的线程执行结束后，会进入到runnable状态</li>
 <li>当线程调用sleep(time),或者wait(time)时，进入到timed waiting状态 当休眠结束时，或者调用otify或notifyAll时会重新进入到runnable状态</li>
 <li>程序结束后，线程进入到terminated状态</li>
+</ol>
+<p>阻塞情况又分为三种：</p>
+<ol>
+<li>等待阻塞 运行的线程执行wait方法，该线程会释放占用的所有资源，JVM会把线程放入等待池中，进入这个状态后，是不能自动唤醒的，必须依靠其他线程调用notify或者notifyall方法才能被唤醒</li>
+<li>同步阻塞，运行的线程在获取对象的同步锁时，若该同步锁被别的线程占用，则JVM会把该线程放入锁池中</li>
+<li>其他阻塞：运行的线程执行sleep,join方法时，或者发出了I/O请求，JVM会把该线程设置为阻塞状态，当sleep状态超时，join等待线程终止或者超时，或者I/O处理完毕时，线程重新转入就绪状态。</li>
 </ol>
 <h4 id="进程的同步方式"><a href="#进程的同步方式" class="headerlink" title="进程的同步方式"></a>进程的同步方式</h4><ol>
 <li>互斥量 采用互斥对象机制</li>
@@ -3276,6 +3321,7 @@
 <p>Spring Ioc 的初始化过程</p>
 <p><strong>xml</strong>   读取   <strong>Resource</strong>   解析    <strong>BeanDefinition</strong> 注册 <strong>BeanFactory</strong></p>
 <h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h3><p>AOP(Aspect-Oriented Programming:面向切面编程)能够将那些与业务无关，<strong>却为业务模块所共同调用的逻辑或责任（例如事务处理、日志管理、权限控制等）封装起来</strong>，便于<strong>减少系统的重复代码</strong>，<strong>降低模块间的耦合度</strong>，并<strong>有利于未来的可拓展性和可维护性</strong>。</p>
+<p>AOP:将程序中的交叉业务逻辑，比如安全，日志，事务等，封装成一个切面，然后注入到目标对象(具体业务逻辑)中去。AOP可以对某个对象或者某些对象的功能进行增强，比如对象中的方法进行增强。</p>
 <p><strong>Spring AOP就是基于动态代理的</strong>，如果要代理的对象，实现了某个接口，那么Spring AOP会使用<strong>JDK Proxy</strong>，去创建代理对象，而对于没有实现接口的对象，就无法使用 JDK Proxy 去进行代理了，这时候Spring AOP会使用<strong>Cglib</strong> ，这时候Spring AOP会使用 <strong>Cglib</strong> 生成一个被代理对象的子类来作为代理，</p>
 <p>当然你也可以使用 AspectJ ,Spring AOP 已经集成了AspectJ ，AspectJ 应该算的上是 Java 生态系统中最完整的 AOP 框架了。</p>
 <p><strong>使用 AOP 之后我们可以把一些通用功能抽象出来，在需要用到的地方直接使用即可，这样大大简化了代码量。我们需要增加新功能时也方便，这样也提高了系统扩展性。日志功能、事务管理等等场景都用到了 AOP</strong> 。</p>
@@ -3287,7 +3333,7 @@
 
 <p><strong>bean 的作用域</strong></p>
 <p><strong>singleton</strong> : 唯一 bean 实例，Spring 中的 bean 默认都是单例的，对单例设计模式的应用。</p>
-<p><strong>prototype</strong> : 每次请求都会创建一个新的 bean 实例。</p>
+<p><strong>prototype</strong> : 每次请求都会创建一个新的 bean 实例。对于有状态的Bean应该使用prototype，对于无状态的Bean则使用singleton</p>
 <p><strong>request</strong> : 每一次 HTTP 请求都会产生一个新的 bean，该 bean 仅在当前 HTTP request 内有效。</p>
 <p><strong>session</strong> : 每一次来自新 session 的 HTTP 请求都会产生一个新的 bean，该 bean 仅在当前 HTTP session 内有效。</p>
 <p><strong>global-session</strong> ： 全局 session 作用域，仅仅在基于 portlet 的 web 应用中才有意义，Spring5 已经没有了。Portlet 是能够生成语义代码(例如：HTML)片段的小型 Java Web 插件。它们基于 portlet 容器，可以像 servlet 一样处理 HTTP 请求。但是，与 servlet 不同，每个 portlet 都有不同的会话。</p>
@@ -3298,6 +3344,8 @@
 <p>注解方式：</p>
 <figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="meta">@Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Person <span class="title">personPrototype</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Person();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p><strong>有状态和无状态</strong></p>
+<p><strong>有状态会话bean</strong>  ：每个用户有自己特有的一个实例，在用户的生存期内，bean保持了用户的信息，即“有状态”；一旦用户灭亡（调用结束或实例结束），bean的生命期也告结束。即每个用户最初都会得到一个初始的bean。简单来说，有状态就是有数据存储功能。有状态对象(Stateful Bean)，就是有实例变量的对象 ，可以保存数据，是<strong>非线程安全</strong>的。<br><strong>无状态会话bean</strong>  ：bean一旦实例化就被加进会话池中，各个用户都可以共用。即使用户已经消亡，bean  的生命期也不一定结束，它可能依然存在于会话池中，供其他用户调用。由于没有特定的用户，那么也就不能保持某一用户的状态，所以叫无状态bean。但无状态会话bean  并非没有状态，如果它有自己的属性（变量），那么这些变量就会受到所有调用它的用户的影响，这是在实际应用中必须注意的。简单来说，无状态就是一次操作，不能保存数据。无状态对象(Stateless Bean)，就是没有实例变量的对象 .不能保存数据，是不变类，是<strong>线程安全</strong>的。</p>
 <p><strong>单线程bean的线程安全问题</strong></p>
 <p>单线程bean存在线程问题，主要是因为当多个线程操作同一个对象的时候是存在资源竞争的。</p>
 <p>常见的两种解决办法：</p>
@@ -3305,6 +3353,7 @@
 <li>在bean中尽量避免定义可变的成员变量</li>
 <li>在类中定义一个ThreadLocal成员变量，将需要的可变成员变量保存在ThreadLocal中</li>
 </ul>
+<p><strong>ThrealLocal举例</strong>例如，我们有一个银行的BankDAO类和一个个人账户的PeopleDAO类，现在需要个人向银行进行转账，在PeopleDAO类中有一个账户减少的方法，BankDAO类中有一个账户增加的方法，那么这两个方法在调用的时候必须使用同一个Connection数据库连接对象，如果他们使用两个Connection对象，则会开启两段事务，可能出现个人账户减少而银行账户未增加的现象。使用同一个Connection对象的话，在应用程序中可能会设置为一个全局的数据库连接对象，从而避免在调用每个方法时都传递一个Connection对象。问题是当我们把Connection对象设置为全局变量时，你不能保证是否有其他线程会将这个Connection对象关闭，这样就会出现线程安全问题。解决办法就是在进行转账操作这个线程中，使用ThreadLocal中获取Connection对象，这样，在调用个人账户减少和银行账户增加的线程中，就能从ThreadLocal中取到同一个Connection对象，并且这个Connection对象为转账操作这个线程独有，不会被其他线程影响，保证了线程安全性。</p>
 <h4 id="创建流程"><a href="#创建流程" class="headerlink" title="创建流程"></a>创建流程</h4><p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1gzhqabbt5oj20qy0d2jt1.jpg" alt="在这里插入图片描述"></p>
 <p>对Bean的创建最为核心三个方法解释如下：</p>
 <ul>
@@ -3332,6 +3381,9 @@
 <p><strong>DisposableBean</strong> 类似于InitializingBean，对应生命周期的销毁阶段，以ConfigurableApplicationContext#close()方法作为入口，实现是通过循环取所有实现了DisposableBean接口的Bean然后调用其destroy()方法 。</p>
 <p>Spring会扫描<strong>指定包</strong>下面的Java类，然后将其变成beanDefinition对象，然后Spring会根据beanDefinition来创建bean，特别要记住一点，Spring是根据beanDefinition来创建Spring bean的</p>
 <p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1gzhrhqc614j20u00ubwij.jpg" alt="img"></p>
+<h3 id="自动配置"><a href="#自动配置" class="headerlink" title="自动配置"></a>自动配置</h3><p>Springboot遵循“约定优于配置”的原则，使用注解对一些常规的配置项做默认配置，减少或不使用xml配置，让你的项目快速运行起来。Springboot还为大量的开发常用框架封装了starter，如今引入框架只要引入一个starter，你就可以使用这个框架，只需少量的配置甚至是不需要任何配置。</p>
+<p>主要关注的几个注解如下<br>@SpringBootConfiguration：标记当前类为配置类<br>@EnableAutoConfiguration：开启自动配置<br>@ComponentScan：扫描主类所在的同级包以及下级包里的Bean</p>
+<p>Spring Boot启动的时候会通过@EnableAutoConfiguration注解找到META-INF/spring.factories配置文件中的所有自动配置类，并对其进行加载，而这些自动配置类都是以AutoConfiguration结尾来命名的，它实际上就是一个JavaConfig形式的Spring容器配置类，它能通过以Properties结尾命名的类中取得在全局配置文件中配置的属性如：server.port，而XxxxProperties类是通过@ConfigurationProperties注解与全局配置文件中对应的属性进行绑定的。</p>
 <h3 id="循环依赖"><a href="#循环依赖" class="headerlink" title="循环依赖"></a>循环依赖</h3><p>对于Spring循环依赖的情况总结如下：</p>
 <p>不能解决的问题：</p>
 <ul>
@@ -4679,6 +4731,37 @@
 <h3 id="初始化零值"><a href="#初始化零值" class="headerlink" title="初始化零值"></a><strong>初始化零值</strong></h3><p>内存分配完成后，虚拟机需要将分配到的内存空间都初始化为零值（不包括对象头），这一步操作保证了对象的实例字段在 Java 代码中可以不赋初始值就直接使用，程序能访问到这些字段的数据类型所对应的零值。</p>
 <h3 id="设置对象头"><a href="#设置对象头" class="headerlink" title="设置对象头"></a>设置对象头</h3><p>初始化零值完成之后，<strong>虚拟机要对对象进行必要的设置</strong>，例如这个对象是哪个类的实例、如何才能找到类的元数据信息、对象的哈希码、对象的 GC 分代年龄等信息。 <strong>这些信息存放在对象头中。</strong> 另外，根据虚拟机当前运行状态的不同，如是否启用偏向锁等，对象头会有不同的设置方式。</p>
 <h3 id="Init"><a href="#Init" class="headerlink" title="Init"></a>Init</h3><p>在上面工作都完成之后，从虚拟机的视角来看，一个新的对象已经产生了，但从 Java 程序的视角来看，对象创建才刚开始，<code>&lt;init&gt;</code> 方法还没有执行，所有的字段都还为零。所以一般来说，执行 new 指令之后会接着执行 <code>&lt;init&gt;</code> 方法，把对象按照程序员的意愿进行初始化，这样一个真正可用的对象才算完全产生出来</p>
+<h2 id="Jvm-堆：新生代老年代永久代"><a href="#Jvm-堆：新生代老年代永久代" class="headerlink" title="Jvm 堆：新生代老年代永久代"></a>Jvm 堆：新生代老年代永久代</h2><p>JVM中的堆，一般分为三大部分：新生代、老年代、永久代</p>
+<p><strong>1 新生代</strong></p>
+<p>主要是用来存放新生的对象。一般占据堆的1/3空间。由于频繁创建对象，所以新生代会频繁触发MinorGC进行垃圾回收。</p>
+<p>新生代又分为 Eden区、ServivorFrom、ServivorTo三个区。</p>
+<ul>
+<li>Eden区：Java新对象的出生地（如果新创建的对象占用内存很大，则直接分配到老年代）。当Eden区内存不够的时候就会触发MinorGC，对新生代区进行一次垃圾回收。</li>
+<li>ServivorTo：保留了一次MinorGC过程中的幸存者。</li>
+<li>ServivorFrom：上一次GC的幸存者，作为这一次GC的被扫描者。</li>
+</ul>
+<p>当JVM无法为新建对象分配内存空间的时候(Eden满了)，Minor GC被触发。因此新生代空间占用率越高，Minor GC越频繁。</p>
+<p>MinorGC的过程：采用复制算法。</p>
+<ol>
+<li>首先，把Eden和ServivorFrom区域中存活的对象复制到ServicorTo区域（如果有对象的年龄以及达到了老年的标准，一般是15，则赋值到老年代区）</li>
+<li>同时把这些对象的年龄+1（如果ServicorTo不够位置了就放到老年区）</li>
+<li>然后，清空Eden和ServicorFrom中的对象；最后，ServicorTo和ServicorFrom互换，原ServicorTo成为下一次GC时的ServicorFrom区。</li>
+</ol>
+<p><strong>2 老年代</strong></p>
+<p>老年代的对象比较稳定，所以MajorGC不会频繁执行。</p>
+<p>在进行MajorGC前一般都先进行了一次MinorGC，使得有新生代的对象晋身入老年代，导致空间不够用时才触发。当无法找到足够大的连续空间分配给新创建的较大对象时也会提前触发一次MajorGC进行垃圾回收腾出空间。</p>
+<p>MajorGC采用标记—清除算法：</p>
+<ol>
+<li>首先扫描一次所有老年代，标记出存活的对象</li>
+<li>然后回收没有标记的对象。</li>
+</ol>
+<p>MajorGC的耗时比较长，因为要扫描再回收。MajorGC会产生内存碎片，为了减少内存损耗，我们一般需要进行合并或者标记出来方便下次直接分配。</p>
+<p>当老年代也满了装不下的时候，就会抛出OOM（Out of Memory）异常。</p>
+<p><strong>3 永久代</strong></p>
+<p>指内存的永久保存区域，主要存放Class和Meta（元数据）的信息。</p>
+<p>Class在被加载的时候被放入永久区域。它和和存放实例的区域不同，GC不会在主程序运行期对永久区域进行清理。所以这也导致了永久代的区域会随着加载的Class的增多而胀满，最终抛出OOM异常。</p>
+<p>在Java8中，永久代已经被移除，被一个称为“元数据区”（元空间）的区域所取代。</p>
+<p>元空间的本质和永久代类似，都是对JVM规范中方法区的实现。不过元空间与永久代之间最大的区别在于：元空间并不在虚拟机中，而是使用本地内存。因此，默认情况下，元空间的大小仅受本地内存限制。类的元数据放入 native memory, 字符串池和类的静态变量放入java堆中. 这样可以加载多少类的元数据就不再由MaxPermSize控制, 而由系统的实际可用空间来控制。</p>
 <h2 id="对象内存分配"><a href="#对象内存分配" class="headerlink" title="对象内存分配"></a>对象内存分配</h2><p>堆中又分为年轻代和老年代，JVM为了更好地区分对象是否需要回收，因此将堆区分为了年轻代和老年代。顾名思义，一个新的对象的创建会优先在年轻代上进行。相对应的，一个对象在几次垃圾回收的过程中一直存在于老年代，那么它就被逐渐变老。</p>
 <p>大部分年轻代中的对象在GC时都会认为是“无用”的，而且对于年轻代采用的回收算法是复制算法，因此JVM将年轻代又分为较大的Eden区域以及两块较小的S0/S1区域。</p>
 <p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gz8gahaci8j314a0u0n1g.jpg" alt="image-20220210153225661"></p>
@@ -4712,7 +4795,10 @@
 <p><strong>BootstrapClassLoader(启动类加载器)</strong> ：最顶层的加载类，由 C++实现，负责加载 <code>%JAVA_HOME%/lib</code>目录下的 jar 包和类或者被 <code>-Xbootclasspath</code>参数指定的路径中的所有类。</p>
 <p><strong>ExtensionClassLoader(扩展类加载器)</strong> ：主要负责加载 <code>%JRE_HOME%/lib/ext</code> 目录下的 jar 包和类，或被 <code>java.ext.dirs</code> 系统变量所指定的路径下的 jar 包。</p>
 <p><strong>AppClassLoader(应用程序类加载器)</strong> ：面向我们用户的加载器，负责加载当前应用 classpath 下的所有 jar 包和类。</p>
-<h3 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h3><p>每一个类都有一个对应它的类加载器。系统中的 ClassLoader 在协同工作的时候会默认使用 <strong>双亲委派模型</strong> 。即在类加载的时候，系统会首先判断当前类是否被加载过。已经被加载的类会直接返回，否则才会尝试加载。加载的时候，首先会把该请求委派给父类加载器的 <code>loadClass()</code> 处理，因此所有的请求最终都应该传送到顶层的启动类加载器 <code>BootstrapClassLoader</code> 中。当父类加载器无法处理时，才由自己来处理。当父类加载器为 null 时，会使用启动类加载器 <code>BootstrapClassLoader</code> 作为父类加载器 </p>
+<h3 id="双亲委派模型"><a href="#双亲委派模型" class="headerlink" title="双亲委派模型"></a>双亲委派模型</h3><p>每一个类都有一个对应它的类加载器。系统中的 ClassLoader 在协同工作的时候会默认使用 <strong>双亲委派模型</strong> 。即在类加载的时候，系统会首先判断当前类是否被加载过。已经被加载的类会直接返回，否则才会尝试加载。加载的时候，首先会把该请求委派给父类加载器的 <code>loadClass()</code> 处理，因此所有的请求最终都应该传送到顶层的启动类加载器 <code>BootstrapClassLoader</code> 中。当父类加载器无法处理时，才由自己来处理。当父类加载器为 null 时，会使用启动类加载器 <code>BootstrapClassLoader</code> 作为父类加载器 。</p>
+<p>向上委派到顶层加载器为止，向下查找找到发起加载的加载器为止</p>
+<p>向上委派：实际上就是查找缓存，是否加载了该类，有则直接返回，没有则继续向上</p>
+<p>向下查找：查找加载路径，有则加载返回，没有则继续向下查找</p>
 <p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gycexry6klj30qq0s0mzh.jpg" alt="image-20220113222734660"></p>
 <p>优点：</p>
 <p>双亲委派模型保证了 Java 程序的稳定运行，可以避免类的重复加载（JVM 区分不同类的方式不仅仅根据类名，相同的类文件被不同的类加载器加载产生的是两个不同的类），也保证了 Java 的核心 API 不被篡改。如果没有使用双亲委派模型，而是每个类加载器加载自己的话就会出现一些问题，比如我们编写一个称为 <code>java.lang.Object</code> 类的话，那么程序运行的时候，系统就会出现多个不同的 <code>Object</code> 类。 </p>
@@ -8748,7 +8834,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#104;&#117;&#x62;&#46;&#99;&#x6f;&#109;">&#103;&#x69;&#116;&#64;&#103;&#x69;&#x74;&#104;&#117;&#x62;&#46;&#99;&#x6f;&#109;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#x6d;">&#x67;&#x69;&#x74;&#x40;&#103;&#105;&#116;&#104;&#117;&#98;&#46;&#99;&#111;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
