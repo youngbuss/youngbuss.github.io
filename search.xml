@@ -380,7 +380,7 @@
 <p>a. 从驱动表（左表）取出N条记录；<br>b. 拿着这N条记录，依次到被驱动表（右表）查找满足WHERE条件的记录；</p>
 <p>所以，官方sql的过程就是👇</p>
 <p>先把Person表搬过来</p>
-<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#x6a;&#111;&#104;&#x6e;&#x40;&#101;&#x78;&#97;&#x6d;&#x70;&#108;&#101;&#x2e;&#99;&#x6f;&#109;">&#x6a;&#111;&#104;&#x6e;&#x40;&#101;&#x78;&#97;&#x6d;&#x70;&#108;&#101;&#x2e;&#99;&#x6f;&#109;</a> |<br>| 2  | <a href="mailto:&#x62;&#111;&#98;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#108;&#x65;&#46;&#x63;&#x6f;&#109;">&#x62;&#111;&#98;&#64;&#101;&#x78;&#97;&#x6d;&#112;&#108;&#x65;&#46;&#x63;&#x6f;&#109;</a>  |<br>| 3  | <a href="mailto:&#106;&#111;&#104;&#x6e;&#x40;&#101;&#120;&#97;&#109;&#112;&#108;&#x65;&#x2e;&#99;&#111;&#109;">&#106;&#111;&#104;&#x6e;&#x40;&#101;&#120;&#97;&#109;&#112;&#108;&#x65;&#x2e;&#99;&#111;&#109;</a> |<br>+—-+——————+</p>
+<p>+—-+——————+<br>| Id | Email            |<br>+—-+——————+<br>| 1  | <a href="mailto:&#x6a;&#x6f;&#x68;&#x6e;&#64;&#101;&#x78;&#x61;&#109;&#112;&#108;&#101;&#46;&#x63;&#111;&#x6d;">&#x6a;&#x6f;&#x68;&#x6e;&#64;&#101;&#x78;&#x61;&#109;&#112;&#108;&#101;&#46;&#x63;&#111;&#x6d;</a> |<br>| 2  | <a href="mailto:&#98;&#x6f;&#x62;&#64;&#x65;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#x6f;&#109;">&#98;&#x6f;&#x62;&#64;&#x65;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#x6f;&#109;</a>  |<br>| 3  | <a href="mailto:&#106;&#x6f;&#x68;&#110;&#64;&#x65;&#120;&#97;&#109;&#x70;&#108;&#101;&#x2e;&#99;&#x6f;&#x6d;">&#106;&#x6f;&#x68;&#110;&#64;&#x65;&#120;&#97;&#109;&#x70;&#108;&#101;&#x2e;&#99;&#x6f;&#x6d;</a> |<br>+—-+——————+</p>
 <p>a. 从表p1取出3条记录；<br>b. 拿着第1条记录去表p2查找满足WHERE的记录，代入该条件p1.Email = p2.Email AND p1.Id &gt; p2.Id后，发现没有满足的，所以不用删掉记录1；<br>c. 记录2同理；<br>d. 拿着第3条记录去表p2查找满足WHERE的记录，发现有一条记录满足，所以要从p1删掉记录3；<br>e. 3条记录遍历完，删掉了1条记录，这个DELETE也就结束了。</p>
 ]]></content>
       <categories>
@@ -754,7 +754,7 @@
 </li>
 </ul>
 <p>Map:Hashtable,HashMap,WeakHashMap</p>
-<h3 id="equals-hashcode"><a href="#equals-hashcode" class="headerlink" title="equals(),hashcode()"></a>equals(),hashcode()</h3><p><strong>1.等价关系</strong></p>
+<h3 id="equals-hashcode"><a href="#equals-hashcode" class="headerlink" title="equals(),==,hashcode()"></a>equals(),==,hashcode()</h3><p><strong>1.等价关系</strong></p>
 <p>两个对象具有等价关系，需要满足以下几个条件</p>
 <p>自反性，对称性，传递性，一致性</p>
 <p><strong>2.等价与相等</strong></p>
@@ -776,8 +776,12 @@
 
 
 
-<p>hashcode()</p>
+<p><strong>hashcode()</strong></p>
 <p>已知散列表（Hash table，也叫哈希表），是根据关键码值(Key value)而直接进行访问的数据结构。也就是说，它通过把关键码值映射到表中一个位置来访问记录，以加快查找的速度。<br>那么所以hashcode()作用就是提高效率。<br>当向集合中插入对象时，如何判别在集合中是否已经存在该对象了？（注意：集合中不允许重复的元素存在）<br>也许大多数人都会想到调用equals方法来逐个进行比较，这个方法确实可行。但是如果集合中已经存在一万条数据或者更多的数据，如果采用equals方法去逐一比较，效率必然是一个问题。此时hashCode方法的作用就体现出来了，当集合要添加新的对象时，先调用这个对象的hashCode方法，得到对应的hashcode值，实际上在HashMap的具体实现中会用一个table保存已经存进去的对象的hashcode值，如果table中没有该hashcode值，它就可以直接存进去，不用再进行任何比较了；如果存在该hashcode值， 就调用它的equals方法与新元素进行比较，相同的话就不存了，不相同就散列其它的地址，所以这里存在一个冲突解决的问题，这样一来实际调用equals方法的次数就大大降低了，说通俗一点：Java中的hashCode方法就是根据一定的规则将与对象相关的信息（比如对象的存储地址，对象的字段等）映射成一个数值，这个数值称作为散列值。</p>
+<p>1.equal()相等的两个对象他们的hashCode()肯定相等，也就是用equal()对比是绝对可靠的。</p>
+<p>2.hashCode()相等的两个对象他们的equal()不一定相等，也就是hashCode()不是绝对可靠的。</p>
+<p>所有对于需要大量并且快速的对比的话如果都用equal()去做显然效率太低，所以解决方式是，每当需要对比的时候，首先用hashCode()去对比，如果hashCode()不一样，则表示这两个对象肯定不相等（也就是不必再用equal()去再对比了）,如果hashCode()相同，此时再对比他们的equal()，如果equal()也相同，则表示这两个对象是真的相同了，这样既能大大提高了效率也保证了对比的绝对正确性！</p>
+<p>这种大量的并且快速的对象对比一般使用的hash容器中，比如hashset,hashmap,hashtable等等，比如hashset里要求对象不能重复，则他内部必然要对添加进去的每个对象进行对比，而他的对比规则就是像上面说的那样，先hashCode()，如果hashCode()相同，再用equal()验证，如果hashCode()都不同，则肯定不同，这样对比的效率就很高了。</p>
 <h3 id="抽象类与接口的区别"><a href="#抽象类与接口的区别" class="headerlink" title="抽象类与接口的区别"></a>抽象类与接口的区别</h3><p>区别：</p>
 <ul>
 <li>抽象类的修饰符是abstract ，接口的修饰符是interface 。另外对于实现的子类来说，有extends 和 implements 之分</li>
@@ -1351,6 +1355,8 @@
 <p>我们写的<strong>java文件会通过java编译器编译成java字节码文件</strong>（也就是.class文件），这个过程是java编译过程。而我们的java虚拟机执行的就是字节码文件。字节码文件会通过java解释器（JVM的一部分）再解释成机器码运行。</p>
 <p>采用字节码的好处：</p>
 <p>Java语言编译成字节码通过JVM实现跨平台，保留了解释性语言可移植的特点（Java是编译和解释并存），这也体现了Java语言”一次编译到处运行”的特点，在一定程度上解决了解释语言执行效率低的问题。Java语言通过字节码的方式，在一定程度上解决了传统解释性语言执行效率低的问题，同时又保证了解释型语言可移植的特点。所以Java程序运行时比较高效，而且，由于字节码并不专对一种特定的机器，因此JAVA语言无须重新编译便可在多种不同的计算机上运行。</p>
+<h3 id="public-protected-private"><a href="#public-protected-private" class="headerlink" title="public protected private"></a>public protected private</h3><p>1、public：public表明该数据成员、成员函数是对所有用户开放的，所有用户都可以直接进行调用<br>2、private：private表示私有，私有的意思就是除了class自己之外，任何人都不可以直接使用。<br>3、protected：protected对于子女、朋友来说，就是public的，可以自由使用，没有任何限制，而对于其他的外部class，protected就变成private。</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1h5qwfbtcu1j20jn03mjrg.jpg" alt="img"></p>
 <h2 id="Hash相关知识"><a href="#Hash相关知识" class="headerlink" title="Hash相关知识"></a>Hash相关知识</h2><h3 id="Hash冲突"><a href="#Hash冲突" class="headerlink" title="Hash冲突"></a>Hash冲突</h3><p>1.开放地址方法</p>
 <p>　　（1）线性探测</p>
 <p>　　　按顺序决定值时，如果某数据的值已经存在，则在原来值的基础上往后加一个单位，直至不发生哈希冲突。　</p>
@@ -1689,6 +1695,16 @@
 <p>A implements Runnable:(推荐)</p>
 <p>多个线程共享一个目标资源，适合多线程处理同一份资源。</p>
 <p>该类还可以继承其他类，也可以实现其他接口。</p>
+<p><strong>Future</strong>相对于普通的条用Runnable Thread而言，多了返回值，同时，整个任务不必阻塞在一个线程中，是一种异步的实现方式。</p>
+<p>下面是一些概念的摘要：</p>
+<p>这个继承体系中的核心接口是Future。Future的核心思想是：一个方法f，计算过程可能非常耗时，等待f返回，显然不明智。可以在调用f的时候，立马返回一个Future，可以通过Future这个数据结构去**<em>控制**</em>方法f的计算过程。</p>
+<p>这里的**<em>控制**</em>包括：</p>
+<ul>
+<li>get方法：获取计算结果（如果还没计算完，也是必须等待的）</li>
+<li>cancel方法：还没计算完，可以取消计算过程</li>
+<li>isDone方法：判断是否计算完</li>
+<li>isCancelled方法：判断计算是否被取消</li>
+</ul>
 <p><strong>Thread类中的start()和run()方法有什么区别？</strong></p>
 <p> start（）方法来启动线程，真正实现了多线程运行，这时无需等待run方法体代码执行完毕而直接继续执行下面的代码： 通过调用Thread类的start()方法来启动一个线程，这时此线程是处于就绪状态，并没有运行。然后通过此Thread类调用方法run()来完成其运行操作的，这里方法run()称为线程体，它包含了要执行的这个线程的内容，Run方法运行结束，此线程终止，而CPU再运行其它线程。</p>
 <p> run（）方法当作普通方法的方式调用，程序还是要顺序执行，还是要等待run方法体执行完毕后才可继续执行下面的代码： 而如果直接用run方法，这只是调用一个方法而已，程序中依然只有主线程–这一个线程，其程序执行路径还是只有一条，这样就没有达到多线程的目的</p>
@@ -9470,7 +9486,7 @@
 <ul>
 <li>linux : ~/.ssh</li>
 <li>Mac : ~/.ssh</li>
-<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#x67;&#105;&#x74;&#64;&#103;&#105;&#116;&#x68;&#117;&#98;&#x2e;&#99;&#x6f;&#x6d;">&#x67;&#105;&#x74;&#64;&#103;&#105;&#116;&#x68;&#117;&#98;&#x2e;&#99;&#x6f;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
+<li>Windows 10 : C:/Users/ASUS/.ssh<br>复制公钥的内容，进入github主页，点击右上角再点击<strong>settings</strong>,点击<strong>SSH and GPG keys</strong>，再点击<strong>NEW SSH KEY</strong>进行添加即可，验证是否成功我们可以在Git Bash中输入ssh -T <a href="mailto:&#103;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#x6d;">&#103;&#x69;&#x74;&#x40;&#103;&#105;&#x74;&#x68;&#117;&#98;&#x2e;&#99;&#111;&#x6d;</a> 进行验证 输入yes(第一次) 看到success则显示成功。</li>
 </ul>
 <p>输入ssh 可以查看本机是否已经安装了ssh</p>
 <h2 id="提交文件"><a href="#提交文件" class="headerlink" title="提交文件"></a>提交文件</h2><p>提交文件有两种方法：</p>
